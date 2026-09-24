@@ -1,0 +1,13 @@
+<div
+  class="rm-card"
+  [class.rm-card--interactive]="interactive()"
+  [class.rm-card--glass]="glass()"
+  [class.rm-card--glow]="glow()"
+  [class.rm-card--flat]="!lift()"
+>
+  <ng-content select="[card-header]"></ng-content>
+  <div class="rm-card__body">
+    <ng-content></ng-content>
+  </div>
+  <ng-content select="[card-footer]"></ng-content>
+</div>

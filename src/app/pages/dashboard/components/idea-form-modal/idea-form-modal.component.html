@@ -1,0 +1,61 @@
+<rm-modal
+  [isOpen]="isOpen()"
+  [title]="editingIdea() ? 'Editar Ideia' : 'Registrar Nova Ideia'"
+  [subtitle]="editingIdea() ? 'Ajuste os conceitos e tags da ideia.' : 'Capture insights rapidamente para posterior desdobramento com IA.'"
+  maxWidth="520px"
+  (closed)="onClose()"
+>
+  <form (submit)="onSubmit($event)" class="rm-form-grid">
+
+    <rm-input
+      label="Título da Ideia"
+      placeholder="Ex: Modo Foco Linear estilo Dynamic Island"
+      [(value)]="title"
+      [required]="true"
+      [errorMessage]="titleError()"
+      prefixIcon="pi-lightbulb"
+    ></rm-input>
+    <div class="rm-form-group">
+      <label class="rm-form-label">Categoria Estratégica</label>
+      <select
+        class="rm-select"
+        [value]="category()"
+        (change)="category.set($any($event.target).value)"
+      >
+        <option value="product">Produto / Feature</option>
+        <option value="workflow">Fluxo de Trabalho</option>
+        <option value="research">Pesquisa / Estudo</option>
+        <option value="creative">Criativo</option>
+        <option value="personal">Pessoal</option>
+      </select>
+    </div>
+    <rm-input
+      label="Resumo do Conceito"
+      placeholder="Explique o valor, o problema que resolve ou o insight principal..."
+      [(value)]="summary"
+      [multiline]="true"
+      [rows]="4"
+      [required]="true"
+      [errorMessage]="summaryError()"
+    ></rm-input>
+    <rm-input
+      label="Tags (separadas por vírgula)"
+      placeholder="IA, UX, Produtividade"
+      [(value)]="tagsString"
+      prefixIcon="pi-tag"
+    ></rm-input>
+  </form>
+
+  <div modal-footer class="rm-modal-actions">
+    <rm-button variant="subtle" (clicked)="onClose()">
+      Cancelar
+    </rm-button>
+    <rm-button
+      variant="primary"
+      [icon]="editingIdea() ? 'pi-check' : 'pi-plus'"
+      (clicked)="saveIdea()"
+    >
+      {{ editingIdea() ? 'Salvar Ideia' : 'Registrar Ideia' }}
+    </rm-button>
+  </div>
+</rm-modal>

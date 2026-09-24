@@ -1,0 +1,123 @@
+<div class="rm-auth-page">
+
+  <a routerLink="/home" class="rm-auth-back-link">
+    <rm-icon name="arrow-left" [size]="14"></rm-icon>
+    <span>{{ i18n.t('auth.back') }}</span>
+  </a>
+
+  <div class="rm-auth-lang">
+    <rm-lang-switcher></rm-lang-switcher>
+  </div>
+
+  <div class="rm-auth-card glass-panel">
+
+    <div class="rm-auth-header">
+      <div class="rm-auth-logo">
+        <img src="assets/favicon-plate-64.png" alt="" width="40" height="40" />
+      </div>
+      <h2 class="rm-auth-title">
+        {{ activeTab() === 'login' ? i18n.t('auth.welcome') : i18n.t('auth.registerTitle') }}
+      </h2>
+      <p class="rm-auth-subtitle">
+        {{ i18n.t('auth.subtitle2') }}
+      </p>
+    </div>
+    <div class="rm-auth-tabs">
+      <button
+        type="button"
+        class="rm-auth-tab"
+        [class.active]="activeTab() === 'login'"
+        (click)="activeTab.set('login')"
+      >
+        {{ i18n.t('auth.tabLogin') }}
+      </button>
+      <button
+        type="button"
+        class="rm-auth-tab"
+        [class.active]="activeTab() === 'register'"
+        (click)="activeTab.set('register')"
+      >
+        {{ i18n.t('auth.tabRegister') }}
+      </button>
+    </div>
+    <form (submit)="onSubmit($event)" class="rm-auth-form">
+      @if (activeTab() === 'register') {
+        <div class="rm-field-group">
+          <label class="rm-label" for="auth-name">{{ i18n.t('auth.name') }}</label>
+          <div class="rm-input-wrap">
+            <rm-icon name="user" [size]="14" class="rm-field-prefix"></rm-icon>
+            <input
+              id="auth-name"
+              type="text"
+              [placeholder]="i18n.t('auth.namePlaceholder')"
+              class="rm-text-input"
+              [value]="nameInput()"
+              (input)="nameInput.set($any($event.target).value)"
+              required
+            />
+          </div>
+        </div>
+      }
+
+      <div class="rm-field-group">
+        <label class="rm-label" for="auth-email">{{ i18n.t('auth.email') }}</label>
+        <div class="rm-input-wrap">
+          <rm-icon name="mail" [size]="14" class="rm-field-prefix"></rm-icon>
+          <input
+            id="auth-email"
+            type="email"
+            placeholder="seu@email.com"
+            class="rm-text-input"
+            [value]="emailInput()"
+            (input)="emailInput.set($any($event.target).value)"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="rm-field-group">
+        <div class="rm-label-row">
+          <label class="rm-label" for="auth-password">{{ i18n.t('auth.password') }}</label>
+        </div>
+        <div class="rm-input-wrap">
+          <rm-icon name="lock" [size]="14" class="rm-field-prefix"></rm-icon>
+          <input
+            id="auth-password"
+            [type]="showPassword() ? 'text' : 'password'"
+            placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+            class="rm-text-input"
+            [value]="passwordInput()"
+            (input)="passwordInput.set($any($event.target).value)"
+            required
+          />
+          <button
+            type="button"
+            class="rm-password-toggle"
+            (click)="toggleShowPassword()"
+            [attr.aria-label]="showPassword() ? i18n.t('auth.hidePass') : i18n.t('auth.showPass')"
+          >
+            <rm-icon [name]="showPassword() ? 'eye-off' : 'eye'" [size]="14"></rm-icon>
+          </button>
+        </div>
+      </div>
+
+      <rm-button
+        type="submit"
+        variant="primary"
+        size="lg"
+        [icon]="activeTab() === 'login' ? 'log-in' : 'check'"
+        [loading]="isLoading()"
+      >
+        {{ activeTab() === 'login' ? i18n.t('auth.submit') : i18n.t('auth.create') }}
+      </rm-button>
+    </form>
+
+    <div class="rm-security-note">
+      <rm-icon name="shield" [size]="12"></rm-icon>
+      <span>{{ i18n.t('auth.security') }}</span>
+    </div>
+    <p class="rm-auth-legal">
+      {{ i18n.t('auth.legal') }} <a routerLink="/privacidade">{{ i18n.t('auth.terms') }}</a> e <a routerLink="/privacidade">{{ i18n.t('auth.privacyPolicy') }}</a> (LGPD).
+    </p>
+  </div>
+</div>

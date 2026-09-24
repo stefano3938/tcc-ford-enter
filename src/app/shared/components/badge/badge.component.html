@@ -1,0 +1,11 @@
+<span [class]="'rm-badge rm-badge--' + resolvedType()" [class.rm-badge--clickable]="clickable()">
+  @if (showDot()) {
+    <span class="rm-badge__dot" aria-hidden="true"></span>
+  }
+  @if (icon()) {
+    <rm-icon [name]="icon()!" [size]="11" class="rm-badge__icon" aria-hidden="true"></rm-icon>
+  }
+  <span class="rm-badge__label">
+    <ng-content>{{ label() }}</ng-content>
+  </span>
+</span>

@@ -1,0 +1,37 @@
+<div #host class="lang" [class.lang--open]="open()">
+  <button
+    type="button"
+    class="lang__trigger"
+    [attr.aria-haspopup]="'listbox'"
+    [attr.aria-expanded]="open()"
+    aria-controls="lang-menu"
+    [attr.aria-label]="i18n.t('nav.language') + ': ' + i18n.current().label"
+    [title]="i18n.t('nav.language')"
+    (click)="toggle()"
+  >
+    <rm-icon name="globe" [size]="15"></rm-icon>
+    <span class="lang__code">{{ i18n.current().short }}</span>
+    <rm-icon class="lang__caret" name="chevron-down" [size]="12"></rm-icon>
+  </button>
+
+  @if (open()) {
+    <div class="lang__menu" id="lang-menu" role="listbox" [attr.aria-label]="i18n.t('nav.language')">
+      @for (lang of langs; track lang.code) {
+        <button
+          type="button"
+          role="option"
+          class="lang__option"
+          [class.lang__option--active]="lang.code === i18n.lang()"
+          [attr.aria-selected]="lang.code === i18n.lang()"
+          (click)="choose(lang.code)"
+        >
+          <span class="lang__option-code">{{ lang.short }}</span>
+          <span class="lang__option-label">{{ lang.label }}</span>
+          @if (lang.code === i18n.lang()) {
+            <rm-icon class="lang__check" name="check" [size]="14"></rm-icon>
+          }
+        </button>
+      }
+    </div>
+  }
+</div>

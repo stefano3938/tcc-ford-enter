@@ -1,0 +1,120 @@
+<rm-modal
+  [isOpen]="isOpen()"
+  [title]="editingTask() ? 'Editar Tarefa' : 'Nova Tarefa'"
+  [subtitle]="editingTask() ? 'Atualize os detalhes da tarefa selecionada.' : 'Adicione uma nova tarefa ao seu fluxo de trabalho.'"
+  maxWidth="540px"
+  (closed)="onClose()"
+>
+  <form (submit)="onSubmit($event)" class="rm-form-grid">
+
+    <rm-input
+      label="Título da Tarefa"
+      placeholder="Ex: Refatorar store com Signals"
+      [(value)]="title"
+      [required]="true"
+      [errorMessage]="titleError()"
+      prefixIcon="edit"
+    ></rm-input>
+    <rm-input
+      label="Descrição / Critérios de Aceite"
+      placeholder="Descreva detalhes, dependências ou contexto..."
+      [(value)]="description"
+      [multiline]="true"
+      [rows]="2"
+    ></rm-input>
+    <div class="rm-form-row">
+      <div class="rm-form-group">
+        <label class="rm-form-label">Status</label>
+        <select
+          class="rm-select"
+          [value]="status()"
+          (change)="status.set($any($event.target).value)"
+        >
+          <option value="todo">A Fazer</option>
+          <option value="in-progress">Em Andamento</option>
+          <option value="done">Concluída</option>
+        </select>
+      </div>
+
+      <div class="rm-form-group">
+        <label class="rm-form-label">Prioridade</label>
+        <select
+          class="rm-select"
+          [value]="priority()"
+          (change)="priority.set($any($event.target).value)"
+        >
+          <option value="low">Baixa</option>
+          <option value="medium">Média</option>
+          <option value="high">Alta</option>
+          <option value="urgent">Urgente</option>
+        </select>
+      </div>
+    </div>
+    <div class="rm-form-row">
+      <div class="rm-form-group">
+        <label class="rm-form-label">Data de Entrega</label>
+        <input
+          type="date"
+          class="rm-date-input"
+          [value]="dueDate()"
+          (input)="dueDate.set($any($event.target).value)"
+        />
+      </div>
+
+      <div class="rm-form-group">
+        <label class="rm-form-label">Tempo Estimado (min)</label>
+        <input
+          type="number"
+          class="rm-number-input"
+          placeholder="30"
+          min="5"
+          step="5"
+          [value]="estimatedMinutes()"
+          (input)="estimatedMinutes.set(+$any($event.target).value)"
+        />
+      </div>
+    </div>
+    <div class="rm-form-group">
+      <label class="rm-form-label">Tags</label>
+      @if (selectedTags().length > 0) {
+        <div class="rm-selected-tags">
+          @for (tag of selectedTags(); track tag) {
+            <span class="rm-tag-chip active">{{ tag }}<button type="button" class="rm-tag-remove" (click)="removeTag(tag)" aria-label="Remover tag {{ tag }}"><span aria-hidden="true">×</span></button></span>
+          }
+        </div>
+      }
+      <div class="rm-tags-select-row">
+        <div class="rm-select-wrap">
+          <select
+            class="rm-select"
+            [value]="''"
+            (change)="addTagFromSelect($any($event.target).value); $any($event.target).value=''"
+            aria-label="Selecionar tag existente"
+          >
+            <option value="" disabled selected>Selecionar tag...</option>
+            @for (tag of availableTags(); track tag) {
+              <option [value]="tag">{{ tag }}</option>
+            }
+            @if (availableTags().length === 0) {
+              <option value="" disabled>Nenhuma tag disponível</option>
+            }
+          </select>
+          <span class="rm-select-arrow" aria-hidden="true">▾</span>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div modal-footer class="rm-modal-actions">
+    <rm-button variant="subtle" (clicked)="onClose()">
+      Cancelar
+    </rm-button>
+    <rm-button
+      variant="primary"
+      [icon]="editingTask() ? 'check' : 'plus'"
+      (clicked)="saveTask()"
+    >
+      {{ editingTask() ? 'Salvar Alterações' : 'Criar Tarefa' }}
+    </rm-button>
+  </div>
+</rm-modal>

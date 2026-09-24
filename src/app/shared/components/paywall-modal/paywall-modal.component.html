@@ -1,0 +1,91 @@
+<rm-modal
+  [isOpen]="userService.isPaywallOpen()"
+  maxWidth="620px"
+  (closed)="userService.closePaywall()"
+>
+  <div class="rm-paywall-hero">
+    <div class="rm-paywall-hero__icon">
+      <rm-icon name="crown" [size]="26"></rm-icon>
+    </div>
+    <span class="ai-pill">
+      <rm-icon name="sparkles" [size]="12"></rm-icon>
+      <span>DESBLOQUEIO DE PERFORMANCE</span>
+    </span>
+    <h2 class="rm-paywall-hero__title">Pense, organize e execute sem limites com RemindMe Pro</h2>
+    <p class="rm-paywall-hero__reason">{{ userService.paywallTriggerReason() }}</p>
+  </div>
+  <div class="rm-billing-switch">
+    <button
+      type="button"
+      class="rm-billing-btn"
+      [class.active]="billingCycle() === 'monthly'"
+      (click)="billingCycle.set('monthly')"
+    >
+      Mensal
+    </button>
+    <button
+      type="button"
+      class="rm-billing-btn"
+      [class.active]="billingCycle() === 'yearly'"
+      (click)="billingCycle.set('yearly')"
+    >
+      Anual
+      <span class="rm-discount-badge">-20% OFF</span>
+    </button>
+  </div>
+  <div class="rm-plan-highlight">
+    <div class="rm-plan-highlight__header">
+      <div>
+        <h3 class="rm-plan-name">RemindMe Pro</h3>
+        <p class="rm-plan-sub">Acesso completo para indivíduos e criadores de alto impacto</p>
+      </div>
+      <div class="rm-plan-price">
+        <span class="rm-plan-price__currency">R$</span>
+        <span class="rm-plan-price__val">{{ billingCycle() === 'yearly' ? '24' : '29' }}</span>
+        <span class="rm-plan-price__period">/mês</span>
+      </div>
+    </div>
+
+    <div class="rm-plan-features-list">
+      <div class="rm-feature-row">
+        <rm-icon name="check" [size]="14" class="text-done"></rm-icon>
+        <span><strong>Tarefas Ilimitadas:</strong> crie quantos fluxos e backlogs desejar</span>
+      </div>
+      <div class="rm-feature-row">
+        <rm-icon name="check" [size]="14" class="text-done"></rm-icon>
+        <span><strong>Banco de Ideias Sem Limites:</strong> anote insights a qualquer instante</span>
+      </div>
+      <div class="rm-feature-row">
+        <rm-icon name="sparkles" [size]="14" class="text-ai"></rm-icon>
+        <span><strong>IA Generativa Ilimitada:</strong> sem restrição de 3 consultas/dia</span>
+      </div>
+      <div class="rm-feature-row">
+        <rm-icon name="check" [size]="14" class="text-done"></rm-icon>
+        <span><strong>Decomposição de Ideias em 1-Clique:</strong> converte planos em tarefas reais</span>
+      </div>
+      <div class="rm-feature-row">
+        <rm-icon name="check" [size]="14" class="text-done"></rm-icon>
+        <span><strong>Priorização Inteligente:</strong> sugestões contextuais de foco diário</span>
+      </div>
+    </div>
+  </div>
+
+  <div modal-footer class="rm-paywall-footer">
+    <rm-button
+      variant="subtle"
+      (clicked)="userService.closePaywall()"
+    >
+      Continuar no Starter
+    </rm-button>
+
+    <rm-button
+      variant="ai"
+      size="lg"
+      icon="zap"
+      [loading]="isUpgrading()"
+      (clicked)="confirmUpgrade()"
+    >
+      Ativar RemindMe Pro Agora
+    </rm-button>
+  </div>
+</rm-modal>

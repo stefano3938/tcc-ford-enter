@@ -10,29 +10,29 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
-      import('./features/home/home.component').then(m => m.HomeComponent)
+      import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('./features/auth/login.component').then(m => m.LoginComponent)
+      import('./pages/auth/login.component').then(m => m.LoginComponent)
   },
   {
     path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
     path: 'ai-assistant',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/ai-assistant/ai-assistant.component').then(m => m.AiAssistantComponent)
+      import('./pages/ai-assistant/ai-assistant.component').then(m => m.AiAssistantComponent)
   },
   {
     path: 'planos',
     loadComponent: () =>
-      import('./features/paywall/paywall.component').then(m => m.PaywallComponent)
+      import('./pages/paywall/paywall.component').then(m => m.PaywallComponent)
   },
   {
     // Old path kept working so shared links and bookmarks don't break.
@@ -42,7 +42,7 @@ export const routes: Routes = [
   {
     path: 'privacidade',
     loadComponent: () =>
-      import('./features/legal/legal.component').then(m => m.LegalComponent)
+      import('./pages/legal/legal.component').then(m => m.LegalComponent)
   },
   {
     path: 'termos',

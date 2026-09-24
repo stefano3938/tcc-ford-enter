@@ -1,0 +1,61 @@
+<div class="rm-field" [class.rm-field--has-error]="!!errorMessage()" [class.rm-field--disabled]="disabled()">
+  @if (label()) {
+    <label [for]="effectiveId()" class="rm-field__label">
+      {{ label() }}
+      @if (required()) {
+        <span class="rm-field__required" aria-hidden="true">*</span>
+      }
+    </label>
+  }
+
+  <div class="rm-field__control">
+    @if (prefixIcon()) {
+      <rm-icon [name]="prefixIcon()!" [size]="14" class="rm-field__icon rm-field__icon--prefix" aria-hidden="true"></rm-icon>
+    }
+
+    @if (multiline()) {
+      <textarea
+        [id]="effectiveId()"
+        [rows]="rows()"
+        [placeholder]="placeholder()"
+        [disabled]="disabled()"
+        [required]="required()"
+        [value]="value()"
+        (input)="onInput($event)"
+        class="rm-input rm-input--textarea"
+        [class.rm-input--with-prefix]="!!prefixIcon()"
+      ></textarea>
+    } @else {
+      <input
+        [id]="effectiveId()"
+        [type]="type()"
+        [placeholder]="placeholder()"
+        [disabled]="disabled()"
+        [required]="required()"
+        [value]="value()"
+        (input)="onInput($event)"
+        (keydown.enter)="enterPressed.emit(value())"
+        class="rm-input"
+        [class.rm-input--with-prefix]="!!prefixIcon()"
+        [class.rm-input--with-suffix]="clearable() && value().length > 0"
+      />
+    }
+
+    @if (clearable() && value().length > 0 && !disabled()) {
+      <button
+        type="button"
+        class="rm-field__clear-btn"
+        (click)="clear()"
+        aria-label="Limpar campo"
+      >
+        <rm-icon name="x" [size]="12"></rm-icon>
+      </button>
+    }
+  </div>
+
+  @if (errorMessage()) {
+    <span class="rm-field__error" role="alert">{{ errorMessage() }}</span>
+  } @else if (hint()) {
+    <span class="rm-field__hint">{{ hint() }}</span>
+  }
+</div>

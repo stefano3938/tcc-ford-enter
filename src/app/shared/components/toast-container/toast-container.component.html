@@ -1,0 +1,45 @@
+<div class="rm-toast-viewport" aria-live="polite" aria-atomic="true">
+  @for (toast of visibleToasts(); track toast.id) {
+    <div
+      [class]="'rm-toast rm-toast--' + toast.type"
+      role="status"
+      (click)="toastService.dismiss(toast.id)"
+    >
+      <div class="rm-toast__icon">
+        @switch (toast.type) {
+          @case ('success') {
+            <rm-icon name="check-circle" [size]="16"></rm-icon>
+          }
+          @case ('warning') {
+            <rm-icon name="alert-triangle" [size]="16"></rm-icon>
+          }
+          @case ('error') {
+            <rm-icon name="x" [size]="16"></rm-icon>
+          }
+          @case ('ai') {
+            <rm-icon name="sparkles" [size]="16"></rm-icon>
+          }
+          @default {
+            <rm-icon name="info" [size]="16"></rm-icon>
+          }
+        }
+      </div>
+
+      <div class="rm-toast__content">
+        <h4 class="rm-toast__title">{{ toast.title }}</h4>
+        @if (toast.message) {
+          <p class="rm-toast__message">{{ toast.message }}</p>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="rm-toast__close"
+        (click)="toastService.dismiss(toast.id); $event.stopPropagation()"
+        aria-label="Dispensar notificação"
+      >
+        <rm-icon name="x" [size]="12"></rm-icon>
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,124 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.rm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.rm-field__label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--rm-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rm-field__required {
+  color: var(--rm-urgent);
+}
+
+.rm-field__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.rm-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 14px;
+  background: var(--rm-bg-surface);
+  border: 1px solid var(--rm-border-base);
+  border-radius: var(--rm-radius-md);
+  color: var(--rm-text-primary);
+  font-size: 13.5px;
+  outline: none;
+  transition: all var(--rm-transition-fast);
+
+  &::placeholder {
+    color: var(--rm-text-muted);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--rm-border-strong);
+  }
+
+  &:focus {
+    border-color: var(--rm-accent);
+    box-shadow: 0 0 0 3px var(--rm-accent-light);
+    background: var(--rm-bg-canvas);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--rm-bg-hover);
+  }
+}
+
+.rm-input--textarea {
+  height: auto;
+  padding: 10px 14px;
+  min-height: 80px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.rm-input--with-prefix {
+  padding-left: 36px;
+}
+
+.rm-input--with-suffix {
+  padding-right: 36px;
+}
+
+.rm-field__icon--prefix {
+  position: absolute;
+  left: 12px;
+  color: var(--rm-text-muted);
+  pointer-events: none;
+}
+
+.rm-field__clear-btn {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--rm-text-muted);
+  background: var(--rm-bg-hover);
+  transition: all var(--rm-transition-fast);
+
+  &:hover {
+    color: var(--rm-text-primary);
+    background: var(--rm-bg-active);
+  }
+}
+
+.rm-field__error {
+  font-size: 11.5px;
+  color: var(--rm-urgent);
+  font-weight: 500;
+}
+
+.rm-field__hint {
+  font-size: 11.5px;
+  color: var(--rm-text-muted);
+}
+
+.rm-field--has-error .rm-input {
+  border-color: var(--rm-urgent);
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
+  }
+}

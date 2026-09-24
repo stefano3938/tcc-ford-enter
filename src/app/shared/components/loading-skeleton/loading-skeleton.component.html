@@ -1,0 +1,44 @@
+<div class="rm-skeleton-group" role="status" aria-label="Carregando conteúdo" aria-busy="true">
+  @for (i of skeletonArray(); track i) {
+    @switch (variant()) {
+      @case ('card') {
+        <div class="rm-skeleton-card">
+          <div class="skeleton-box rm-sk-title"></div>
+          <div class="skeleton-box rm-sk-line"></div>
+          <div class="skeleton-box rm-sk-line short"></div>
+          <div class="rm-sk-footer">
+            <div class="skeleton-box rm-sk-pill"></div>
+            <div class="skeleton-box rm-sk-pill"></div>
+          </div>
+        </div>
+      }
+      @case ('list-row') {
+        <div class="rm-skeleton-row">
+          <div class="skeleton-box rm-sk-avatar"></div>
+          <div class="rm-skeleton-row__main">
+            <div class="skeleton-box rm-sk-title"></div>
+            <div class="skeleton-box rm-sk-line"></div>
+          </div>
+          <div class="skeleton-box rm-sk-badge"></div>
+        </div>
+      }
+      @case ('kanban-col') {
+        <div class="rm-skeleton-kanban-col">
+          <div class="skeleton-box rm-sk-col-header"></div>
+          <div class="skeleton-box rm-sk-card-sm"></div>
+          <div class="skeleton-box rm-sk-card-sm"></div>
+          <div class="skeleton-box rm-sk-card-sm short"></div>
+        </div>
+      }
+      @case ('chat-bubble') {
+        <div class="rm-skeleton-chat" [class.even]="i % 2 === 0">
+          <div class="skeleton-box rm-sk-avatar"></div>
+          <div class="rm-skeleton-chat__bubble">
+            <div class="skeleton-box rm-sk-line"></div>
+            <div class="skeleton-box rm-sk-line short"></div>
+          </div>
+        </div>
+      }
+    }
+  }
+</div>

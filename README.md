@@ -26,6 +26,16 @@ For a complete list of available schematics (such as `components`, `directives`,
 ng generate --help
 ```
 
+## Project organization
+
+The application keeps route-level screens in `src/app/pages`. Each Angular component uses three separate files:
+
+- `*.component.ts` — component logic and inputs/outputs
+- `*.component.html` — template markup
+- `*.component.css` — component styles
+
+Reusable UI is organized in `src/app/shared/components`, while services, models, guards, and mock data live in `src/app/core`.
+
 ## Building
 
 To build the project run:

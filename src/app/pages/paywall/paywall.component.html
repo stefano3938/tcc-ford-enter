@@ -1,0 +1,191 @@
+<div class="rm-pricing-page">
+  <header class="rm-pricing-nav">
+    <a routerLink="/home" class="rm-pricing-brand">
+      <span class="rm-pricing-logo"><img src="assets/favicon-plate-64.png" alt="" width="30" height="30" /></span>
+      <span class="rm-pricing-brand__text">Remind<span class="rm-pricing-brand__accent">Me</span></span>
+    </a>
+    <div class="rm-pricing-nav__actions">
+      <rm-lang-switcher></rm-lang-switcher>
+      <button
+        type="button"
+        class="rm-pricing-theme"
+        (click)="themeService.toggleTheme()"
+        [attr.aria-label]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
+        [title]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
+      >
+        @if (themeService.theme() === 'dark') { <rm-icon name="sun" [size]="15"></rm-icon> }
+        @else { <rm-icon name="moon" [size]="15"></rm-icon> }
+      </button>
+      @if (authService.isAuthenticated()) {
+        <a routerLink="/dashboard" class="rm-pricing-back">
+          <rm-icon name="arrow-left" [size]="14"></rm-icon>
+          <span>{{ i18n.t('nav.backApp') }}</span>
+        </a>
+      } @else {
+        <a routerLink="/login" class="rm-pricing-back">
+          <rm-icon name="arrow-left" [size]="14"></rm-icon>
+          <span>{{ i18n.t('nav.login') }}</span>
+        </a>
+      }
+    </div>
+  </header>
+
+  <div class="rm-pricing-hero rm-page-hero">
+    <span class="ai-pill">{{ i18n.t('pay.badge') }}</span>
+    <h1 class="rm-pricing-hero__title">{{ i18n.t('pay.heroShort') }}</h1>
+    <p class="rm-pricing-hero__subtitle">
+      {{ i18n.t('pay.subtitle') }}
+    </p>
+    <div class="rm-billing-toggle">
+      <button
+        type="button"
+        class="rm-toggle-option"
+        [class.active]="billing() === 'monthly'"
+        (click)="billing.set('monthly')"
+      >
+        {{ i18n.t('pay.monthly') }}
+      </button>
+      <button
+        type="button"
+        class="rm-toggle-option"
+        [class.active]="billing() === 'yearly'"
+        (click)="billing.set('yearly')"
+      >
+        {{ i18n.t('pay.yearly') }}
+        <span class="rm-save-tag">-20% OFF</span>
+      </button>
+    </div>
+  </div>
+  <div class="rm-plans-grid rm-page-grid">
+    @for (plan of userService.pricingPlans; track plan.id) {
+      <rm-card
+        class="rm-plan-card"
+        [glow]="!!plan.isPopular"
+        [lift]="false"
+        [class.rm-plan-card--popular]="plan.isPopular"
+        [class.rm-plan-card--current]="isCurrentPlan(plan.id)"
+      >
+        <div class="rm-plan-header">
+          <div class="rm-plan-title-wrap">
+            <h3 class="rm-plan-title">{{ plan.name }}</h3>
+            @if (plan.isPopular) {
+              <rm-badge type="pro" label="MAIS POPULAR"></rm-badge>
+            }
+          </div>
+          <p class="rm-plan-desc">{{ plan.description }}</p>
+        </div>
+        <div class="rm-plan-pricing-box">
+          @if (plan.priceMonthly === 0) {
+            <span class="rm-plan-free-text">{{ i18n.t('pay.freeWord') }}</span>
+            <span class="rm-plan-period">{{ i18n.t('pay.forever') }}</span>
+          } @else {
+            <div class="rm-price-amount">
+              <span class="rm-currency">R$</span>
+              <span class="rm-amount">
+                {{ billing() === 'yearly' ? plan.priceYearly : plan.priceMonthly }}
+              </span>
+              <span class="rm-period">{{ i18n.t('pay.perMonth') }}</span>
+            </div>
+            @if (billing() === 'yearly') {
+              <span class="rm-billing-note">{{ i18n.t('pay.billedYearly', { amount: plan.priceYearly * 12 }) }}</span>
+            }
+          }
+        </div>
+        <div class="rm-plan-cta">
+          @if (isCurrentPlan(plan.id)) {
+            <rm-button
+              variant="subtle"
+              size="lg"
+              [disabled]="true"
+            >
+              <i class="pi pi-check" aria-hidden="true"></i>
+              {{ i18n.t('pay.current') }}
+            </rm-button>
+          } @else if (plan.id === 'pro') {
+            <rm-button
+              variant="ai"
+              size="lg"
+              icon="pi-bolt"
+              [loading]="isProcessing() && planToSelect() === 'pro'"
+              (clicked)="selectPlan('pro')"
+            >
+              {{ plan.ctaLabel }}
+            </rm-button>
+          } @else if (plan.id === 'free') {
+            <rm-button
+              variant="outline"
+              size="lg"
+              (clicked)="selectPlan('free')"
+            >
+              {{ i18n.t('pay.backToFree') }}
+            </rm-button>
+          } @else {
+            <rm-button
+              variant="secondary"
+              size="lg"
+              (clicked)="selectPlan('team')"
+            >
+              {{ plan.ctaLabel }}
+            </rm-button>
+          }
+        </div>
+
+        <div class="rm-plan-divider"></div>
+        <div class="rm-plan-features">
+          <span class="rm-features-label">{{ i18n.t('pay.includes') }}</span>
+          <ul class="rm-features-items">
+            @for (feat of plan.features; track feat) {
+              <li class="rm-feature-item">
+                <i class="pi pi-check text-done" aria-hidden="true"></i>
+                <span>{{ feat }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </rm-card>
+    }
+  </div>
+  <div class="rm-comparison-section rm-page-section">
+    <h3 class="rm-comparison-title">{{ i18n.t('pay.compare') }}</h3>
+
+    <div class="rm-table-wrapper glass-panel">
+      <table class="rm-comparison-table">
+        <thead>
+          <tr>
+            <th class="col-feature">{{ i18n.t('pay.feature') }}</th>
+            <th class="col-plan">Starter</th>
+            <th class="col-plan text-pro">RemindMe Pro</th>
+            <th class="col-plan">Team Studio</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of comparisonRows; track row.feature) {
+            <tr>
+              <td>{{ i18n.t(row.feature) }}</td>
+              @for (cell of row.cells; track $index) {
+                @if (cell === true) {
+                  <td [class.text-done]="true" [class.font-bold]="true"><i class="pi pi-check" aria-hidden="true"></i></td>
+                } @else if (cell === false) {
+                  <td>—</td>
+                } @else {
+                  <td [class.text-pro]="row.pro === $index" [class.font-bold]="row.pro === $index">{{ i18n.t(cell) }}</td>
+                }
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="rm-faq-section rm-page-section">
+    <h3 class="rm-faq-title">{{ i18n.t('pay.faqTitle') }}</h3>
+    <div class="rm-faq-grid">
+      @for (faq of faqs; track faq.q) {
+        <div class="rm-faq-item">
+          <h4 class="rm-faq-q">{{ i18n.t(faq.q) }}</h4>
+          <p class="rm-faq-a">{{ i18n.t(faq.a) }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

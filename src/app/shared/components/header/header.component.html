@@ -1,0 +1,91 @@
+<header class="rm-header glass-panel">
+  <div class="rm-header__left">
+    <button
+      type="button"
+      class="rm-header__menu-btn"
+      (click)="toggleMenu.emit()"
+      [attr.aria-label]="i18n.t('nav.menu')"
+    >
+      <rm-icon name="menu" [size]="16"></rm-icon>
+    </button>
+
+    <a routerLink="/dashboard" class="rm-logo">
+      <div class="rm-logo__mark">
+        <img src="assets/favicon-plate-64.png" alt="" width="32" height="32" />
+      </div>
+      <span class="rm-logo__text">Remind<span class="rm-logo__accent">Me</span></span>
+    </a>
+
+    <div class="rm-header__status-badge">
+      @if (taskService.totalCount() > 0) {
+        <rm-badge
+          type="neutral"
+          [showDot]="true"
+          [label]="taskService.doneCount() + '/' + taskService.totalCount() + ' ' + i18n.t('nav.status') + ' (' + taskService.completionPercentage() + '%)'"
+        ></rm-badge>
+      }
+    </div>
+  </div>
+
+  <div class="rm-header__right">
+
+    <div class="rm-header__ai-quota" (click)="openAiPaywall()">
+      <span class="ai-pill">
+        <rm-icon name="layers" [size]="12"></rm-icon>
+        @if (userService.isPro()) {
+          {{ i18n.t('nav.ai.unlimited') }}
+        } @else {
+          {{ userService.aiRemaining() }} {{ i18n.t('nav.ai.remaining') }}
+        }
+      </span>
+    </div>
+    @if (!userService.isPro()) {
+      <rm-button
+        variant="ai"
+        size="sm"
+        icon="crown"
+        (clicked)="userService.openPaywall('Upgrade para desbloquear todos os superpoderes de IA.')"
+      >
+        {{ i18n.t('nav.upgrade') }}
+      </rm-button>
+    }
+    <rm-lang-switcher></rm-lang-switcher>
+    <button
+      type="button"
+      class="rm-header__action-btn"
+      (click)="themeService.toggleTheme()"
+      [attr.aria-label]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
+      [title]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
+    >
+      @if (themeService.theme() === 'dark') {
+        <rm-icon name="sun" [size]="15"></rm-icon>
+      } @else {
+        <rm-icon name="moon" [size]="15"></rm-icon>
+      }
+    </button>
+    <div class="rm-user-pill" [title]="userService.currentUser().name">
+      <rm-avatar
+        [src]="userService.currentUser().avatarUrl"
+        [name]="userService.currentUser().name"
+        size="sm"
+        [alt]="userService.currentUser().name"
+      ></rm-avatar>
+      <div class="rm-user-pill__info">
+        <span class="rm-user-pill__name">{{ userService.currentUser().name }}</span>
+        <rm-badge
+          [type]="userService.isPro() ? 'pro' : 'neutral'"
+          [label]="userService.currentUser().plan.toUpperCase()"
+        ></rm-badge>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="rm-header__action-btn rm-header__action-btn--logout"
+      (click)="authService.logout()"
+      [title]="i18n.t('nav.logout')"
+      [attr.aria-label]="i18n.t('nav.logout')"
+    >
+      <rm-icon name="log-out" [size]="15"></rm-icon>
+    </button>
+  </div>
+</header>

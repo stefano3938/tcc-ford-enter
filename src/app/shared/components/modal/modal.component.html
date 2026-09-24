@@ -1,0 +1,44 @@
+@if (isOpen()) {
+  <div
+    class="rm-modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="title() ? 'modal-title' : null"
+    (click)="onBackdropClick($event)"
+    (keydown)="onKeydown($event)"
+  >
+    <div
+      class="rm-modal-box"
+      #modalBox
+      [style.max-width]="maxWidth()"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="rm-modal-header">
+        <div class="rm-modal-titles">
+          @if (title()) {
+            <h3 id="modal-title" class="rm-modal-title">{{ title() }}</h3>
+          }
+          @if (subtitle()) {
+            <p class="rm-modal-subtitle">{{ subtitle() }}</p>
+          }
+        </div>
+
+        <button
+          type="button"
+          class="rm-modal-close"
+          (click)="close()"
+          aria-label="Fechar janela"
+        >
+          <rm-icon name="x" [size]="14"></rm-icon>
+        </button>
+      </div>
+      <div class="rm-modal-body">
+        <ng-content></ng-content>
+      </div>
+      <div class="rm-modal-footer">
+        <ng-content select="[modal-footer]"></ng-content>
+      </div>
+    </div>
+  </div>
+}

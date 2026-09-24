@@ -1,0 +1,20 @@
+<button
+  [type]="type()"
+  [disabled]="disabled() || loading()"
+  [attr.aria-busy]="loading()"
+  [attr.aria-disabled]="disabled() || loading()"
+  [class]="'rm-btn rm-btn--' + variant() + ' rm-btn--' + size()"
+  [class.rm-btn--loading]="loading()"
+  [class.rm-btn--icon-only]="iconOnly()"
+  (click)="onClick($event)"
+>
+  @if (loading()) {
+    <span class="rm-spinner" aria-hidden="true"></span>
+  } @else if (icon()) {
+    <rm-icon [name]="icon()!" [size]="iconSize()" aria-hidden="true"></rm-icon>
+  }
+
+  <span class="rm-btn__content">
+    <ng-content></ng-content>
+  </span>
+</button>

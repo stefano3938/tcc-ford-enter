@@ -4,60 +4,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   selector: 'rm-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div
-      class="rm-card"
-      [class.rm-card--interactive]="interactive()"
-      [class.rm-card--glass]="glass()"
-      [class.rm-card--glow]="glow()"
-      [class.rm-card--flat]="!lift()"
-    >
-      <ng-content select="[card-header]"></ng-content>
-      <div class="rm-card__body">
-        <ng-content></ng-content>
-      </div>
-      <ng-content select="[card-footer]"></ng-content>
-    </div>
-  `,
-  styles: [`
-    :host { display: block; }
-
-    .rm-card {
-      background: var(--rm-bg-card);
-      border: 1px solid var(--rm-border-base);
-      border-radius: var(--rm-radius-lg);
-      padding: 18px 20px;
-      box-shadow: var(--rm-shadow-card);
-      position: relative;
-      overflow: hidden;
-      transition: border-color var(--rm-transition-base),
-        box-shadow var(--rm-transition-base),
-        transform var(--rm-transition-base);
-    }
-
-    .rm-card--interactive { cursor: pointer; }
-
-    .rm-card--glass {
-      background: var(--rm-bg-glass);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-    }
-
-    .rm-card--glow {
-      border-color: var(--rm-border-glow);
-      box-shadow: 0 0 30px -4px rgba(99, 102, 241, 0.25), 0 0 0 1px var(--rm-border-glow);
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .rm-card--interactive:not(.rm-card--flat):hover {
-        border-color: var(--rm-border-strong);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--rm-border-strong);
-      }
-    }
-
-    .rm-card__body { display: flex; flex-direction: column; gap: 12px; }
-  `]
+  templateUrl: './card.component.html',
+  styleUrl: './card.component.css'
 })
 export class CardComponent {
   readonly interactive = input<boolean>(false);

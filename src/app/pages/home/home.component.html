@@ -1,0 +1,220 @@
+<div class="rm-home-container">
+  <header class="rm-home-nav glass-panel">
+    <div class="rm-home-nav__inner">
+      <div class="rm-home-brand">
+        <div class="rm-home-logo-mark">
+          <img src="assets/favicon-plate-64.png" alt="" width="32" height="32" />
+        </div>
+        <span class="rm-home-logo-title">Remind<span class="text-accent">Me</span></span>
+      </div>
+      <nav class="rm-home-links" aria-label="Principal">
+        <a href="#recursos" class="rm-home-link">{{ i18n.t('home.nav.features') }}</a>
+        <a href="#como-funciona" class="rm-home-link">{{ i18n.t('home.nav.how') }}</a>
+        <a routerLink="/planos" class="rm-home-link">{{ i18n.t('home.nav.plans') }}</a>
+      </nav>
+      <div class="rm-home-actions">
+        <rm-lang-switcher></rm-lang-switcher>
+        <button type="button" class="rm-home-theme-btn" (click)="themeService.toggleTheme()" [attr.aria-label]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')" [title]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')">
+          @if (themeService.theme() === 'dark') {
+            <rm-icon name="sun" [size]="16"></rm-icon>
+          } @else {
+            <rm-icon name="moon" [size]="16"></rm-icon>
+          }
+        </button>
+        @if (authService.isAuthenticated()) {
+          <rm-button variant="subtle" size="sm" (clicked)="goToApp()">{{ i18n.t('home.nav.dashboard') }}</rm-button>
+        } @else {
+          <rm-button variant="subtle" size="sm" (clicked)="goToLogin()">{{ i18n.t('home.nav.enter') }}</rm-button>
+        }
+        <rm-button variant="primary" size="sm" icon="plus" (clicked)="onStartNow()"><span class="rm-home-nav-cta-text">{{ i18n.t('home.nav.start') }}</span></rm-button>
+        <button type="button" class="rm-home-menu-btn" (click)="isMobileMenuOpen.set(!isMobileMenuOpen())" aria-label="Abrir menu">
+          <rm-icon [name]="isMobileMenuOpen() ? 'x' : 'menu'" [size]="18"></rm-icon>
+        </button>
+      </div>
+    </div>
+    @if (isMobileMenuOpen()) {
+      <div class="rm-home-mobile-menu glass-panel">
+        <a href="#recursos" class="rm-home-mobile-link" (click)="isMobileMenuOpen.set(false)">{{ i18n.t('home.nav.features') }}</a>
+        <a href="#como-funciona" class="rm-home-mobile-link" (click)="isMobileMenuOpen.set(false)">{{ i18n.t('home.nav.how') }}</a>
+        <a routerLink="/planos" class="rm-home-mobile-link" (click)="isMobileMenuOpen.set(false)">{{ i18n.t('home.nav.plans') }}</a>
+        <div class="rm-home-mobile-actions">
+          @if (authService.isAuthenticated()) {
+            <rm-button variant="primary" size="md" (clicked)="goToApp(); isMobileMenuOpen.set(false)">{{ i18n.t('home.nav.dashboard') }}</rm-button>
+          } @else {
+            <rm-button variant="subtle" size="md" (clicked)="goToLogin(); isMobileMenuOpen.set(false)">{{ i18n.t('home.nav.enter') }}</rm-button>
+            <rm-button variant="primary" size="md" (clicked)="onStartNow(); isMobileMenuOpen.set(false)">{{ i18n.t('home.nav.start') }}</rm-button>
+          }
+        </div>
+      </div>
+    }
+  </header>
+  <section class="rm-hero-section rm-page">
+    <div class="rm-hero-bg" aria-hidden="true">
+      <div class="rm-hero-orb"></div>
+      <div class="rm-hero-orb rm-hero-orb--2"></div>
+      <div class="rm-hero-grid"></div>
+    </div>
+
+    <h1 class="rm-hero-title">
+      <span class="rm-typewriter-line">{{ typedLine1() }}</span><span class="rm-typewriter-cursor" [class.done]="isTypingDone() || isNarrow()"></span>
+      <br />
+      <span class="rm-typewriter-line rm-typewriter-line--accent">{{ typedLine2() }}</span><span class="rm-typewriter-cursor" [class.done]="isTypingDone() || isNarrow()"></span>
+    </h1>
+
+    <p class="rm-hero-subtitle">{{ i18n.t('home.hero.sub') }}</p>
+
+    <div class="rm-hero-cta-group">
+      <rm-button variant="primary" size="lg" icon="arrow-right" (clicked)="onStartNow()">{{ i18n.t('home.hero.cta') }}</rm-button>
+      <rm-button variant="secondary" size="lg" icon="eye" (clicked)="goToLogin()">{{ i18n.t('home.hero.cta2') }}</rm-button>
+    </div>
+
+    <div id="recursos" class="rm-bento-grid rm-bento-grid--metrics">
+      <div class="rm-bento-card rm-bento-card--metric">
+        <span class="rm-metric-kicker">{{ i18n.t('home.metric.org') }}</span>
+        <h4 class="rm-bento-title">{{ i18n.t('home.metric.org.title') }}</h4>
+        <p class="rm-bento-desc">{{ i18n.t('home.metric.org.body') }}</p>
+      </div>
+      <div class="rm-bento-card rm-bento-card--metric">
+        <span class="rm-metric-kicker">{{ i18n.t('home.metric.focus') }}</span>
+        <h4 class="rm-bento-title">{{ i18n.t('home.metric.focus.title') }}</h4>
+        <p class="rm-bento-desc">{{ i18n.t('home.metric.focus.body') }}</p>
+      </div>
+      <div class="rm-bento-card rm-bento-card--metric">
+        <span class="rm-metric-kicker">{{ i18n.t('home.metric.ai') }}</span>
+        <h4 class="rm-bento-title">{{ i18n.t('home.metric.ai.title') }}</h4>
+        <p class="rm-bento-desc">{{ i18n.t('home.metric.ai.body') }}</p>
+      </div>
+      <div class="rm-bento-card rm-bento-card--metric">
+        <span class="rm-metric-kicker">{{ i18n.t('home.metric.scale') }}</span>
+        <h4 class="rm-bento-title">{{ i18n.t('home.metric.scale.title') }}</h4>
+        <p class="rm-bento-desc">{{ i18n.t('home.metric.scale.body') }}</p>
+      </div>
+    </div>
+  </section>
+  <section class="rm-preview-section rm-page">
+    <div class="rm-mockup-frame glass-panel">
+      <div class="rm-mockup-header">
+        <div class="rm-mockup-dots">
+          <span class="rm-dot rm-dot--red"></span><span class="rm-dot rm-dot--yellow"></span><span class="rm-dot rm-dot--green"></span>
+        </div>
+        <div class="rm-mockup-url"><rm-icon name="lock" [size]="12"></rm-icon><span>app.remindme.com/dashboard</span><span class="rm-mockup-live"><span class="rm-live-dot"></span> {{ i18n.t('home.preview.live') }}</span></div>
+        <div class="rm-mockup-actions"><span class="rm-mockup-tabs"><span class="active">{{ i18n.t('dash.board') }}</span><span>{{ i18n.t('dash.list') }}</span></span><rm-badge type="neutral" [label]="i18n.t('home.preview.overview')"></rm-badge></div>
+      </div>
+
+      <div class="rm-mockup-toolbar">
+        <div class="rm-mockup-search"><rm-icon name="search" [size]="13"></rm-icon><span>{{ i18n.t('home.preview.search') }}</span></div>
+        <div class="rm-mockup-filters"><span class="rm-mockup-filter active">{{ i18n.t('dash.filter.all') }}</span><span class="rm-mockup-filter">{{ i18n.t('dash.filter.urgent') }}</span><span class="rm-mockup-filter">{{ i18n.t('dash.filter.progress') }}</span></div>
+      </div>
+
+      <div class="rm-mockup-body">
+        <div class="rm-mockup-stats-row">
+          <div class="rm-mini-card rm-mini-card--progress"><div class="rm-mini-card__top"><span class="rm-mini-card__label">{{ i18n.t('home.preview.production') }}</span><span class="rm-mini-card__pct">83%</span></div><div class="rm-mini-progress"><span style="width: 83%"></span></div><span class="rm-mini-card__val">12 / 14 <span class="rm-lower">{{ i18n.t('dash.done') }}</span></span></div>
+          <div class="rm-mini-card rm-mini-card--urgent"><span class="rm-mini-card__label">{{ i18n.t('home.preview.urgent') }}</span><div class="rm-mini-urgent-row"><span class="rm-mini-card__val text-urgent">2 {{ i18n.t('dash.filter.urgent') }}</span><span class="rm-mini-badge-urgent">{{ i18n.t('home.preview.today') }}</span></div><span class="rm-mini-card__sub">{{ i18n.t('home.preview.dueToday') }}</span></div>
+          <div class="rm-mini-card"><span class="rm-mini-card__label">{{ i18n.t('ai.title') }}</span><span class="rm-mini-card__val text-accent">3 {{ i18n.t('home.preview.suggestions') }}</span><span class="rm-mini-card__sub">{{ i18n.t('home.preview.ready') }}</span></div>
+        </div>
+
+        <div class="rm-mockup-kanban-preview">
+          <div class="rm-kanban-col-preview">
+            <div class="rm-preview-col-title"><rm-icon name="list" [size]="14"></rm-icon><span>A Fazer</span><span class="rm-col-count">3</span></div>
+            <div class="rm-preview-item" [class.rm-preview-item--demo]="demoIndex() === 0"><div class="rm-preview-item__top"><span class="rm-preview-priority rm-preview-priority--high">Alta</span><span class="rm-preview-time">30 min</span></div><span class="rm-preview-item__title">Revisar proposta comercial Q4</span><p class="rm-preview-item__desc">Validar escopo e margem com financeiro</p><div class="rm-preview-item__meta"><span class="rm-tag-pill">Planejamento</span><span class="rm-tag-pill">Q4</span><span class="rm-avatar-pill">SD</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item" [class.rm-preview-item--demo]="demoIndex() === 1"><div class="rm-preview-item__top"><span class="rm-preview-priority rm-preview-priority--medium">Média</span><span class="rm-preview-time">45 min</span></div><span class="rm-preview-item__title">Definir escopo do MVP de onboarding</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Produto</span><span class="rm-tag-pill">MVP</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item rm-preview-item--muted" [class.rm-preview-item--demo]="demoIndex() === 2"><span class="rm-preview-item__title">Agendar entrevistas com 5 usuários</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Pesquisa</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+          </div>
+
+          <div class="rm-kanban-col-preview">
+            <div class="rm-preview-col-title"><rm-icon name="clock" [size]="14"></rm-icon><span>{{ i18n.t('dash.doing') }}</span><span class="rm-col-count">3</span></div>
+            <div class="rm-preview-item border-accent" [class.rm-preview-item--demo]="demoIndex() === 3"><div class="rm-preview-item__top"><span class="rm-preview-priority rm-preview-priority--urgent">Urgente</span><span class="rm-preview-time">45 min</span></div><span class="rm-preview-item__title">Refinar fluxo de onboarding</span><p class="rm-preview-item__desc">Protótipo no Figma com estados vazios</p><div class="rm-preview-item__meta"><span class="rm-tag-pill">Produto</span><span class="rm-tag-pill">UX</span><span class="rm-avatar-pill">AV</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item" [class.rm-preview-item--demo]="demoIndex() === 4"><span class="rm-preview-item__title">Sincronizar design tokens</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Design System</span><span class="rm-preview-time">20 min</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item" [class.rm-preview-item--demo]="demoIndex() === 5"><span class="rm-preview-item__title">Validar acessibilidade dos modais</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">#A11y</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+          </div>
+
+          <div class="rm-kanban-col-preview">
+            <div class="rm-preview-col-title"><rm-icon name="check-circle" [size]="14"></rm-icon><span>{{ i18n.t('dash.done') }}</span><span class="rm-col-count">4</span></div>
+            <div class="rm-preview-item done" [class.rm-preview-item--demo]="demoIndex() === 6"><span class="rm-preview-item__title">Mapear jornada do usuário</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Pesquisa</span><span class="rm-preview-check"><rm-icon name="check-circle" [size]="12"></rm-icon> {{ i18n.t('home.preview.yesterday') }}</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item done" [class.rm-preview-item--demo]="demoIndex() === 7"><span class="rm-preview-item__title">Entrevistar 5 usuários beta</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Entrevista</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item done" [class.rm-preview-item--demo]="demoIndex() === 8"><span class="rm-preview-item__title">Criar parser de datas</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Automação</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="rm-carousel-section rm-page">
+    <div class="rm-carousel-header">
+      <div>
+        <span class="rm-hero-badge rm-hero-badge--upper">{{ i18n.t('home.nav.how') }}</span>
+        <h2 class="rm-carousel-title">{{ i18n.t('home.modes.title') }}</h2>
+        <p class="rm-carousel-subtitle">{{ i18n.t('home.modes.sub') }}</p>
+      </div>
+      <div class="rm-carousel-controls">
+        <button type="button" class="rm-carousel-arrow" (click)="scrollCarousel(-1)" [attr.aria-label]="i18n.t('home.modes.prev')"><rm-icon name="chevron-left" [size]="18"></rm-icon></button>
+        <button type="button" class="rm-carousel-arrow" (click)="scrollCarousel(1)" [attr.aria-label]="i18n.t('home.modes.next')"><rm-icon name="chevron-right" [size]="18"></rm-icon></button>
+      </div>
+    </div>
+
+    <div class="rm-carousel-viewport" #carouselViewport (scroll)="onCarouselScroll()">
+      <div class="rm-carousel-track">
+        @for (item of carouselItems(); track item.title) {
+          <div class="rm-carousel-slide">
+            <div class="rm-carousel-card glass-panel">
+              <div class="rm-carousel-card__icon"><rm-icon [name]="item.icon" [size]="22"></rm-icon></div>
+              <span class="rm-carousel-card__label">{{ item.label }}</span>
+              <h3 class="rm-carousel-card__title">{{ item.title }}</h3>
+              <p class="rm-carousel-card__desc">{{ item.desc }}</p>
+              <div class="rm-carousel-card__preview">
+                @if (item.label === 'MODO KANBAN') {
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#f97316"></span><span>Revisar proposta Q4</span><span class="rm-tag-mini">#Planejamento</span></div>
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#38bdf8"></span><span>Refinar fluxo onboarding</span><span class="rm-tag-mini">#Produto</span></div>
+                  <div class="rm-preview-progress"><span style="width: 68%"></span></div>
+                } @else if (item.label === 'ASSISTENTE') {
+                  <div class="rm-chat-mini"><span class="rm-chat-mini--user">Priorizar meu dia</span><span class="rm-chat-mini--ai">Sugeri 3 tarefas urgentes →</span></div>
+                  <div class="rm-preview-row"><span class="rm-dot-mini"></span><span>Bloquear 90 min de foco</span><span class="rm-tag-mini">Urgente</span></div>
+                } @else if (item.label === 'BANCO DE IDEIAS') {
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#8b5cf6"></span><span>Smart Summarizer</span><span class="rm-tag-mini">#IA</span></div>
+                  <div class="rm-preview-tags"><span>#Automação</span><span>#Sprint-1</span><span>#Pesquisa</span></div>
+                } @else if (item.label === 'FOCO') {
+                  <div class="rm-preview-timer"><span class="rm-timer-ring"></span><span class="rm-timer-text">25:00</span><span class="rm-timer-label">Pomodoro • Tarefa atual</span></div>
+                } @else if (item.label === 'PROGRESSO') {
+                  <div class="rm-preview-stats"><span class="rm-stat-big">83%</span><span class="rm-stat-label">concluídas</span><div class="rm-preview-progress"><span style="width: 83%"></span></div><span class="rm-stat-sub">12 de 14 • 2 urgentes</span></div>
+                } @else {
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#10b981"></span><span>Dados no dispositivo</span><span class="rm-tag-mini">Seguro</span></div>
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#64748b"></span><span>Acesso offline</span><span class="rm-tag-mini">Local</span></div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="rm-carousel-dots">
+      @for (page of carouselPages; track page; let i = $index) {
+        <button type="button" class="rm-carousel-dot" [class.active]="carouselPage() === i" (click)="scrollToPage(i)" [attr.aria-label]="'Ir para página ' + (i+1)"></button>
+      }
+    </div>
+  </section>
+  <section id="como-funciona" class="rm-architecture-section rm-page">
+    <div class="rm-architecture-card glass-panel">
+      <div class="rm-arch-header">
+        <div><span class="rm-hero-badge rm-hero-badge--upper">{{ i18n.t('home.how.badge') }}</span><h2 class="rm-arch-title">{{ i18n.t('home.how.title') }}</h2></div>
+        <rm-button variant="outline" size="sm" icon="arrow-right" (clicked)="onStartNow()">{{ i18n.t('home.how.cta') }}</rm-button>
+      </div>
+      <div class="rm-arch-grid">
+        <div class="rm-arch-col"><h4 class="rm-arch-col-title"><rm-icon name="lightbulb" [size]="16"></rm-icon><span>{{ i18n.t('home.how.1.title') }}</span></h4><p class="rm-arch-text">{{ i18n.t('home.how.1.body') }}</p></div>
+        <div class="rm-arch-col"><h4 class="rm-arch-col-title"><rm-icon name="kanban" [size]="16"></rm-icon><span>{{ i18n.t('home.how.2.title') }}</span></h4><p class="rm-arch-text">{{ i18n.t('home.how.2.body') }}</p></div>
+        <div class="rm-arch-col"><h4 class="rm-arch-col-title"><rm-icon name="message-square" [size]="16"></rm-icon><span>{{ i18n.t('home.how.3.title') }}</span></h4><p class="rm-arch-text">{{ i18n.t('home.how.3.body') }}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="rm-home-footer">
+    <div class="rm-home-footer__inner">
+      <div class="rm-home-footer__brand"><div class="rm-home-logo-mark small"><img src="assets/favicon-plate-64.png" alt="" width="24" height="24" /></div><span>RemindMe</span></div>
+      <div class="rm-home-footer__links">
+        <a routerLink="/privacidade" class="rm-home-footer__link">{{ i18n.t('nav.privacy') }}</a>
+        <a routerLink="/privacidade" class="rm-home-footer__link">{{ i18n.t('nav.terms') }}</a>
+        <a routerLink="/planos" class="rm-home-footer__link">{{ i18n.t('home.nav.plans') }}</a>
+      </div>
+      <p class="rm-home-footer__rights">&copy; 2026 RemindMe &mdash; {{ i18n.t('home.footer.rights') }}</p>
+    </div>
+  </footer>
+</div>

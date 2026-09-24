@@ -1,0 +1,13 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.rm-vector-icon {
+  display: block;
+  flex-shrink: 0;
+  transition: stroke var(--rm-transition-fast);
+}
