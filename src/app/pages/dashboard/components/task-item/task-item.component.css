@@ -1,56 +1,55 @@
 .rm-task-item {
-  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  padding: 14px 12px 14px 16px;
+  padding: 14px 16px;
+  background: var(--rm-bg-card);
   border: 1px solid var(--rm-border-base);
   border-radius: var(--rm-radius-md);
-  background: var(--rm-bg-card);
-  transition: border-color var(--rm-transition-fast), box-shadow var(--rm-transition-fast);
+  transition: all var(--rm-transition-fast);
+  position: relative;
+
+  &:hover {
+    border-color: var(--rm-border-strong);
+    background: var(--rm-bg-elevated);
+    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.08);
+  }
 }
 
-.rm-task-item--done .rm-task-title {
-  text-decoration: line-through;
-  color: var(--rm-text-muted);
+.rm-task-item--urgent {
+  border-left: 3px solid var(--rm-urgent);
 }
 
-.rm-task-item--done .rm-task-desc,
-.rm-task-item--done .rm-task-meta-row {
-  opacity: 0.6;
+.rm-task-item--done {
+  opacity: 0.65;
+  .rm-task-title {
+    text-decoration: line-through;
+    color: var(--rm-text-muted);
+  }
 }
-
-/* ---------- Three-way checkbox: empty, dot (in progress), check (done) ---------- */
 
 .rm-task-checkbox {
-  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--rm-border-strong);
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 2px;
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  margin-top: 1px;
-  border: 2px solid var(--rm-border-strong);
-  border-radius: 50%;
+  transition: all var(--rm-transition-fast);
+  background: transparent;
   color: #ffffff;
-  transition: border-color var(--rm-transition-fast), background var(--rm-transition-fast), transform var(--rm-transition-fast);
 
-  /* 22px visual, 44px target */
-  &::after {
-    content: '';
-    position: absolute;
-    inset: -11px;
-  }
-
-  &:active {
-    transform: scale(0.88);
+  &:hover {
+    border-color: var(--rm-accent);
   }
 }
 
 .rm-task-checkbox--checked {
-  border-color: var(--rm-done);
   background: var(--rm-done);
+  border-color: var(--rm-done);
 }
 
 .rm-task-checkbox--in-progress {
@@ -58,20 +57,17 @@
 }
 
 .rm-task-checkbox__dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--rm-in-progress);
 }
 
-/* ---------- Content ---------- */
-
 .rm-task-main {
-  display: flex;
   flex: 1;
+  display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 0;
   cursor: pointer;
 }
 
@@ -79,151 +75,94 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 12px;
   flex-wrap: wrap;
-  gap: 8px 12px;
 }
 
 .rm-task-title {
-  min-width: 0;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
+  color: var(--rm-text-primary);
   line-height: 1.35;
   letter-spacing: -0.01em;
-  color: var(--rm-text-primary);
 }
 
 .rm-task-badges {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .rm-task-desc {
-  font-size: 13.5px;
-  line-height: 1.5;
+  font-size: 12.5px;
   color: var(--rm-text-secondary);
+  line-height: 1.4;
 }
 
 .rm-task-meta-row {
   display: flex;
   align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
-  gap: 6px 14px;
   margin-top: 2px;
 }
 
 .rm-task-meta {
+  font-size: 11.5px;
+  color: var(--rm-text-muted);
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 12.5px;
-  font-variant-numeric: tabular-nums;
-  color: var(--rm-text-muted);
 }
 
 .rm-task-meta--date {
   color: var(--rm-text-secondary);
 }
 
-.rm-task-meta--overdue {
-  color: var(--rm-urgent-text);
-  font-weight: 600;
-}
-
 .rm-task-tags {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
 }
 
 .rm-task-tag {
-  padding: 1px 7px;
-  border-radius: 6px;
-  background: var(--rm-bg-hover);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--rm-text-muted);
+  background: var(--rm-bg-hover);
+  padding: 1px 6px;
+  border-radius: var(--rm-radius-sm);
 }
-
-/* ---------- Actions: 32px visual, 44px target ---------- */
 
 .rm-task-actions {
   display: flex;
   align-items: center;
-  gap: 2px;
-  margin-top: -5px;
+  gap: 4px;
+  opacity: 0.7;
+  transition: opacity var(--rm-transition-fast);
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .rm-task-action-btn {
-  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--rm-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--rm-radius-sm);
   color: var(--rm-text-muted);
-  transition: background var(--rm-transition-fast), color var(--rm-transition-fast);
+  transition: all var(--rm-transition-fast);
 
-  &::after {
-    content: '';
-    position: absolute;
-    inset: -6px -2px;
-  }
-
-  &:active {
-    background: var(--rm-bg-active);
-    transform: scale(0.94);
-  }
-}
-
-.rm-task-action-btn--delete:active {
-  background: var(--rm-urgent-bg);
-  color: var(--rm-urgent-text);
-}
-
-/* ---------- Focus and hover ---------- */
-
-.rm-task-checkbox:focus-visible,
-.rm-task-action-btn:focus-visible {
-  outline: 2px solid var(--rm-accent);
-  outline-offset: 2px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .rm-task-item:hover {
-    border-color: var(--rm-border-strong);
-    box-shadow: 0 8px 20px -14px rgba(10, 22, 48, 0.3);
-  }
-
-  .rm-task-checkbox:hover {
-    border-color: var(--rm-accent);
-  }
-
-  .rm-task-checkbox--checked:hover {
-    border-color: var(--rm-done);
-  }
-
-  .rm-task-action-btn:hover {
+  &:hover {
     background: var(--rm-bg-hover);
     color: var(--rm-text-primary);
   }
-
-  .rm-task-action-btn--delete:hover {
-    background: var(--rm-urgent-bg);
-    color: var(--rm-urgent-text);
-  }
 }
 
-/* Narrow: actions stay top-right, badges wrap under the title */
-@media (max-width: 600px) {
-  .rm-task-item {
-    gap: 12px;
-    padding: 12px 8px 12px 12px;
-  }
-
-  .rm-task-header-row {
-    flex-direction: column;
-  }
+.rm-task-action-btn--delete:hover {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--rm-urgent);
 }

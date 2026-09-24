@@ -1,21 +1,25 @@
-<div class="rm-task-item" [class.rm-task-item--done]="task().status === 'done'">
+<div
+  class="rm-task-item"
+  [class.rm-task-item--done]="task().status === 'done'"
+  [class.rm-task-item--urgent]="task().priority === 'urgent' && task().status !== 'done'"
+>
+
   <button
     type="button"
     class="rm-task-checkbox"
     role="checkbox"
-    [attr.aria-checked]="ariaChecked()"
+    [attr.aria-checked]="task().status === 'done'"
     [attr.aria-label]="i18n.t('task.toggle', { title: task().title })"
     [class.rm-task-checkbox--checked]="task().status === 'done'"
     [class.rm-task-checkbox--in-progress]="task().status === 'in-progress'"
     (click)="taskService.toggleDone(task().id)"
   >
     @if (task().status === 'done') {
-      <rm-icon name="check" [size]="12" [strokeWidth]="3" aria-hidden="true"></rm-icon>
+      <rm-icon name="check" [size]="12"></rm-icon>
     } @else if (task().status === 'in-progress') {
       <span class="rm-task-checkbox__dot" aria-hidden="true"></span>
     }
   </button>
-
   <div class="rm-task-main" (click)="edit.emit(task())">
     <div class="rm-task-header-row">
       <h4 class="rm-task-title">{{ task().title }}</h4>
@@ -25,6 +29,7 @@
           <rm-badge type="ai" icon="sparkles" label="IA"></rm-badge>
         }
         <rm-badge [type]="task().priority" [label]="i18n.t('priority.' + task().priority)"></rm-badge>
+        <rm-badge [type]="task().status" [label]="statusLabel(task().status)"></rm-badge>
       </div>
     </div>
 
@@ -33,20 +38,19 @@
     }
 
     <div class="rm-task-meta-row">
-      @if (due(); as due) {
-        <span class="rm-task-meta rm-task-meta--date" [class.rm-task-meta--overdue]="due.overdue">
-          <rm-icon name="calendar" [size]="12" aria-hidden="true"></rm-icon>
-          <time [attr.datetime]="due.iso">{{ due.label }}</time>
+      @if (task().dueDate) {
+        <span class="rm-task-meta rm-task-meta--date">
+          <rm-icon name="calendar" [size]="12"></rm-icon>
+          <span>{{ task().dueDate }}</span>
         </span>
       }
 
       @if (task().estimatedMinutes) {
         <span class="rm-task-meta">
-          <rm-icon name="clock" [size]="12" aria-hidden="true"></rm-icon>
+          <rm-icon name="clock" [size]="12"></rm-icon>
           <span>{{ task().estimatedMinutes }} min</span>
         </span>
       }
-
       <div class="rm-task-tags">
         @for (tag of task().tags; track tag) {
           <span class="rm-task-tag">{{ tag }}</span>
@@ -54,7 +58,6 @@
       </div>
     </div>
   </div>
-
   <div class="rm-task-actions">
     <button
       type="button"
@@ -63,7 +66,7 @@
       [title]="i18n.t('task.edit')"
       [attr.aria-label]="i18n.t('task.edit')"
     >
-      <rm-icon name="edit" [size]="14" aria-hidden="true"></rm-icon>
+      <rm-icon name="edit" [size]="13"></rm-icon>
     </button>
 
     <button
@@ -73,7 +76,7 @@
       [title]="i18n.t('task.delete')"
       [attr.aria-label]="i18n.t('task.delete')"
     >
-      <rm-icon name="trash" [size]="14" aria-hidden="true"></rm-icon>
+      <rm-icon name="trash" [size]="13"></rm-icon>
     </button>
   </div>
 </div>

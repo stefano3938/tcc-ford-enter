@@ -1,34 +1,67 @@
-<dl class="rm-stats">
-  <div class="rm-stat">
-    <dt class="rm-stat__label">{{ i18n.t('stats.total') }}</dt>
-    <dd class="rm-stat__value rm-num">{{ taskService.completionPercentage() }}%</dd>
-    <dd class="rm-stat__bar" aria-hidden="true">
-      <span class="rm-stat__fill" [style.width.%]="taskService.completionPercentage()"></span>
-    </dd>
-    <dd class="rm-stat__caption">{{ i18n.t('stats.items', { count: taskService.totalCount() }) }}</dd>
-  </div>
+<div class="rm-stats-grid">
 
-  <div class="rm-stat">
-    <dt class="rm-stat__label">{{ i18n.t('stats.urgent') }}</dt>
-    <dd class="rm-stat__value rm-num" [class.rm-stat__value--urgent]="taskService.urgentCount() > 0">{{ taskService.urgentCount() }}</dd>
-    <dd class="rm-stat__caption">
-      @if (taskService.urgentCount() > 0) {
-        {{ i18n.t('stats.urgent.hint') }}
-      } @else {
-        {{ i18n.t('stats.urgent.none') }}
-      }
-    </dd>
-  </div>
-
-  <div class="rm-stat">
-    <dt class="rm-stat__label">{{ i18n.t('stats.doing') }}</dt>
-    <dd class="rm-stat__value rm-num">{{ taskService.inProgressCount() }}</dd>
-    <dd class="rm-stat__caption">{{ i18n.t('stats.doing.queue', { count: taskService.todoCount() }) }}</dd>
-  </div>
-
-  <div class="rm-stat">
-    <dt class="rm-stat__label">{{ i18n.t('dash.tab.ideas') }}</dt>
-    <dd class="rm-stat__value rm-num">{{ ideaService.totalIdeas() }}</dd>
-    <dd class="rm-stat__caption">{{ i18n.t('stats.ideas.expanded', { count: ideaService.expandedCount() }) }}</dd>
-  </div>
-</dl>
+  <rm-card class="rm-stat-card">
+    <div class="rm-stat-card__inner">
+      <div class="rm-stat-card__header">
+        <span class="rm-stat-card__label">{{ i18n.t('stats.total') }}</span>
+        <rm-badge type="neutral" [label]="i18n.t('stats.items', { count: taskService.totalCount() })"></rm-badge>
+      </div>
+      <div class="rm-stat-card__value-row">
+        <span class="rm-stat-card__value">{{ taskService.completionPercentage() }}%</span>
+        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.total.sub') }}</span>
+      </div>
+      <div class="rm-stat-card__bar">
+        <div class="rm-stat-card__fill" [style.width.%]="taskService.completionPercentage()"></div>
+      </div>
+    </div>
+  </rm-card>
+  <rm-card class="rm-stat-card" [glow]="taskService.urgentCount() > 0">
+    <div class="rm-stat-card__inner">
+      <div class="rm-stat-card__header">
+        <span class="rm-stat-card__label">{{ i18n.t('stats.urgent') }}</span>
+        <rm-badge type="urgent" [label]="i18n.t('priority.urgent')"></rm-badge>
+      </div>
+      <div class="rm-stat-card__value-row">
+        <span class="rm-stat-card__value text-urgent">{{ taskService.urgentCount() }}</span>
+        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.urgent.sub') }}</span>
+      </div>
+      <p class="rm-stat-card__caption">
+        @if (taskService.urgentCount() > 0) {
+          {{ i18n.t('stats.urgent.hint') }}
+        } @else {
+          {{ i18n.t('stats.urgent.none') }}
+        }
+      </p>
+    </div>
+  </rm-card>
+  <rm-card class="rm-stat-card">
+    <div class="rm-stat-card__inner">
+      <div class="rm-stat-card__header">
+        <span class="rm-stat-card__label">{{ i18n.t('stats.doing') }}</span>
+        <rm-badge type="in-progress" [label]="i18n.t('dash.doing')"></rm-badge>
+      </div>
+      <div class="rm-stat-card__value-row">
+        <span class="rm-stat-card__value text-progress">{{ taskService.inProgressCount() }}</span>
+        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.doing.sub') }}</span>
+      </div>
+      <p class="rm-stat-card__caption">
+        {{ i18n.t('stats.doing.queue', { count: taskService.todoCount() }) }}
+      </p>
+    </div>
+  </rm-card>
+  <rm-card class="rm-stat-card">
+    <div class="rm-stat-card__inner">
+      <div class="rm-stat-card__header">
+        <span class="rm-stat-card__label">{{ i18n.t('dash.tab.ideas') }}</span>
+        <rm-badge type="ai" [label]="i18n.t('stats.ideas.badge')"></rm-badge>
+      </div>
+      <div class="rm-stat-card__value-row">
+        <span class="rm-stat-card__value text-ai">{{ ideaService.totalIdeas() }}</span>
+        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.ideas.sub') }}</span>
+      </div>
+      <p class="rm-stat-card__caption">
+        {{ i18n.t('stats.ideas.expanded', { count: ideaService.expandedCount() }) }}
+      </p>
+    </div>
+  </rm-card>
+</div>
