@@ -56,12 +56,16 @@ export const routes: Routes = [
   },
   {
     path: 'privacidade',
+    data: { tab: 'privacidade' },
     loadComponent: () =>
       import('./pages/legal/legal.component').then(m => m.LegalComponent)
   },
   {
+    // Its own route now: "Termos" links used to land on the privacy tab
     path: 'termos',
-    redirectTo: 'privacidade'
+    data: { tab: 'termos' },
+    loadComponent: () =>
+      import('./pages/legal/legal.component').then(m => m.LegalComponent)
   },
   {
     path: '**',

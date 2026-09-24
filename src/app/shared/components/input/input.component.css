@@ -11,7 +11,7 @@
 }
 
 .rm-field__label {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--rm-text-secondary);
   display: flex;
@@ -20,7 +20,7 @@
 }
 
 .rm-field__required {
-  color: var(--rm-urgent);
+  color: var(--rm-urgent-text);
 }
 
 .rm-field__control {
@@ -32,25 +32,22 @@
 
 .rm-input {
   width: 100%;
-  height: 40px;
+  height: 44px;
   padding: 0 14px;
   background: var(--rm-bg-surface);
   border: 1px solid var(--rm-border-base);
   border-radius: var(--rm-radius-md);
   color: var(--rm-text-primary);
-  font-size: 13.5px;
-  outline: none;
-  transition: all var(--rm-transition-fast);
+  /* 16px minimum: anything smaller makes iOS zoom into the page */
+  font-size: 16px;
+  transition: border-color var(--rm-transition-fast), box-shadow var(--rm-transition-fast), background var(--rm-transition-fast);
 
   &::placeholder {
     color: var(--rm-text-muted);
   }
 
-  &:hover:not(:disabled) {
-    border-color: var(--rm-border-strong);
-  }
-
-  &:focus {
+  &:focus-visible {
+    outline: none;
     border-color: var(--rm-accent);
     box-shadow: 0 0 0 3px var(--rm-accent-light);
     background: var(--rm-bg-canvas);
@@ -63,62 +60,75 @@
   }
 }
 
-.rm-input--textarea {
-  height: auto;
-  padding: 10px 14px;
-  min-height: 80px;
-  resize: vertical;
-  line-height: 1.5;
-}
+@media (hover: hover) and (pointer: fine) {
+  .rm-input:hover:not(:disabled):not(:focus) {
+    border-color: var(--rm-border-strong);
+  }
 
-.rm-input--with-prefix {
-  padding-left: 36px;
-}
-
-.rm-input--with-suffix {
-  padding-right: 36px;
-}
-
-.rm-field__icon--prefix {
-  position: absolute;
-  left: 12px;
-  color: var(--rm-text-muted);
-  pointer-events: none;
-}
-
-.rm-field__clear-btn {
-  position: absolute;
-  right: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  color: var(--rm-text-muted);
-  background: var(--rm-bg-hover);
-  transition: all var(--rm-transition-fast);
-
-  &:hover {
+  .rm-field__clear-btn:hover {
     color: var(--rm-text-primary);
     background: var(--rm-bg-active);
   }
 }
 
+.rm-input--textarea {
+  height: auto;
+  padding: 10px 14px;
+  min-height: 88px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.rm-input--with-prefix {
+  padding-left: 38px;
+}
+
+.rm-input--with-suffix {
+  padding-right: 44px;
+}
+
+.rm-field__icon--prefix {
+  position: absolute;
+  left: 13px;
+  color: var(--rm-text-muted);
+  pointer-events: none;
+}
+
+.rm-field__control:has(textarea) .rm-field__icon--prefix {
+  top: 14px;
+}
+
+.rm-field__clear-btn {
+  position: absolute;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--rm-text-muted);
+  background: var(--rm-bg-hover);
+  transition: color var(--rm-transition-fast), background var(--rm-transition-fast);
+
+  &::after { content: ''; position: absolute; inset: -8px; }
+  &:active { background: var(--rm-bg-active); }
+}
+
 .rm-field__error {
-  font-size: 11.5px;
-  color: var(--rm-urgent);
+  font-size: 12.5px;
+  color: var(--rm-urgent-text);
   font-weight: 500;
 }
 
 .rm-field__hint {
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--rm-text-muted);
 }
 
 .rm-field--has-error .rm-input {
   border-color: var(--rm-urgent);
-  &:focus {
+  &:focus-visible {
     box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
   }
 }

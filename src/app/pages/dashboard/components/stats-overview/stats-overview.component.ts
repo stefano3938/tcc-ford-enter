@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TaskService } from '../../../../core/services/task.service';
+import { I18nService } from '../../../../core/services/i18n.service';
 import { IdeaService } from '../../../../core/services/idea.service';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
@@ -13,6 +14,7 @@ import { BadgeComponent } from '../../../../shared/components/badge/badge.compon
   styleUrl: './stats-overview.component.css'
 })
 export class StatsOverviewComponent {
+  readonly i18n = inject(I18nService);
   readonly taskService = inject(TaskService);
   readonly ideaService = inject(IdeaService);
 }

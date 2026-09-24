@@ -1,58 +1,58 @@
 <rm-modal
   [isOpen]="isOpen()"
-  [title]="editingTask() ? 'Editar Tarefa' : 'Nova Tarefa'"
-  [subtitle]="editingTask() ? 'Atualize os detalhes da tarefa selecionada.' : 'Adicione uma nova tarefa ao seu fluxo de trabalho.'"
+  [title]="editingTask() ? i18n.t('task.form.editTitle') : i18n.t('dash.newTask')"
+  [subtitle]="editingTask() ? i18n.t('task.form.editSub') : i18n.t('task.form.newSub')"
   maxWidth="540px"
   (closed)="onClose()"
 >
   <form (submit)="onSubmit($event)" class="rm-form-grid">
 
     <rm-input
-      label="Título da Tarefa"
-      placeholder="Ex: Refatorar store com Signals"
+      [label]="i18n.t('task.form.title')"
+      [placeholder]="i18n.t('task.form.titlePlaceholder')"
       [(value)]="title"
       [required]="true"
       [errorMessage]="titleError()"
       prefixIcon="edit"
     ></rm-input>
     <rm-input
-      label="Descrição / Critérios de Aceite"
-      placeholder="Descreva detalhes, dependências ou contexto..."
+      [label]="i18n.t('task.form.desc')"
+      [placeholder]="i18n.t('task.form.descPlaceholder')"
       [(value)]="description"
       [multiline]="true"
       [rows]="2"
     ></rm-input>
     <div class="rm-form-row">
       <div class="rm-form-group">
-        <label class="rm-form-label">Status</label>
+        <label class="rm-form-label">{{ i18n.t('dash.status.label') }}</label>
         <select
           class="rm-select"
           [value]="status()"
           (change)="status.set($any($event.target).value)"
         >
-          <option value="todo">A Fazer</option>
-          <option value="in-progress">Em Andamento</option>
-          <option value="done">Concluída</option>
+          <option value="todo">{{ i18n.t('dash.todo') }}</option>
+          <option value="in-progress">{{ i18n.t('dash.doing') }}</option>
+          <option value="done">{{ i18n.t('status.done') }}</option>
         </select>
       </div>
 
       <div class="rm-form-group">
-        <label class="rm-form-label">Prioridade</label>
+        <label class="rm-form-label">{{ i18n.t('dash.priority.label') }}</label>
         <select
           class="rm-select"
           [value]="priority()"
           (change)="priority.set($any($event.target).value)"
         >
-          <option value="low">Baixa</option>
-          <option value="medium">Média</option>
-          <option value="high">Alta</option>
-          <option value="urgent">Urgente</option>
+          <option value="low">{{ i18n.t('priority.low') }}</option>
+          <option value="medium">{{ i18n.t('priority.medium') }}</option>
+          <option value="high">{{ i18n.t('priority.high') }}</option>
+          <option value="urgent">{{ i18n.t('priority.urgent') }}</option>
         </select>
       </div>
     </div>
     <div class="rm-form-row">
       <div class="rm-form-group">
-        <label class="rm-form-label">Data de Entrega</label>
+        <label class="rm-form-label">{{ i18n.t('task.form.due') }}</label>
         <input
           type="date"
           class="rm-date-input"
@@ -62,7 +62,7 @@
       </div>
 
       <div class="rm-form-group">
-        <label class="rm-form-label">Tempo Estimado (min)</label>
+        <label class="rm-form-label">{{ i18n.t('task.form.estimate') }}</label>
         <input
           type="number"
           class="rm-number-input"
@@ -75,11 +75,11 @@
       </div>
     </div>
     <div class="rm-form-group">
-      <label class="rm-form-label">Tags</label>
+      <label class="rm-form-label">{{ i18n.t('task.form.tags') }}</label>
       @if (selectedTags().length > 0) {
         <div class="rm-selected-tags">
           @for (tag of selectedTags(); track tag) {
-            <span class="rm-tag-chip active">{{ tag }}<button type="button" class="rm-tag-remove" (click)="removeTag(tag)" aria-label="Remover tag {{ tag }}"><span aria-hidden="true">×</span></button></span>
+            <span class="rm-tag-chip active">{{ tag }}<button type="button" class="rm-tag-remove" (click)="removeTag(tag)" [attr.aria-label]="i18n.t('task.form.removeTag', { tag })"><span aria-hidden="true">×</span></button></span>
           }
         </div>
       }
@@ -89,14 +89,14 @@
             class="rm-select"
             [value]="''"
             (change)="addTagFromSelect($any($event.target).value); $any($event.target).value=''"
-            aria-label="Selecionar tag existente"
+            [attr.aria-label]="i18n.t('task.form.pickTag')"
           >
-            <option value="" disabled selected>Selecionar tag...</option>
+            <option value="" disabled selected>{{ i18n.t('task.form.pickTag') }}</option>
             @for (tag of availableTags(); track tag) {
               <option [value]="tag">{{ tag }}</option>
             }
             @if (availableTags().length === 0) {
-              <option value="" disabled>Nenhuma tag disponível</option>
+              <option value="" disabled>{{ i18n.t('task.form.noTags') }}</option>
             }
           </select>
           <span class="rm-select-arrow" aria-hidden="true">▾</span>
@@ -107,14 +107,14 @@
 
   <div modal-footer class="rm-modal-actions">
     <rm-button variant="subtle" (clicked)="onClose()">
-      Cancelar
+      {{ i18n.t('common.cancel') }}
     </rm-button>
     <rm-button
       variant="primary"
       [icon]="editingTask() ? 'check' : 'plus'"
       (clicked)="saveTask()"
     >
-      {{ editingTask() ? 'Salvar Alterações' : 'Criar Tarefa' }}
+      {{ editingTask() ? i18n.t('common.save') : i18n.t('dash.newTask') }}
     </rm-button>
   </div>
 </rm-modal>

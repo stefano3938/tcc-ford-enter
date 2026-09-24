@@ -20,6 +20,9 @@ export class ButtonComponent {
   readonly icon = input<string | undefined>(undefined);
   readonly iconOnly = input<boolean>(false);
   readonly type = input<'button' | 'submit' | 'reset'>('button');
+  /** Required when the visible text is hidden (icon-only on small screens). */
+  readonly ariaLabel = input<string>('');
+  readonly ariaPressed = input<boolean | null>(null);
 
   readonly clicked = output<MouseEvent>();
 

@@ -12,7 +12,7 @@ import { ButtonComponent, ButtonVariant } from '../button/button.component';
 })
 export class EmptyStateComponent {
   readonly icon = input<string>('list');
-  readonly title = input<string>('Nenhum item encontrado');
+  readonly title = input.required<string>();
   readonly description = input<string>('');
   readonly actionLabel = input<string>('');
   readonly actionIcon = input<string>('plus');

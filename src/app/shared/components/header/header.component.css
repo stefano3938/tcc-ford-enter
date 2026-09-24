@@ -5,6 +5,7 @@
   min-height: 60px;
   height: auto;
   padding: 8px 24px;
+  padding-top: max(8px, env(safe-area-inset-top));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13,11 +14,21 @@
   flex-wrap: wrap;
   min-width: 0;
   @media (max-width: 768px) {
-    padding: 8px 14px;
+    padding-inline: 14px;
     gap: 8px;
   }
+  @media (max-width: 600px) {
+    flex-wrap: nowrap;
+  }
   @media (max-width: 375px) {
-    padding: 8px 10px;
+    padding-inline: 10px;
+  }
+}
+
+/* Quota, upgrade, profile and logout all live in the sidebar too; on phones the header keeps one row */
+.rm-header__desktop-only {
+  @media (max-width: 600px) {
+    display: none !important;
   }
 }
 
@@ -39,9 +50,14 @@
   flex: 0 1 auto;
   justify-content: flex-end;
   min-width: 0;
+  @media (max-width: 600px) {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
 }
 
 .rm-header__menu-btn {
+  position: relative;
   display: none;
   align-items: center;
   justify-content: center;
@@ -51,10 +67,23 @@
   color: var(--rm-text-secondary);
   background: var(--rm-bg-hover);
   border: 1px solid var(--rm-border-base);
+  flex-shrink: 0;
+
+  &:active {
+    background: var(--rm-bg-active);
+  }
 
   @media (max-width: 900px) {
     display: flex;
   }
+}
+
+/* 44px touch area around the smaller visual buttons */
+.rm-header__menu-btn::after,
+.rm-header__action-btn::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
 }
 
 .rm-logo {
@@ -111,19 +140,26 @@
 }
 
 .rm-header__ai-quota {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   cursor: pointer;
   transition: transform var(--rm-transition-fast);
   min-width: 0;
   flex-shrink: 1;
-  &:hover {
-    transform: scale(1.03);
+  &:active {
+    transform: scale(0.97);
   }
-  @media (max-width: 375px) {
-    font-size: 10px;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: scale(1.03);
+    }
   }
 }
 
 .rm-header__action-btn {
+  position: relative;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,17 +171,26 @@
   border: 1px solid var(--rm-border-base);
   transition: all var(--rm-transition-fast);
 
-  &:hover {
+  &:active {
     background: var(--rm-bg-active);
     color: var(--rm-text-primary);
-    border-color: var(--rm-border-strong);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--rm-bg-active);
+      color: var(--rm-text-primary);
+      border-color: var(--rm-border-strong);
+    }
   }
 }
 
-.rm-header__action-btn--logout:hover {
-  color: var(--rm-urgent);
-  background: rgba(244, 63, 94, 0.08);
-  border-color: rgba(244, 63, 94, 0.2);
+@media (hover: hover) and (pointer: fine) {
+  .rm-header__action-btn--logout:hover {
+    color: var(--rm-urgent);
+    background: var(--rm-urgent-bg);
+    border-color: var(--rm-urgent);
+  }
 }
 
 .rm-user-pill {

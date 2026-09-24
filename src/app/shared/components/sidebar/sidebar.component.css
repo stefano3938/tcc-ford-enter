@@ -45,6 +45,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--rm-text-muted);
   padding: 0 10px 6px;
 }
@@ -79,9 +80,9 @@
 }
 
 .rm-nav-item--ai.active {
-  background: rgba(99, 102, 241, 0.08);
+  background: rgba(var(--rm-accent-rgb), 0.08);
   color: var(--rm-accent);
-  border-color: rgba(99, 102, 241, 0.25);
+  border-color: rgba(var(--rm-accent-rgb), 0.25);
 }
 
 .rm-nav-item__main {
@@ -152,7 +153,7 @@
   font-weight: 600;
   color: var(--rm-accent);
   background: var(--rm-accent-light);
-  border: 1px solid rgba(99,102,241,0.18);
+  border: 1px solid rgba(var(--rm-accent-rgb), 0.18);
   padding: 3px 7px;
   border-radius: var(--rm-radius-full);
   transition: all var(--rm-transition-fast);

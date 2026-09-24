@@ -1,44 +1,18 @@
 <rm-public-shell>
-  <section class="rm-hero-section rm-page">
-    <div class="rm-hero-bg" aria-hidden="true">
-      <div class="rm-hero-orb"></div>
-      <div class="rm-hero-orb rm-hero-orb--2"></div>
-      <div class="rm-hero-grid"></div>
-    </div>
-  
-    <h1 class="rm-hero-title">
-      <span class="rm-typewriter-line">{{ typedLine1() }}</span><span class="rm-typewriter-cursor" [class.done]="isTypingDone() || isNarrow()"></span>
-      <br />
-      <span class="rm-typewriter-line rm-typewriter-line--accent">{{ typedLine2() }}</span><span class="rm-typewriter-cursor" [class.done]="isTypingDone() || isNarrow()"></span>
-    </h1>
-  
-    <p class="rm-hero-subtitle">{{ i18n.t('home.hero.sub') }}</p>
-  
-    <div class="rm-hero-cta-group">
-      <rm-button variant="primary" size="lg" icon="arrow-right" (clicked)="onStartNow()">{{ i18n.t('home.hero.cta') }}</rm-button>
-      <rm-button variant="secondary" size="lg" icon="eye" (clicked)="goToResources()">{{ i18n.t('home.hero.cta2') }}</rm-button>
-    </div>
-  
-    <div class="rm-bento-grid rm-bento-grid--metrics">
-      <div class="rm-bento-card rm-bento-card--metric">
-        <span class="rm-metric-kicker">{{ i18n.t('home.metric.org') }}</span>
-        <h4 class="rm-bento-title">{{ i18n.t('home.metric.org.title') }}</h4>
-        <p class="rm-bento-desc">{{ i18n.t('home.metric.org.body') }}</p>
-      </div>
-      <div class="rm-bento-card rm-bento-card--metric">
-        <span class="rm-metric-kicker">{{ i18n.t('home.metric.focus') }}</span>
-        <h4 class="rm-bento-title">{{ i18n.t('home.metric.focus.title') }}</h4>
-        <p class="rm-bento-desc">{{ i18n.t('home.metric.focus.body') }}</p>
-      </div>
-      <div class="rm-bento-card rm-bento-card--metric">
-        <span class="rm-metric-kicker">{{ i18n.t('home.metric.ai') }}</span>
-        <h4 class="rm-bento-title">{{ i18n.t('home.metric.ai.title') }}</h4>
-        <p class="rm-bento-desc">{{ i18n.t('home.metric.ai.body') }}</p>
-      </div>
-      <div class="rm-bento-card rm-bento-card--metric">
-        <span class="rm-metric-kicker">{{ i18n.t('home.metric.scale') }}</span>
-        <h4 class="rm-bento-title">{{ i18n.t('home.metric.scale.title') }}</h4>
-        <p class="rm-bento-desc">{{ i18n.t('home.metric.scale.body') }}</p>
+  <section class="rm-hero" aria-labelledby="rm-hero-title">
+    <rm-particle-field></rm-particle-field>
+
+    <div class="rm-hero__inner rm-page">
+      <h1 id="rm-hero-title" class="rm-hero__title">
+        <span class="rm-hero__line">{{ i18n.t('home.hero.line1') }}</span>
+        <span class="rm-hero__line rm-hero__line--accent">{{ i18n.t('home.hero.line2') }}</span>
+      </h1>
+
+      <p class="rm-hero__lede">{{ i18n.t('home.hero.sub') }}</p>
+
+      <div class="rm-hero__actions">
+        <rm-button variant="primary" size="lg" icon="arrow-right" (clicked)="onStartNow()">{{ i18n.t('home.hero.cta') }}</rm-button>
+        <rm-button variant="outline" size="lg" (clicked)="goToResources()">{{ i18n.t('home.hero.cta2') }}</rm-button>
       </div>
     </div>
   </section>

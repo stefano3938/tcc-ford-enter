@@ -1,41 +1,9 @@
+<rm-public-shell>
 <div class="rm-pricing-page">
-  <header class="rm-pricing-nav">
-    <a routerLink="/home" class="rm-pricing-brand">
-      <span class="rm-pricing-logo"><img src="assets/favicon-plate-64.png" alt="" width="30" height="30" /></span>
-      <span class="rm-pricing-brand__text">Remind<span class="rm-pricing-brand__accent">Me</span></span>
-    </a>
-    <div class="rm-pricing-nav__actions">
-      <rm-lang-switcher></rm-lang-switcher>
-      <button
-        type="button"
-        class="rm-pricing-theme"
-        (click)="themeService.toggleTheme()"
-        [attr.aria-label]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
-        [title]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
-      >
-        @if (themeService.theme() === 'dark') { <rm-icon name="sun" [size]="15"></rm-icon> }
-        @else { <rm-icon name="moon" [size]="15"></rm-icon> }
-      </button>
-      @if (authService.isAuthenticated()) {
-        <a routerLink="/dashboard" class="rm-pricing-back">
-          <rm-icon name="arrow-left" [size]="14"></rm-icon>
-          <span>{{ i18n.t('nav.backApp') }}</span>
-        </a>
-      } @else {
-        <a routerLink="/login" class="rm-pricing-back">
-          <rm-icon name="arrow-left" [size]="14"></rm-icon>
-          <span>{{ i18n.t('nav.login') }}</span>
-        </a>
-      }
-    </div>
-  </header>
 
   <div class="rm-pricing-hero rm-page-hero">
-    <span class="ai-pill">{{ i18n.t('pay.badge') }}</span>
-    <h1 class="rm-pricing-hero__title">{{ i18n.t('pay.heroShort') }}</h1>
-    <p class="rm-pricing-hero__subtitle">
-      {{ i18n.t('pay.subtitle') }}
-    </p>
+    <h1 class="rm-page-title">{{ i18n.t('pay.heroShort') }}</h1>
+    <p class="rm-page-lede">{{ i18n.t('pay.subtitle') }}</p>
     <div class="rm-billing-toggle">
       <button
         type="button"
@@ -57,7 +25,7 @@
     </div>
   </div>
   <div class="rm-plans-grid rm-page-grid">
-    @for (plan of userService.pricingPlans; track plan.id) {
+    @for (plan of userService.pricingPlans(); track plan.id) {
       <rm-card
         class="rm-plan-card"
         [glow]="!!plan.isPopular"
@@ -69,7 +37,7 @@
           <div class="rm-plan-title-wrap">
             <h3 class="rm-plan-title">{{ plan.name }}</h3>
             @if (plan.isPopular) {
-              <rm-badge type="pro" label="MAIS POPULAR"></rm-badge>
+              <rm-badge type="pro" [label]="i18n.t('pay.popular')"></rm-badge>
             }
           </div>
           <p class="rm-plan-desc">{{ plan.description }}</p>
@@ -189,3 +157,4 @@
     </div>
   </div>
 </div>
+</rm-public-shell>

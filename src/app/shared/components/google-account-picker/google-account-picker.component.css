@@ -1,0 +1,88 @@
+.rm-gpick-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rm-border-base);
+  border-radius: var(--rm-radius-md);
+  overflow: hidden;
+
+  li + li {
+    border-top: 1px solid var(--rm-border-subtle);
+  }
+}
+
+.rm-gpick-account {
+  width: 100%;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  text-align: left;
+  color: var(--rm-text-primary);
+  transition: background var(--rm-transition-fast);
+
+  &:active {
+    background: var(--rm-bg-active);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--rm-bg-hover);
+    }
+  }
+}
+
+.rm-gpick-account__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rm-gpick-account__name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.rm-gpick-account__email {
+  font-size: 12.5px;
+  color: var(--rm-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rm-gpick-other-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--rm-radius-full);
+  border: 1px dashed var(--rm-border-strong);
+  color: var(--rm-text-secondary);
+  font-size: 18px;
+}
+
+.rm-gpick-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rm-gpick-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rm-gpick-note {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--rm-text-muted);
+  text-align: center;
+}

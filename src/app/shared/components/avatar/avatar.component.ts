@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { I18nService } from '../../../core/services/i18n.service';
 
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarStatus = 'online' | 'offline' | 'busy' | undefined;
@@ -19,21 +20,22 @@ export class AvatarComponent {
   readonly showBorder = input<boolean>(false);
 
   readonly hasError = signal<boolean>(false);
+  private readonly i18n = inject(I18nService);
 
   constructor() {
 
     effect(() => {
       this.src();
       this.hasError.set(false);
-    }, { allowSignalWrites: true });
+    });
   }
 
   readonly accessibleLabel = computed(() => {
     const a = this.alt().trim();
     const n = this.name().trim();
     if (a && a !== 'Avatar') return a;
-    if (n) return `Avatar de ${n}`;
-    return 'Avatar';
+    if (n) return this.i18n.t('avatar.of', { name: n });
+    return this.i18n.t('avatar.label');
   });
 
   readonly initials = computed(() => {

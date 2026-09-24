@@ -1,8 +1,9 @@
 <button
   [type]="type()"
   [disabled]="disabled() || loading()"
-  [attr.aria-busy]="loading()"
-  [attr.aria-disabled]="disabled() || loading()"
+  [attr.aria-busy]="loading() || null"
+  [attr.aria-label]="ariaLabel() || null"
+  [attr.aria-pressed]="ariaPressed()"
   [class]="'rm-btn rm-btn--' + variant() + ' rm-btn--' + size()"
   [class.rm-btn--loading]="loading()"
   [class.rm-btn--icon-only]="iconOnly()"

@@ -8,9 +8,14 @@ import {
   inject,
   input,
   model,
-  output
+  output,
+  untracked
 } from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
+import { I18nService } from '../../../core/services/i18n.service';
+
+/** Open modals, top-most last. Esc and body scroll-lock only act on / release for the right one. */
+const openStack: ModalComponent[] = [];
 
 @Component({
   selector: 'rm-modal',
@@ -21,47 +26,49 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './modal.component.css'
 })
 export class ModalComponent implements OnDestroy {
+  private static counter = 0;
+
   private readonly elementRef = inject(ElementRef);
+  readonly i18n = inject(I18nService);
+
   readonly isOpen = model<boolean>(false);
   readonly title = input<string>('');
   readonly subtitle = input<string>('');
+  /** Accessible name when the dialog shows no visible title. */
+  readonly ariaLabel = input<string>('');
   readonly maxWidth = input<string>('560px');
   readonly closeOnBackdrop = input<boolean>(true);
+  readonly dialogRole = input<'dialog' | 'alertdialog'>('dialog');
 
   readonly closed = output<void>();
+
+  readonly titleId = `rm-modal-title-${ModalComponent.counter}`;
+  readonly subtitleId = `rm-modal-subtitle-${ModalComponent.counter++}`;
+
+  /** Element that had focus before opening; focus goes back there on close. */
+  private returnFocusTo: HTMLElement | null = null;
 
   constructor() {
     effect(() => {
       const open = this.isOpen();
-      if (typeof document !== 'undefined') {
-        if (open) {
-          document.body.style.overflow = 'hidden';
-
-          setTimeout(() => this.focusInitial(), 0);
-        } else {
-          document.body.style.overflow = '';
-        }
-      }
+      untracked(() => (open ? this.onOpened() : this.onClosed()));
     });
   }
 
   ngOnDestroy(): void {
-
-    if (typeof document !== 'undefined') {
-      document.body.style.overflow = '';
-    }
+    this.onClosed();
   }
 
-  @HostListener('document:keydown.escape')
-  onEscape(): void {
-
-    if (this.isOpen()) {
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscape(event: Event): void {
+    if (this.isOpen() && openStack[openStack.length - 1] === this) {
+      event.stopPropagation();
       this.close();
     }
   }
 
   onBackdropClick(event: MouseEvent): void {
-    if (this.closeOnBackdrop()) {
+    if (this.closeOnBackdrop() && event.target === event.currentTarget) {
       this.close();
     }
   }
@@ -73,18 +80,44 @@ export class ModalComponent implements OnDestroy {
     }
   }
 
+  close(): void {
+    this.isOpen.set(false);
+    this.closed.emit();
+  }
+
+  private onOpened(): void {
+    if (typeof document === 'undefined' || openStack.includes(this)) return;
+    this.returnFocusTo = document.activeElement as HTMLElement | null;
+    openStack.push(this);
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => this.focusInitial(), 0);
+  }
+
+  private onClosed(): void {
+    const index = openStack.indexOf(this);
+    if (index === -1) return;
+    openStack.splice(index, 1);
+    if (typeof document !== 'undefined' && openStack.length === 0) {
+      document.body.style.overflow = '';
+    }
+    const target = this.returnFocusTo;
+    this.returnFocusTo = null;
+    if (target && typeof target.focus === 'function' && document.contains(target)) {
+      setTimeout(() => target.focus(), 0);
+    }
+  }
+
   private focusInitial(): void {
+    const box: HTMLElement | null = this.elementRef.nativeElement.querySelector('.rm-modal-box');
+    // Prefer the first form field; fall back to the first control, then the box itself
+    const field = box?.querySelector<HTMLElement>('input:not([disabled]), textarea:not([disabled]), select:not([disabled])');
     const focusable = this.getFocusableElements();
-    if (focusable.length > 0) {
-      focusable[0].focus();
-    } else {
-
-      const box: HTMLElement | null = this.elementRef.nativeElement.querySelector('.rm-modal-box');
-      if (box) {
-
-        if (!box.hasAttribute('tabindex')) box.setAttribute('tabindex', '-1');
-        box.focus();
-      }
+    const target = field ?? focusable.find(el => !el.classList.contains('rm-modal-close')) ?? focusable[0];
+    if (target) {
+      target.focus();
+    } else if (box) {
+      box.setAttribute('tabindex', '-1');
+      box.focus();
     }
   }
 
@@ -103,11 +136,9 @@ export class ModalComponent implements OnDestroy {
         event.preventDefault();
         last.focus();
       }
-    } else {
-      if (active === last) {
-        event.preventDefault();
-        first.focus();
-      }
+    } else if (active === last) {
+      event.preventDefault();
+      first.focus();
     }
   }
 
@@ -115,16 +146,10 @@ export class ModalComponent implements OnDestroy {
     const host: HTMLElement = this.elementRef.nativeElement;
     const selector =
       'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-    const box: HTMLElement | null = host.querySelector('.rm-modal-box');
-    const root: HTMLElement | null = box ?? host;
+    const root: HTMLElement | null = host.querySelector('.rm-modal-box');
     if (!root) return [];
     return Array.from(root.querySelectorAll<HTMLElement>(selector)).filter(
-      (el) => !el.hasAttribute('hidden') && el.getAttribute('aria-hidden') !== 'true'
+      el => !el.hasAttribute('hidden') && el.getAttribute('aria-hidden') !== 'true'
     );
-  }
-
-  close(): void {
-    this.isOpen.set(false);
-    this.closed.emit();
   }
 }

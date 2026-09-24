@@ -1,8 +1,8 @@
-<div class="rm-empty-state" role="status" aria-live="polite">
+<div class="rm-empty-state">
   <div class="rm-empty-state__icon-wrap" aria-hidden="true">
     <rm-icon [name]="icon()" [size]="28" class="rm-empty-state__icon"></rm-icon>
   </div>
-  <h4 class="rm-empty-state__title">{{ title() }}</h4>
+  <p class="rm-empty-state__title">{{ title() }}</p>
   @if (description()) {
     <p class="rm-empty-state__desc">{{ description() }}</p>
   }

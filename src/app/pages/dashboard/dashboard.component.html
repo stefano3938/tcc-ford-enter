@@ -58,7 +58,7 @@
           icon="plus"
           (clicked)="openNewTaskModal()"
         >
-          Nova Tarefa
+          {{ i18n.t('dash.newTask') }}
         </rm-button>
       } @else {
         <rm-button
@@ -67,7 +67,7 @@
           icon="plus"
           (clicked)="openNewIdeaModal()"
         >
-          Nova Ideia
+          {{ i18n.t('dash.newIdea') }}
         </rm-button>
       }
 
@@ -78,7 +78,7 @@
         (clicked)="resetMocks()"
         [title]="i18n.t('dash.reset')"
       >
-        Reset
+        {{ i18n.t('dash.resetShort') }}
       </rm-button>
     </div>
   </div>
@@ -151,14 +151,14 @@
                 <div class="rm-filtered-empty__head">
                   <span class="rm-active-filters-badge">
                     <rm-icon name="filter" [size]="12"></rm-icon>
-                    Filtros ativos
+                    {{ i18n.t('dash.filters.active') }}
                   </span>
                 </div>
                 <rm-empty-state
                   icon="list"
-                  title="Nenhuma tarefa corresponde aos filtros"
-                  description="Nenhum resultado para os filtros atuais. Limpe os filtros ou ajuste a busca."
-                  actionLabel="Limpar filtros"
+                  [title]="i18n.t('dash.empty.filtered.title')"
+                  [description]="i18n.t('dash.empty.filtered.body')"
+                  [actionLabel]="i18n.t('dash.filters.clear')"
                   actionIcon="x"
                   (action)="clearAllFilters()"
                 ></rm-empty-state>
@@ -166,9 +166,9 @@
             } @else {
               <rm-empty-state
                 icon="list"
-                title="Nenhuma tarefa encontrada"
-                description="Tente alterar os filtros ou crie uma nova tarefa para começar."
-                actionLabel="Criar Tarefa"
+                [title]="i18n.t('dash.empty.tasks.title')"
+                [description]="i18n.t('dash.empty.tasks.body')"
+                [actionLabel]="i18n.t('dash.newTask')"
                 actionIcon="plus"
                 (action)="openNewTaskModal()"
               ></rm-empty-state>
@@ -187,11 +187,11 @@
         <div class="rm-kanban-filter-notice">
           <span class="rm-active-filters-badge">
             <rm-icon name="filter" [size]="12"></rm-icon>
-            Filtros ativos — Visão Kanban filtrada
+            {{ i18n.t('dash.filters.kanban') }}
           </span>
-          <button type="button" class="rm-clear-filters-btn" (click)="clearAllFilters()" aria-label="Limpar filtros da visão Kanban">
+          <button type="button" class="rm-clear-filters-btn" (click)="clearAllFilters()" [attr.aria-label]="i18n.t('dash.filters.clearKanban')">
             <rm-icon name="x" [size]="12"></rm-icon>
-            Limpar filtros
+            {{ i18n.t('dash.filters.clear') }}
           </button>
         </div>
       }
@@ -211,9 +211,9 @@
               <rm-task-item [task]="task" (edit)="openEditTaskModal($event)"></rm-task-item>
             } @empty {
               @if (hasActiveFilters()) {
-                <div class="rm-kanban-empty rm-kanban-empty--filtered">Nenhuma tarefa — filtros ativos</div>
+                <div class="rm-kanban-empty rm-kanban-empty--filtered">{{ i18n.t('dash.kanban.emptyFiltered') }}</div>
               } @else {
-                <div class="rm-kanban-empty">Nenhuma tarefa a iniciar</div>
+                <div class="rm-kanban-empty">{{ i18n.t('dash.kanban.emptyTodo') }}</div>
               }
             }
           </div>
@@ -222,7 +222,7 @@
           <div class="rm-kanban-col__header">
             <div class="rm-kanban-col__title-wrap">
               <span class="rm-kanban-dot rm-kanban-dot--progress"></span>
-              <span class="rm-kanban-col__title">Em Andamento</span>
+              <span class="rm-kanban-col__title">{{ i18n.t('dash.doing') }}</span>
             </div>
             <rm-badge type="in-progress" [label]="getTasksByStatus('in-progress').length + ''"></rm-badge>
           </div>
@@ -232,9 +232,9 @@
               <rm-task-item [task]="task" (edit)="openEditTaskModal($event)"></rm-task-item>
             } @empty {
               @if (hasActiveFilters()) {
-                <div class="rm-kanban-empty rm-kanban-empty--filtered">Nenhuma tarefa — filtros ativos</div>
+                <div class="rm-kanban-empty rm-kanban-empty--filtered">{{ i18n.t('dash.kanban.emptyFiltered') }}</div>
               } @else {
-                <div class="rm-kanban-empty">Nenhuma tarefa em andamento</div>
+                <div class="rm-kanban-empty">{{ i18n.t('dash.kanban.emptyDoing') }}</div>
               }
             }
           </div>
@@ -253,9 +253,9 @@
               <rm-task-item [task]="task" (edit)="openEditTaskModal($event)"></rm-task-item>
             } @empty {
               @if (hasActiveFilters()) {
-                <div class="rm-kanban-empty rm-kanban-empty--filtered">Nenhuma tarefa — filtros ativos</div>
+                <div class="rm-kanban-empty rm-kanban-empty--filtered">{{ i18n.t('dash.kanban.emptyFiltered') }}</div>
               } @else {
-                <div class="rm-kanban-empty">Nenhuma tarefa concluída ainda</div>
+                <div class="rm-kanban-empty">{{ i18n.t('dash.kanban.emptyDone') }}</div>
               }
             }
           </div>
@@ -273,7 +273,7 @@
         [class.active]="ideaService.categoryFilter() === 'all'"
         (click)="ideaService.categoryFilter.set('all')"
       >
-        Todas ({{ ideaService.totalIdeas() }})
+        {{ i18n.t('dash.ideas.all', { count: ideaService.totalIdeas() }) }}
       </button>
       <button
         type="button"
@@ -282,7 +282,7 @@
         (click)="ideaService.categoryFilter.set('product')"
       >
         <rm-icon name="box" [size]="12"></rm-icon>
-        <span>Produto</span>
+        <span>{{ i18n.t('idea.cat.product') }}</span>
       </button>
       <button
         type="button"
@@ -291,7 +291,7 @@
         (click)="ideaService.categoryFilter.set('workflow')"
       >
         <rm-icon name="layers" [size]="12"></rm-icon>
-        <span>Fluxo</span>
+        <span>{{ i18n.t('idea.cat.workflow') }}</span>
       </button>
       <button
         type="button"
@@ -300,7 +300,7 @@
         (click)="ideaService.categoryFilter.set('research')"
       >
         <rm-icon name="layers" [size]="12"></rm-icon>
-        <span>Pesquisa</span>
+        <span>{{ i18n.t('idea.cat.research') }}</span>
       </button>
       <button
         type="button"
@@ -309,7 +309,7 @@
         (click)="ideaService.categoryFilter.set('creative')"
       >
         <rm-icon name="lightbulb" [size]="12"></rm-icon>
-        <span>Criativo</span>
+        <span>{{ i18n.t('idea.cat.creative') }}</span>
       </button>
     </div>
 
@@ -322,9 +322,9 @@
         } @empty {
           <rm-empty-state
             icon="lightbulb"
-            title="Nenhuma ideia nesta categoria"
-            description="Registre seus insights antes que eles desapareçam."
-            actionLabel="Registrar Ideia"
+            [title]="i18n.t('dash.empty.ideas.title')"
+            [description]="i18n.t('dash.empty.ideas.body')"
+            [actionLabel]="i18n.t('dash.newIdea')"
             actionIcon="plus"
             (action)="openNewIdeaModal()"
           ></rm-empty-state>

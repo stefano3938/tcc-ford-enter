@@ -3,8 +3,6 @@ import {
   Component,
   ElementRef,
   HostListener,
-  computed,
-  effect,
   inject,
   signal,
   viewChild
@@ -22,36 +20,39 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './lang-switcher.component.css'
 })
 export class LangSwitcherComponent {
+  private static counter = 0;
+
   readonly i18n = inject(I18nService);
   private readonly toast = inject(ToastService);
   readonly langs = LANGS;
   readonly open = signal(false);
+  readonly menuId = `lang-menu-${LangSwitcherComponent.counter++}`;
 
   private readonly host = viewChild<ElementRef<HTMLElement>>('host');
-
-  constructor() {
-    effect(() => {
-      this.i18n.lang();
-      if (typeof document !== 'undefined' && document.activeElement?.closest('.lang')) {
-        queueMicrotask(() => (document.activeElement as HTMLElement | null)?.blur());
-      }
-    });
-  }
+  private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
 
   toggle(): void {
     this.open.update(v => !v);
   }
 
   choose(code: LangCode): void {
+    const changed = code !== this.i18n.lang();
     this.i18n.setLang(code);
+    this.close();
+    if (changed) {
+      this.toast.success(this.i18n.t('toast.langChanged', { lang: this.i18n.current().label }));
+    }
+  }
+
+  /** Closing returns focus to the trigger so keyboard users don't lose their place. */
+  private close(): void {
     this.open.set(false);
-    const label = this.i18n.current().label;
-    this.toast.success(this.i18n.t('toast.langChanged', { lang: label }), '');
+    this.trigger()?.nativeElement.focus();
   }
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
-    this.open.set(false);
+    if (this.open()) this.close();
   }
 
   @HostListener('document:click', ['$event'])

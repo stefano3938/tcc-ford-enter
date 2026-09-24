@@ -1,14 +1,15 @@
 <rm-public-shell>
   <section class="rm-preview-section rm-page">
     <header class="rm-demo-header">
-      <span class="rm-hero-badge rm-hero-badge--upper">{{ i18n.t('nav.demo') }}</span>
-      <h1 class="rm-demo-title">{{ i18n.t('demo.title') }}</h1>
-      <p class="rm-demo-description">{{ i18n.t('demo.subtitle') }}</p>
-      <rm-button variant="primary" size="md" icon="arrow-right" (clicked)="onStartNow()">
+      <div class="rm-page-head">
+        <h1 class="rm-page-title">{{ i18n.t('demo.title') }}</h1>
+        <p class="rm-page-lede">{{ i18n.t('demo.subtitle') }}</p>
+      </div>
+      <rm-button variant="primary" size="lg" icon="arrow-right" (clicked)="onStartNow()">
         {{ i18n.t('demo.cta') }}
       </rm-button>
     </header>
-    <div class="rm-mockup-frame glass-panel">
+    <div class="rm-mockup-frame">
       <div class="rm-mockup-header">
         <div class="rm-mockup-dots">
           <span class="rm-dot rm-dot--red"></span><span class="rm-dot rm-dot--yellow"></span><span class="rm-dot rm-dot--green"></span>

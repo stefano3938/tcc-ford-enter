@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { ModalComponent } from '../modal/modal.component';
 import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../icon/icon.component';
@@ -13,6 +14,7 @@ import { IconComponent } from '../icon/icon.component';
   styleUrl: './paywall-modal.component.css'
 })
 export class PaywallModalComponent {
+  readonly i18n = inject(I18nService);
   readonly userService = inject(UserService);
   readonly billingCycle = signal<'monthly' | 'yearly'>('yearly');
   readonly isUpgrading = signal<boolean>(false);

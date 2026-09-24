@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { Idea } from '../../../../core/models/idea.model';
 import { IdeaService } from '../../../../core/services/idea.service';
+import { I18nService } from '../../../../core/services/i18n.service';
 import { AiService } from '../../../../core/services/ai.service';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -15,6 +16,7 @@ import { CardComponent } from '../../../../shared/components/card/card.component
   styleUrl: './idea-item.component.css'
 })
 export class IdeaItemComponent {
+  readonly i18n = inject(I18nService);
   readonly ideaService = inject(IdeaService);
   private readonly aiService = inject(AiService);
 
@@ -41,7 +43,7 @@ export class IdeaItemComponent {
 
     const mapped = breakdown.actionableSteps.map((step, idx) => ({
       title: step,
-      description: `Derivado da ideia "${this.idea().title}".`,
+      description: this.i18n.t('idea.derived', { title: this.idea().title }),
       status: 'todo' as const,
       priority: (idx === 0 ? 'high' : 'medium') as any,
       tags: [...this.idea().tags, 'Decomposição-IA'],

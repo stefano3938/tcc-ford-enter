@@ -1,0 +1,29 @@
+<div class="rm-ai-fab">
+  @if (showTeaser()) {
+    <div class="rm-ai-fab__teaser" role="status">
+      <p class="rm-ai-fab__teaser-title">{{ i18n.t('aiFab.teaser.title') }}</p>
+      <p class="rm-ai-fab__teaser-body">{{ i18n.t('aiFab.teaser.body') }}</p>
+      <button
+        type="button"
+        class="rm-ai-fab__teaser-close"
+        (click)="dismissTeaser()"
+        [attr.aria-label]="i18n.t('aiFab.teaser.close')"
+      >
+        <rm-icon name="x" [size]="14" aria-hidden="true"></rm-icon>
+      </button>
+    </div>
+  }
+
+  <a
+    routerLink="/ai-assistant"
+    class="rm-ai-fab__btn"
+    (click)="dismissTeaser()"
+    [attr.aria-label]="i18n.t('aiFab.label')"
+  >
+    <rm-icon name="sparkles" [size]="20" aria-hidden="true"></rm-icon>
+    <span class="rm-ai-fab__text">{{ i18n.t('aiFab.label') }}</span>
+    @if (!userService.isPro()) {
+      <span class="rm-ai-fab__count" aria-hidden="true">{{ userService.aiRemaining() }}</span>
+    }
+  </a>
+</div>

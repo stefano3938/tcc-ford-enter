@@ -53,7 +53,17 @@ export type IconName =
   | 'menu'
   | 'globe'
   | 'chevron-down'
-  | 'more-vertical';
+  | 'more-vertical'
+  | 'undo'
+  | 'square';
+
+/** Names that other icon sets use for glyphs this set already draws. */
+const ICON_ALIASES: Readonly<Record<string, string>> = {
+  bolt: 'zap',
+  pencil: 'edit',
+  'exclamation-triangle': 'alert-triangle',
+  'check-square-o': 'check-square'
+};
 
 @Component({
   selector: 'rm-icon',
@@ -70,14 +80,10 @@ export class IconComponent {
   readonly resolvedName = computed(() => {
     let n = this.name().trim().toLowerCase();
 
+    // Legacy PrimeIcons-style names ("pi-bolt") map onto this icon set
     if (n.startsWith('pi-')) {
       n = n.slice(3);
-    } else if (n.startsWith('pi') && n.length > 2) {
-
-      n = n.slice(2).replace(/^[-_\s]+/, '');
-
-      if (!n) n = 'sparkles';
     }
-    return n;
+    return ICON_ALIASES[n] ?? n;
   });
 }

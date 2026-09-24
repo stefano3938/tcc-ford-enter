@@ -2,24 +2,39 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <title>RemindMe — AI Productivity & Task OS</title>
+  <title>RemindMe: tarefas e ideias com IA</title>
   <meta name="description" content="RemindMe: organize tarefas, capture ideias e deixe a inteligência contextual criar seu próximo passo.">
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#060910">
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-plate-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-plate-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-plate-180.png">
-  
-  <!-- Apple typography: Inter & JetBrains Mono -->
+
+  <!-- Apply the saved (or system) theme before Angular boots, so the page never flashes the wrong theme -->
+  <script>
+    (function () {
+      var theme = null;
+      try { theme = JSON.parse(localStorage.getItem('redmindme_theme_mode')); } catch (e) {}
+      if (theme !== 'dark' && theme !== 'light') {
+        theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
+  <!-- Geist for text, Geist Mono for numerals; loaded once -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+  <script>
+    if (document.documentElement.getAttribute('data-theme') === 'dark') document.body.classList.add('dark-mode');
+  </script>
   <app-root></app-root>
 </body>
 </html>

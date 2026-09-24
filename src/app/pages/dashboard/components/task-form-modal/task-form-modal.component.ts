@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { Task, TaskPriority, TaskStatus } from '../../../../core/models/task.model';
 import { TaskService } from '../../../../core/services/task.service';
+import { I18nService } from '../../../../core/services/i18n.service';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -23,6 +24,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
   styleUrl: './task-form-modal.component.css'
 })
 export class TaskFormModalComponent {
+  readonly i18n = inject(I18nService);
   private readonly taskService = inject(TaskService);
 
   readonly isOpen = model<boolean>(false);
@@ -86,7 +88,7 @@ export class TaskFormModalComponent {
   saveTask(): void {
     const rawTitle = this.title().trim();
     if (!rawTitle) {
-      this.titleError.set('O título da tarefa é obrigatório.');
+      this.titleError.set(this.i18n.t('task.form.titleRequired'));
       return;
     }
     this.titleError.set(undefined);

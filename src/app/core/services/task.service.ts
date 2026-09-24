@@ -2,6 +2,7 @@ import { Injectable, computed, effect, inject, signal, untracked } from '@angula
 import { StorageService } from './storage.service';
 import { UserService } from './user.service';
 import { ToastService } from './toast.service';
+import { I18nService } from './i18n.service';
 import { Task, TaskPriority, TaskStatus } from '../models/task.model';
 import { INITIAL_MOCK_TASKS } from '../mock-data/tasks.mock';
 
@@ -12,6 +13,7 @@ export class TaskService {
   private readonly storage = inject(StorageService);
   private readonly userService = inject(UserService);
   private readonly toast = inject(ToastService);
+  private readonly i18n = inject(I18nService);
   private readonly TASKS_KEY = 'redmindme_tasks_list';
   readonly tasks = signal<Task[]>(this.loadTasks());
   readonly searchQuery = signal<string>('');
@@ -21,11 +23,8 @@ export class TaskService {
   readonly statusFilter = signal<TaskStatus | 'all'>('all');
   readonly priorityFilter = signal<TaskPriority | 'all'>('all');
   readonly tagFilter = signal<string | 'all'>('all');
-  private cachedTags: string[] = [];
-  private cachedTagsRef: Task[] | null = null;
 
   constructor() {
-
     let debounceTimer: ReturnType<typeof setTimeout> | null = null;
     effect((onCleanup) => {
       const raw = this.searchQuery();
@@ -50,26 +49,17 @@ export class TaskService {
         return `${prefix}-${crypto.randomUUID()}`;
       }
     } catch {
-
+      // fall through to the time-based id
     }
     return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
   }
+
   readonly allTags = computed(() => {
-    const tasks = this.tasks();
-
-    if (this.cachedTagsRef === tasks && this.cachedTags.length > 0) {
-
-      return this.cachedTags;
-    }
     const set = new Set<string>();
-    for (let i = 0; i < tasks.length; i++) {
-      const tags = tasks[i].tags;
-      for (let j = 0; j < tags.length; j++) set.add(tags[j]);
+    for (const task of this.tasks()) {
+      for (const tag of task.tags) set.add(tag);
     }
-    const result = Array.from(set);
-    this.cachedTags = result;
-    this.cachedTagsRef = tasks;
-    return result;
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
   });
 
   readonly totalCount = computed(() => this.tasks().length);
@@ -97,13 +87,12 @@ export class TaskService {
   });
 
   readonly filteredTasks = computed(() => {
-    const query = this.debouncedSearchQuery().toLowerCase().trim();
+    const query = this.debouncedSearchQuery().toLowerCase().trim().replace(/^#/, '');
     const status = this.statusFilter();
     const priority = this.priorityFilter();
     const tag = this.tagFilter();
 
     return this.tasks().filter(task => {
-
       if (query) {
         const matchesTitle = task.title.toLowerCase().includes(query);
         const matchesDesc = (task.description || '').toLowerCase().includes(query);
@@ -118,18 +107,19 @@ export class TaskService {
     });
   });
 
+  /**
+   * True when a new task fits in the plan. When it doesn't, the paywall opens right away,
+   * so the user never fills a form that can't be saved.
+   */
+  ensureCanAdd(): boolean {
+    const max = this.userService.currentUser().quotas.tasksMax;
+    if (this.userService.isPro() || this.tasks().length < max) return true;
+    this.userService.openPaywall(this.i18n.t('paywall.reason.tasks', { count: max }));
+    return false;
+  }
+
   addTask(data: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Task | null {
-
-    const isPro = this.userService.isPro();
-    const currentCount = this.tasks().length;
-    const maxAllowed = this.userService.currentUser().quotas.tasksMax;
-
-    if (!isPro && currentCount >= maxAllowed) {
-      this.userService.openPaywall(
-        `Limite de ${maxAllowed} tarefas atingido no plano Starter. Faça upgrade para tarefas infinitas.`
-      );
-      return null;
-    }
+    if (!this.ensureCanAdd()) return null;
 
     const now = new Date().toISOString();
     const newTask: Task = {
@@ -141,44 +131,71 @@ export class TaskService {
 
     this.tasks.update(list => [newTask, ...list]);
     this.saveTasks();
-    this.toast.success('Tarefa criada com sucesso', newTask.title);
+    this.toast.success(this.i18n.t('toast.task.created'), newTask.title);
     return newTask;
   }
 
-  updateTask(id: string, changes: Partial<Omit<Task, 'id' | 'createdAt'>>): void {
+  updateTask(id: string, changes: Partial<Omit<Task, 'id' | 'createdAt'>>, options: { silent?: boolean } = {}): void {
     const now = new Date().toISOString();
     this.tasks.update(list =>
       list.map(t => (t.id === id ? { ...t, ...changes, updatedAt: now } : t))
     );
     this.saveTasks();
-    this.toast.info('Tarefa atualizada');
+    if (!options.silent) {
+      this.toast.success(this.i18n.t('toast.task.updated'));
+    }
   }
 
-  toggleStatus(id: string): void {
+  /**
+   * The checkbox means "done": ticking completes the task, unticking reopens it as to-do.
+   * "In progress" is set from the task form or by moving it on the board.
+   */
+  toggleDone(id: string): void {
     const task = this.tasks().find(t => t.id === id);
     if (!task) return;
 
-    let nextStatus: TaskStatus;
-    if (task.status === 'todo') nextStatus = 'in-progress';
-    else if (task.status === 'in-progress') nextStatus = 'done';
-    else nextStatus = 'todo';
-
-    this.updateTask(id, { status: nextStatus });
-    if (nextStatus === 'done') {
-      this.toast.success('Tarefa concluída com sucesso!', task.title);
+    if (task.status === 'done') {
+      this.updateTask(id, { status: 'todo' }, { silent: true });
+      return;
     }
+    const previous = task.status;
+    this.updateTask(id, { status: 'done' }, { silent: true });
+    this.toast.success(this.i18n.t('toast.task.done'), task.title, {
+      label: this.i18n.t('common.undo'),
+      run: () => this.updateTask(id, { status: previous }, { silent: true })
+    });
+  }
+
+  setStatus(id: string, status: TaskStatus): void {
+    this.updateTask(id, { status }, { silent: true });
   }
 
   deleteTask(id: string): void {
-    const task = this.tasks().find(t => t.id === id);
-    this.tasks.update(list => list.filter(t => t.id !== id));
+    const list = this.tasks();
+    const index = list.findIndex(t => t.id === id);
+    if (index === -1) return;
+    const task = list[index];
+
+    this.tasks.update(current => current.filter(t => t.id !== id));
     this.saveTasks();
-    if (task) {
-      this.toast.warning('Tarefa removida', task.title);
-    }
+    this.toast.info(this.i18n.t('toast.task.deleted'), task.title, {
+      label: this.i18n.t('common.undo'),
+      run: () => this.restoreTask(task, index)
+    });
   }
 
-  addMultipleTasks(newTasks: Array<Omit<Task, 'id' | 'createdAt' | 'updatedAt'>>): void {
+  private restoreTask(task: Task, index: number): void {
+    if (this.tasks().some(t => t.id === task.id)) return;
+    this.tasks.update(current => {
+      const next = [...current];
+      next.splice(Math.min(index, next.length), 0, task);
+      return next;
+    });
+    this.saveTasks();
+  }
+
+  /** Adds tasks suggested by the AI. Returns how many were actually added. */
+  addMultipleTasks(newTasks: Array<Omit<Task, 'id' | 'createdAt' | 'updatedAt'>>): number {
     const isPro = this.userService.isPro();
     const currentCount = this.tasks().length;
     const maxAllowed = this.userService.currentUser().quotas.tasksMax;
@@ -186,20 +203,14 @@ export class TaskService {
     if (!isPro) {
       const remaining = Math.max(0, maxAllowed - currentCount);
       if (remaining <= 0) {
-        this.userService.openPaywall(
-          `Limite de ${maxAllowed} tarefas atingido no plano Starter. Faça upgrade para tarefas infinitas.`
-        );
-        this.toast.warning('Limite de tarefas atingido', `Você já possui ${currentCount}/${maxAllowed} tarefas.`);
-        return;
+        this.userService.openPaywall(this.i18n.t('paywall.reason.tasks', { count: maxAllowed }));
+        return 0;
       }
       if (newTasks.length > remaining) {
-        const allowed = newTasks.slice(0, remaining);
         this.userService.openPaywall(
-          `Apenas ${remaining} de ${newTasks.length} tarefas puderam ser adicionadas (limite ${maxAllowed}). Faça upgrade para tarefas infinitas.`
+          this.i18n.t('paywall.reason.partial', { added: remaining, total: newTasks.length, count: maxAllowed })
         );
-        this.toast.warning('Limite parcialmente atingido', `Apenas ${remaining} tarefas foram inseridas. Faça upgrade para adicionar todas.`);
-
-        newTasks = allowed;
+        newTasks = newTasks.slice(0, remaining);
       }
     }
 
@@ -214,13 +225,13 @@ export class TaskService {
 
     this.tasks.update(list => [...mapped, ...list]);
     this.saveTasks();
-    this.toast.ai(`${mapped.length} tarefas geradas pela IA inseridas no seu fluxo!`);
+    this.toast.ai(this.i18n.t('toast.task.aiAdded', { count: mapped.length }));
+    return mapped.length;
   }
 
   resetToMock(): void {
     this.tasks.set(INITIAL_MOCK_TASKS);
     this.saveTasks();
-    this.toast.info('Dados de tarefas restaurados para o padrão.');
   }
 
   private loadTasks(): Task[] {
@@ -229,31 +240,9 @@ export class TaskService {
 
   private saveTasks(): void {
     try {
-      const tasks = this.tasks();
-
-      try {
-        const serialized = JSON.stringify(tasks);
-
-        const MAX_SERIALIZED = 2_500_000;
-        if (serialized.length > MAX_SERIALIZED) {
-          const truncated = tasks.slice(0, 250);
-          this.storage.setItem(this.TASKS_KEY, truncated);
-          this.toast.warning('Armazenamento otimizado', 'Lista muito grande — mantidas apenas as 250 tarefas mais recentes.');
-          return;
-        }
-      } catch {
-
-      }
       this.storage.setItem(this.TASKS_KEY, this.tasks());
-    } catch (error: unknown) {
-      const isQuotaExceeded =
-        error instanceof DOMException &&
-        (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED' || (error as { code?: number }).code === 22);
-      if (isQuotaExceeded) {
-        this.toast.warning('Armazenamento cheio', 'Não foi possível salvar as tarefas. Limite local excedido.');
-      } else {
-        this.toast.warning('Erro ao salvar', 'Não foi possível persistir as tarefas.');
-      }
+    } catch {
+      this.toast.warning(this.i18n.t('toast.saveError'), this.i18n.t('toast.saveError.body'));
     }
   }
 }

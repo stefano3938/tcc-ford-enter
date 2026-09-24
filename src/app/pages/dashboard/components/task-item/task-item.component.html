@@ -9,10 +9,10 @@
     class="rm-task-checkbox"
     role="checkbox"
     [attr.aria-checked]="task().status === 'done'"
-    [attr.aria-label]="'Alternar status da tarefa ' + task().title"
+    [attr.aria-label]="i18n.t('task.toggle', { title: task().title })"
     [class.rm-task-checkbox--checked]="task().status === 'done'"
     [class.rm-task-checkbox--in-progress]="task().status === 'in-progress'"
-    (click)="taskService.toggleStatus(task().id)"
+    (click)="taskService.toggleDone(task().id)"
   >
     @if (task().status === 'done') {
       <rm-icon name="check" [size]="12"></rm-icon>
@@ -28,7 +28,7 @@
         @if (task().isAiGenerated) {
           <rm-badge type="ai" icon="sparkles" label="IA"></rm-badge>
         }
-        <rm-badge [type]="task().priority" [label]="task().priority.toUpperCase()"></rm-badge>
+        <rm-badge [type]="task().priority" [label]="i18n.t('priority.' + task().priority)"></rm-badge>
         <rm-badge [type]="task().status" [label]="statusLabel(task().status)"></rm-badge>
       </div>
     </div>
@@ -63,8 +63,8 @@
       type="button"
       class="rm-task-action-btn"
       (click)="edit.emit(task())"
-      title="Editar tarefa"
-      aria-label="Editar tarefa"
+      [title]="i18n.t('task.edit')"
+      [attr.aria-label]="i18n.t('task.edit')"
     >
       <rm-icon name="edit" [size]="13"></rm-icon>
     </button>
@@ -73,8 +73,8 @@
       type="button"
       class="rm-task-action-btn rm-task-action-btn--delete"
       (click)="taskService.deleteTask(task().id)"
-      title="Excluir tarefa"
-      aria-label="Excluir tarefa"
+      [title]="i18n.t('task.delete')"
+      [attr.aria-label]="i18n.t('task.delete')"
     >
       <rm-icon name="trash" [size]="13"></rm-icon>
     </button>

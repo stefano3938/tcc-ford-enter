@@ -1,12 +1,12 @@
 <div class="rm-app-container">
   @if (isPublicPage()) {
-    <!-- Public Layout: Full width for Home and Auth pages -->
-    <main class="rm-public-main">
+    <!-- Public pages render their own shell (header, footer) through <rm-public-shell> -->
+    <div class="rm-public-main">
       <router-outlet></router-outlet>
-    </main>
+    </div>
   } @else {
     <!-- Protected App Layout: Header + Sidebar + Router Outlet -->
-    <rm-header (toggleMenu)="toggleMobileMenu()"></rm-header>
+    <rm-header [menuOpen]="isMobileMenuOpen()" (toggleMenu)="toggleMobileMenu()"></rm-header>
 
     <div class="rm-layout-body">
       <rm-sidebar
@@ -14,17 +14,19 @@
         (closeMobile)="isMobileMenuOpen.set(false)"
       ></rm-sidebar>
 
-      <main class="rm-main-content">
+      <main id="rm-main" class="rm-main-content">
         <div class="rm-content-wrapper fade-in">
           <router-outlet></router-outlet>
         </div>
       </main>
     </div>
+
+    @if (!isAiPage()) {
+      <rm-ai-fab></rm-ai-fab>
+    }
   }
 
-  <!-- Global Toast Feedback Viewport -->
   <rm-toast-container></rm-toast-container>
-
-  <!-- Global Paywall / Upgrade Modal -->
   <rm-paywall-modal></rm-paywall-modal>
+  <rm-confirm-dialog></rm-confirm-dialog>
 </div>

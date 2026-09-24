@@ -14,7 +14,7 @@ import type { SafeHtml } from '@angular/platform-browser';
 import { AiService } from '../../core/services/ai.service';
 import { UserService } from '../../core/services/user.service';
 import { I18nService } from '../../core/services/i18n.service';
-import { AI_PROMPT_PRESETS } from '../../core/mock-data/ai.mock';
+import { AI_PROMPT_PRESETS, AI_WELCOME_MESSAGE_ID } from '../../core/mock-data/ai.mock';
 import { AiPromptPreset, ChatMessage } from '../../core/models/ai.model';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
@@ -38,6 +38,7 @@ export class AiAssistantComponent {
   @ViewChild('scrollContainer') private scrollContainer?: ElementRef<HTMLDivElement>;
 
   readonly presets = AI_PROMPT_PRESETS;
+  readonly welcomeId = AI_WELCOME_MESSAGE_ID;
   readonly messageInput = signal<string>('');
 
   private scrollTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -62,7 +63,7 @@ export class AiAssistantComponent {
   }
 
   applyPreset(preset: AiPromptPreset): void {
-    this.messageInput.set(preset.promptTemplate);
+    this.messageInput.set(this.i18n.t(preset.promptTemplate));
   }
 
   onEnterPressed(event: Event): void {
@@ -110,9 +111,6 @@ export class AiAssistantComponent {
     return this.sanitizer.bypassSecurityTrustHtml(sanitized);
   }
 
-  formatContent(raw: string): SafeHtml {
-    return this.formatContentSafe(raw);
-  }
 
   private scrollToBottom(): void {
     if (this.scrollContainer) {

@@ -1,23 +1,26 @@
-@import 'primeicons/primeicons.css';
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Fonts are loaded once, from index.html (with preconnect). Do not @import them here. */
 
 :root {
 
-  --rm-font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  --rm-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-  --rm-font-mono: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
-  --rm-accent: #6366f1;
-  --rm-accent-hover: #4f46e5;
-  --rm-accent-light: rgba(99, 102, 241, 0.12);
-  --rm-accent-glow: 0 0 24px rgba(99, 102, 241, 0.35);
+  --rm-font-display: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --rm-font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --rm-font-mono: 'Geist Mono', 'SF Mono', Consolas, monospace;
 
-  --rm-ai-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
-  --rm-ai-glow: 0 0 25px rgba(139, 92, 246, 0.35);
+  /* One blue. Its RGB triplet lets components build tints without new hues. */
+  --rm-accent-rgb: 37, 99, 235;
+  --rm-accent: #2563eb;
+  --rm-accent-hover: #1d4ed8;
+  --rm-accent-light: rgba(var(--rm-accent-rgb), 0.1);
+  --rm-accent-glow: 0 8px 24px -8px rgba(var(--rm-accent-rgb), 0.45);
+
+  /* AI keeps its own identity inside the blue family: navy to sky */
+  --rm-ai-gradient: linear-gradient(135deg, #1d4ed8 0%, #2563eb 45%, #0ea5e9 100%);
+  --rm-ai-glow: 0 8px 24px -8px rgba(14, 116, 233, 0.45);
   --rm-todo: #94a3b8;
   --rm-todo-bg: rgba(148, 163, 184, 0.12);
 
-  --rm-in-progress: #38bdf8;
-  --rm-in-progress-bg: rgba(56, 189, 248, 0.12);
+  --rm-in-progress: #0ea5e9;
+  --rm-in-progress-bg: rgba(14, 165, 233, 0.12);
 
   --rm-done: #10b981;
   --rm-done-bg: rgba(16, 185, 129, 0.12);
@@ -34,62 +37,102 @@
   --rm-low: #64748b;
   --rm-low-bg: rgba(100, 116, 139, 0.12);
   --rm-radius-sm: 8px;
-  --rm-radius-md: 12px;
-  --rm-radius-lg: 18px;
-  --rm-radius-xl: 24px;
+  --rm-radius-md: 10px;
+  --rm-radius-lg: 14px;
+  --rm-radius-xl: 16px;
   --rm-radius-full: 9999px;
 
-  --rm-transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
-  --rm-transition-base: 250ms cubic-bezier(0.16, 1, 0.3, 1);
-  --rm-transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* App header height: the sidebar and the AI view size themselves from it */
+  --rm-header-h: 60px;
+
+  --rm-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --rm-transition-fast: 150ms var(--rm-ease-out);
+  --rm-transition-base: 250ms var(--rm-ease-out);
+  --rm-transition-smooth: 400ms var(--rm-ease-out);
 }
 body.dark-mode {
-  --rm-bg-canvas: #09090b;
-  --rm-bg-surface: #121217;
-  --rm-bg-card: #18181f;
-  --rm-bg-hover: #22222b;
-  --rm-bg-active: #2a2a36;
-  --rm-bg-elevated: #202029;
-  --rm-bg-glass: rgba(18, 18, 23, 0.75);
+  --rm-bg-canvas: #060910;
+  --rm-bg-surface: #0c111c;
+  --rm-bg-card: #0f1522;
+  --rm-bg-hover: #161e2e;
+  --rm-bg-active: #1d2739;
+  --rm-bg-elevated: #131a29;
+  --rm-bg-glass: rgba(6, 9, 16, 0.72);
 
-  --rm-border-subtle: rgba(255, 255, 255, 0.06);
-  --rm-border-base: rgba(255, 255, 255, 0.1);
-  --rm-border-strong: rgba(255, 255, 255, 0.18);
-  --rm-border-glow: rgba(99, 102, 241, 0.4);
+  --rm-border-subtle: rgba(148, 178, 230, 0.07);
+  --rm-border-base: rgba(148, 178, 230, 0.12);
+  --rm-border-strong: rgba(148, 178, 230, 0.22);
+  --rm-border-glow: rgba(var(--rm-accent-rgb), 0.5);
 
-  --rm-text-primary: #f8fafc;
-  --rm-text-secondary: #94a3b8;
-  --rm-text-muted: #64748b;
-  --rm-text-inverse: #09090b;
+  --rm-text-primary: #eef2f9;
+  --rm-text-secondary: #9aa6ba;
+  --rm-text-muted: #7d8aa1;
+  --rm-text-inverse: #060910;
 
-  --rm-shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
-  --rm-shadow-dropdown: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  --rm-shadow-modal: 0 24px 60px -8px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  /* Readable text variants of the status colours (the base hues are fine on dark) */
+  --rm-todo-text: #94a3b8;
+  --rm-in-progress-text: #38bdf8;
+  --rm-done-text: #34d399;
+  --rm-urgent-text: #fb7185;
+  --rm-high-text: #fb923c;
+  --rm-medium-text: #eab308;
+  --rm-low-text: #94a3b8;
+  --rm-pro-text: #f59e0b;
+  --rm-ai-text: #7dd3fc;
+  --rm-accent-text: #7aa7ff;
+
+  /* Particle field palette (hero) */
+  --rm-particle-1: #3b82f6;
+  --rm-particle-2: #60a5fa;
+  --rm-particle-3: #93c5fd;
+  --rm-particle-4: #1d4ed8;
+
+  --rm-shadow-card: 0 4px 20px -4px rgba(0, 0, 0, 0.5);
+  --rm-shadow-dropdown: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(148, 178, 230, 0.12);
+  --rm-shadow-modal: 0 24px 60px -8px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(148, 178, 230, 0.14);
 
   color-scheme: dark;
 }
 body:not(.dark-mode) {
-  --rm-bg-canvas: #f8fafc;
+  --rm-bg-canvas: #ffffff;
   --rm-bg-surface: #ffffff;
   --rm-bg-card: #ffffff;
-  --rm-bg-hover: #f1f5f9;
-  --rm-bg-active: #e2e8f0;
+  --rm-bg-hover: #f3f6fb;
+  --rm-bg-active: #e6ecf5;
   --rm-bg-elevated: #ffffff;
-  --rm-bg-glass: rgba(255, 255, 255, 0.8);
+  --rm-bg-glass: rgba(255, 255, 255, 0.78);
 
-  --rm-border-subtle: rgba(0, 0, 0, 0.05);
-  --rm-border-base: rgba(0, 0, 0, 0.08);
-  --rm-border-strong: rgba(0, 0, 0, 0.15);
-  --rm-border-glow: rgba(99, 102, 241, 0.3);
+  --rm-border-subtle: rgba(10, 22, 48, 0.06);
+  --rm-border-base: rgba(10, 22, 48, 0.1);
+  --rm-border-strong: rgba(10, 22, 48, 0.18);
+  --rm-border-glow: rgba(var(--rm-accent-rgb), 0.35);
 
-  --rm-text-primary: #0f172a;
-  --rm-text-secondary: #475569;
-  --rm-text-muted: #94a3b8;
-  --rm-text-inverse: #f8fafc;
+  --rm-text-primary: #0a1020;
+  --rm-text-secondary: #4a5568;
+  /* 4.7:1 on white */
+  --rm-text-muted: #64748b;
+  --rm-text-inverse: #ffffff;
 
-  --rm-shadow-card: 0 2px 12px -2px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
-  --rm-shadow-dropdown: 0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.08);
-  --rm-shadow-modal: 0 20px 50px -10px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  /* Darker text variants so status labels reach 4.5:1 on light surfaces */
+  --rm-todo-text: #475569;
+  --rm-in-progress-text: #0369a1;
+  --rm-done-text: #047857;
+  --rm-urgent-text: #be123c;
+  --rm-high-text: #c2410c;
+  --rm-medium-text: #a16207;
+  --rm-low-text: #475569;
+  --rm-pro-text: #b45309;
+  --rm-ai-text: #0369a1;
+  --rm-accent-text: #1d4ed8;
+
+  --rm-particle-1: #2563eb;
+  --rm-particle-2: #3b82f6;
+  --rm-particle-3: #93c5fd;
+  --rm-particle-4: #1e3a8a;
+
+  --rm-shadow-card: 0 1px 2px rgba(10, 22, 48, 0.04), 0 4px 16px -6px rgba(10, 22, 48, 0.08);
+  --rm-shadow-dropdown: 0 10px 30px rgba(10, 22, 48, 0.1), 0 0 0 1px rgba(10, 22, 48, 0.08);
+  --rm-shadow-modal: 0 20px 50px -10px rgba(10, 22, 48, 0.2), 0 0 0 1px rgba(10, 22, 48, 0.08);
 
   color-scheme: light;
 }
@@ -114,6 +157,7 @@ html, body {
   color: var(--rm-text-primary);
   font-size: 14px;
   line-height: 1.5;
+  font-feature-settings: 'ss01', 'cv11';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -139,12 +183,27 @@ html, body {
   background: var(--rm-border-strong);
   border-radius: var(--rm-radius-full);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--rm-text-muted);
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--rm-text-muted);
+  }
 }
 :focus-visible {
   outline: 2px solid var(--rm-accent);
   outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(var(--rm-accent-rgb), 0.2);
+  color: inherit;
+}
+
+input, textarea {
+  caret-color: var(--rm-accent);
+}
+
+html {
+  scrollbar-color: var(--rm-border-strong) transparent;
 }
 button, input, textarea, select {
   font-family: inherit;
@@ -154,9 +213,10 @@ button, input, textarea, select {
   background: none;
 }
 
-/* iOS zooms the page when focusing an input under 16px and never zooms back out */
+/* iOS zooms the page when focusing a field under 16px and never zooms back out.
+   Component styles must not lower this. */
 input, textarea, select {
-  font-size: max(1rem, 100%);
+  font-size: 16px;
 }
 
 button {
@@ -182,10 +242,23 @@ img, svg {
 h1, h2, h3, h4, p, span, li, a, td, th {
   overflow-wrap: break-word;
 }
+
+/* Visually hidden but read by screen readers */
+.rm-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Kept for existing markup: a flat surface with a hairline, no blur */
 .glass-panel {
-  background: var(--rm-bg-glass);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: var(--rm-bg-surface);
   border: 1px solid var(--rm-border-base);
 }
 
@@ -195,13 +268,88 @@ h1, h2, h3, h4, p, span, li, a, td, th {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
   padding: 3px 8px;
   border-radius: var(--rm-radius-full);
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  box-shadow: 0 0 16px rgba(139, 92, 246, 0.3);
+  box-shadow: none;
 }
+
+/* Title block shared by the inner public pages (recursos, como funciona, demo, planos).
+   Swiss rhythm: big tight headline, one lede, left aligned. */
+.rm-page-head {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 760px;
+}
+
+.rm-page-title {
+  font-family: var(--rm-font-display);
+  font-size: clamp(34px, 6vw, 64px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  color: var(--rm-text-primary);
+  text-wrap: balance;
+}
+
+.rm-page-lede {
+  font-size: clamp(16px, 1.6vw, 18px);
+  line-height: 1.55;
+  color: var(--rm-text-secondary);
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+
+/* Numerals that carry order or measurement */
+.rm-num {
+  font-family: var(--rm-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/* One form-control look for every native select, date and number field */
+.rm-select,
+.rm-control {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  background: var(--rm-bg-surface);
+  border: 1px solid var(--rm-border-base);
+  border-radius: var(--rm-radius-md);
+  color: var(--rm-text-primary);
+  font-size: 16px;
+  transition: border-color var(--rm-transition-fast), box-shadow var(--rm-transition-fast);
+}
+
+.rm-select:focus-visible,
+.rm-control:focus-visible {
+  outline: none;
+  border-color: var(--rm-accent);
+  box-shadow: 0 0 0 3px var(--rm-accent-light);
+}
+
+.rm-select option {
+  background: var(--rm-bg-surface);
+  color: var(--rm-text-primary);
+}
+
+.rm-form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rm-text-secondary);
+}
+
+/* Readable status text on both themes */
+.text-urgent { color: var(--rm-urgent-text); }
+.text-progress { color: var(--rm-in-progress-text); }
+.text-done { color: var(--rm-done-text); }
+.text-pro { color: var(--rm-pro-text); }
+.text-ai { color: var(--rm-ai-text); }
+
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -224,6 +372,12 @@ h1, h2, h3, h4, p, span, li, a, td, th {
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Shared entrance animation: defined once, used by header menu, cards and sheets */
+@keyframes rmFadeUp {
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 

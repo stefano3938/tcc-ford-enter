@@ -81,7 +81,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  box-shadow: 0 0 25px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 25px rgba(var(--rm-accent-rgb), 0.12);
 }
 
 .rm-plan-highlight__header {

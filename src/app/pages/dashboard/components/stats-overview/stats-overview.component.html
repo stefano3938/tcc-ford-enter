@@ -3,12 +3,12 @@
   <rm-card class="rm-stat-card">
     <div class="rm-stat-card__inner">
       <div class="rm-stat-card__header">
-        <span class="rm-stat-card__label">PRODUÇÃO TOTAL</span>
-        <rm-badge type="neutral" [label]="taskService.totalCount() + ' itens'"></rm-badge>
+        <span class="rm-stat-card__label">{{ i18n.t('stats.total') }}</span>
+        <rm-badge type="neutral" [label]="i18n.t('stats.items', { count: taskService.totalCount() })"></rm-badge>
       </div>
       <div class="rm-stat-card__value-row">
         <span class="rm-stat-card__value">{{ taskService.completionPercentage() }}%</span>
-        <span class="rm-stat-card__sublabel">conclusão geral</span>
+        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.total.sub') }}</span>
       </div>
       <div class="rm-stat-card__bar">
         <div class="rm-stat-card__fill" [style.width.%]="taskService.completionPercentage()"></div>
@@ -18,18 +18,18 @@
   <rm-card class="rm-stat-card" [glow]="taskService.urgentCount() > 0">
     <div class="rm-stat-card__inner">
       <div class="rm-stat-card__header">
-        <span class="rm-stat-card__label">PRIORIDADE MÁXIMA</span>
-        <rm-badge type="urgent" label="URGENTE"></rm-badge>
+        <span class="rm-stat-card__label">{{ i18n.t('stats.urgent') }}</span>
+        <rm-badge type="urgent" [label]="i18n.t('priority.urgent')"></rm-badge>
       </div>
       <div class="rm-stat-card__value-row">
         <span class="rm-stat-card__value text-urgent">{{ taskService.urgentCount() }}</span>
-        <span class="rm-stat-card__sublabel">requerem atenção</span>
+        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.urgent.sub') }}</span>
       </div>
       <p class="rm-stat-card__caption">
         @if (taskService.urgentCount() > 0) {
-          Foque nestes itens antes das demais tarefas.
+          {{ i18n.t('stats.urgent.hint') }}
         } @else {
-          Nenhuma pendência urgente no momento.
+          {{ i18n.t('stats.urgent.none') }}
         }
       </p>
     </div>
@@ -37,30 +37,30 @@
   <rm-card class="rm-stat-card">
     <div class="rm-stat-card__inner">
       <div class="rm-stat-card__header">
-        <span class="rm-stat-card__label">EM EXECUÇÃO</span>
-        <rm-badge type="in-progress" label="ANDAMENTO"></rm-badge>
+        <span class="rm-stat-card__label">{{ i18n.t('stats.doing') }}</span>
+        <rm-badge type="in-progress" [label]="i18n.t('dash.doing')"></rm-badge>
       </div>
       <div class="rm-stat-card__value-row">
         <span class="rm-stat-card__value text-progress">{{ taskService.inProgressCount() }}</span>
-        <span class="rm-stat-card__sublabel">tarefas ativas</span>
+        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.doing.sub') }}</span>
       </div>
       <p class="rm-stat-card__caption">
-        {{ taskService.todoCount() }} ainda na fila para iniciar.
+        {{ i18n.t('stats.doing.queue', { count: taskService.todoCount() }) }}
       </p>
     </div>
   </rm-card>
   <rm-card class="rm-stat-card">
     <div class="rm-stat-card__inner">
       <div class="rm-stat-card__header">
-        <span class="rm-stat-card__label">BANCO DE IDEIAS</span>
-        <rm-badge type="ai" label="IA READY"></rm-badge>
+        <span class="rm-stat-card__label">{{ i18n.t('dash.tab.ideas') }}</span>
+        <rm-badge type="ai" [label]="i18n.t('stats.ideas.badge')"></rm-badge>
       </div>
       <div class="rm-stat-card__value-row">
         <span class="rm-stat-card__value text-ai">{{ ideaService.totalIdeas() }}</span>
-        <span class="rm-stat-card__sublabel">ideias salvas</span>
+        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.ideas.sub') }}</span>
       </div>
       <p class="rm-stat-card__caption">
-        {{ ideaService.expandedCount() }} já desdobradas pela inteligência.
+        {{ i18n.t('stats.ideas.expanded', { count: ideaService.expandedCount() }) }}
       </p>
     </div>
   </rm-card>

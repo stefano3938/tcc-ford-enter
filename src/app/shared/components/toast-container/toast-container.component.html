@@ -1,11 +1,7 @@
-<div class="rm-toast-viewport" aria-live="polite" aria-atomic="true">
-  @for (toast of visibleToasts(); track toast.id) {
-    <div
-      [class]="'rm-toast rm-toast--' + toast.type"
-      role="status"
-      (click)="toastService.dismiss(toast.id)"
-    >
-      <div class="rm-toast__icon">
+<div class="rm-toast-viewport" aria-live="polite" aria-relevant="additions">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div [class]="'rm-toast rm-toast--' + toast.type">
+      <div class="rm-toast__icon" aria-hidden="true">
         @switch (toast.type) {
           @case ('success') {
             <rm-icon name="check-circle" [size]="16"></rm-icon>
@@ -26,17 +22,24 @@
       </div>
 
       <div class="rm-toast__content">
-        <h4 class="rm-toast__title">{{ toast.title }}</h4>
+        <p class="rm-toast__title">{{ toast.title }}</p>
         @if (toast.message) {
           <p class="rm-toast__message">{{ toast.message }}</p>
         }
       </div>
 
+      @if (toast.action) {
+        <button type="button" class="rm-toast__action" (click)="toastService.runAction(toast)">
+          <rm-icon name="undo" [size]="13"></rm-icon>
+          <span>{{ toast.action.label }}</span>
+        </button>
+      }
+
       <button
         type="button"
         class="rm-toast__close"
-        (click)="toastService.dismiss(toast.id); $event.stopPropagation()"
-        aria-label="Dispensar notificação"
+        (click)="toastService.dismiss(toast.id)"
+        [attr.aria-label]="i18n.t('toast.dismiss')"
       >
         <rm-icon name="x" [size]="12"></rm-icon>
       </button>

@@ -221,8 +221,8 @@
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  background: rgba(99, 102, 241, 0.08);
-  border: 1px solid rgba(99, 102, 241, 0.18);
+  background: rgba(var(--rm-accent-rgb), 0.08);
+  border: 1px solid rgba(var(--rm-accent-rgb), 0.18);
   border-radius: var(--rm-radius-md);
   flex-wrap: wrap;
 }
@@ -236,7 +236,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--rm-accent);
-  background: rgba(99, 102, 241, 0.12);
+  background: rgba(var(--rm-accent-rgb), 0.12);
   padding: 4px 8px;
   border-radius: var(--rm-radius-full);
 }
@@ -255,7 +255,7 @@
   font-weight: 600;
   color: var(--rm-accent);
   background: var(--rm-bg-surface);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(var(--rm-accent-rgb), 0.25);
   padding: 6px 12px;
   border-radius: var(--rm-radius-full);
   transition: all var(--rm-transition-fast);

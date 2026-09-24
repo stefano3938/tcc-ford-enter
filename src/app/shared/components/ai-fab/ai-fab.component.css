@@ -1,0 +1,163 @@
+/* Sits under modals (1000) and the mobile sidebar (1040), above page content */
+.rm-ai-fab {
+  position: fixed;
+  right: max(24px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+
+.rm-ai-fab > * {
+  pointer-events: auto;
+}
+
+.rm-ai-fab__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 22px 0 18px;
+  border-radius: var(--rm-radius-full);
+  background: var(--rm-ai-gradient);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: var(--rm-ai-glow), var(--rm-shadow-dropdown);
+  transition: transform var(--rm-transition-fast), box-shadow var(--rm-transition-fast);
+  animation: rm-ai-fab-pulse 2.6s ease-in-out 3;
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Phones: round icon-only button, the label stays as the accessible name */
+  @media (max-width: 600px) {
+    width: 56px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+
+.rm-ai-fab__text {
+  white-space: nowrap;
+
+  @media (max-width: 600px) {
+    display: none;
+  }
+}
+
+/* Free plan: queries left today */
+.rm-ai-fab__count {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--rm-radius-full);
+  background: #ffffff;
+  color: var(--rm-accent);
+  font-size: 12px;
+  font-weight: 800;
+
+  @media (max-width: 600px) {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+  }
+}
+
+.rm-ai-fab__teaser {
+  position: relative;
+  width: min(280px, calc(100vw - 32px));
+  padding: 14px 44px 14px 16px;
+  background: var(--rm-bg-elevated);
+  border: 1px solid var(--rm-border-base);
+  border-radius: var(--rm-radius-lg);
+  box-shadow: var(--rm-shadow-dropdown);
+  animation: rm-ai-fab-teaser-in 240ms cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* Little tail pointing at the button */
+  &::after {
+    content: '';
+    position: absolute;
+    right: 24px;
+    bottom: -7px;
+    width: 12px;
+    height: 12px;
+    background: var(--rm-bg-elevated);
+    border-right: 1px solid var(--rm-border-base);
+    border-bottom: 1px solid var(--rm-border-base);
+    transform: rotate(45deg);
+  }
+}
+
+.rm-ai-fab__teaser-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--rm-text-primary);
+}
+
+.rm-ai-fab__teaser-body {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--rm-text-secondary);
+}
+
+.rm-ai-fab__teaser-close {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--rm-radius-md);
+  color: var(--rm-text-muted);
+
+  /* 44px touch area */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+  }
+
+  &:active {
+    background: var(--rm-bg-active);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background: var(--rm-bg-hover);
+      color: var(--rm-text-primary);
+    }
+  }
+}
+
+@keyframes rm-ai-fab-pulse {
+  0%, 100% { box-shadow: var(--rm-ai-glow), var(--rm-shadow-dropdown); }
+  50% { box-shadow: 0 0 0 8px rgba(14, 165, 233, 0.18), var(--rm-ai-glow), var(--rm-shadow-dropdown); }
+}
+
+@keyframes rm-ai-fab-teaser-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}

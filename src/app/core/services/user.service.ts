@@ -1,12 +1,18 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { StorageService } from './storage.service';
 import { ToastService } from './toast.service';
+import { I18nService } from './i18n.service';
 import { PricingPlan, UserProfile } from '../models/user.model';
 
-const FREE_TASKS_MAX = 8;
-const FREE_IDEAS_MAX = 4;
-const FREE_AI_QUERIES_PER_DAY = 3;
+export const FREE_TASKS_MAX = 8;
+export const FREE_IDEAS_MAX = 4;
+export const FREE_AI_QUERIES_PER_DAY = 3;
 const UNLIMITED = 9999;
+
+export const PLAN_PRICES = {
+  pro: { monthly: 29, yearly: 24 },
+  team: { monthly: 69, yearly: 55 }
+} as const;
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +20,7 @@ const UNLIMITED = 9999;
 export class UserService {
   private readonly storage = inject(StorageService);
   private readonly toast = inject(ToastService);
+  private readonly i18n = inject(I18nService);
   private readonly USER_KEY = 'redmindme_user_profile';
   private readonly TASKS_KEY = 'redmindme_tasks_list';
   private readonly IDEAS_KEY = 'redmindme_ideas_list';
@@ -22,7 +29,7 @@ export class UserService {
   readonly tasksUsed = signal<number>(this.loadTasksCount());
   readonly ideasUsed = signal<number>(this.loadIdeasCount());
   readonly isPaywallOpen = signal<boolean>(false);
-  readonly paywallTriggerReason = signal<string>('Faça upgrade para ter acesso ilimitado.');
+  readonly paywallTriggerReason = signal<string>('');
   readonly isPro = computed(() => this.currentUser().plan === 'pro');
 
   readonly tasksRemaining = computed(() => {
@@ -41,56 +48,46 @@ export class UserService {
     return Math.max(0, aiQueriesPerDay - aiQueriesUsedToday);
   });
 
-  readonly pricingPlans: PricingPlan[] = [
-    {
-      id: 'free',
-      name: 'Starter',
-      description: 'Ideal para experimentação e organização pessoal básica.',
-      priceMonthly: 0,
-      priceYearly: 0,
-      features: [
-        `Até ${FREE_TASKS_MAX} tarefas ativas`,
-        `Até ${FREE_IDEAS_MAX} ideias salvas`,
-        `${FREE_AI_QUERIES_PER_DAY} consultas de IA generativa por dia`,
-        'Filtros básicos por status e prioridade',
-        'Armazenamento local seguro'
-      ],
-      ctaLabel: 'Plano Atual'
-    },
-    {
-      id: 'pro',
-      name: 'RemindMe Pro',
-      description: 'Poder absoluto de IA para profissionais focados em máxima produtividade linear.',
-      priceMonthly: 29,
-      priceYearly: 24,
-      isPopular: true,
-      features: [
-        'Tarefas & Ideias Ilimitadas',
-        'IA Generativa Ilimitada com modelos de alta velocidade',
-        'Decomposição instantânea de ideias em tarefas acionáveis',
-        'Priorização automática por inteligência contextual',
-        'Visualização em Kanban & Lista avançada',
-        'Exportação em Markdown & JSON',
-        'Suporte prioritário e novidades em primeira mão'
-      ],
-      ctaLabel: 'Desbloquear Acesso Pro'
-    },
-    {
-      id: 'team',
-      name: 'Team Studio',
-      description: 'Para squads e times que pensam e executam juntos com IA.',
-      priceMonthly: 69,
-      priceYearly: 55,
-      features: [
-        'Tudo incluído no Pro',
-        'Workspaces colaborativos compartilhados',
-        'Atribuição inteligente de tarefas entre membros',
-        'Relatórios executivos semanais de sprints',
-        'API de integração com Slack e GitHub'
-      ],
-      ctaLabel: 'Falar com Especialista'
-    }
-  ];
+  /** Plans are built from translations, so they follow the selected language. */
+  readonly pricingPlans = computed<PricingPlan[]>(() => {
+    const t = (key: string, params?: Record<string, string | number>) => this.i18n.t(key, params);
+    return [
+      {
+        id: 'free',
+        name: 'Starter',
+        description: t('plan.free.desc'),
+        priceMonthly: 0,
+        priceYearly: 0,
+        features: [
+          t('plan.free.f1', { count: FREE_TASKS_MAX }),
+          t('plan.free.f2', { count: FREE_IDEAS_MAX }),
+          t('plan.free.f3', { count: FREE_AI_QUERIES_PER_DAY }),
+          t('plan.free.f4'),
+          t('plan.free.f5')
+        ],
+        ctaLabel: t('plan.free.cta')
+      },
+      {
+        id: 'pro',
+        name: 'RemindMe Pro',
+        description: t('plan.pro.desc'),
+        priceMonthly: PLAN_PRICES.pro.monthly,
+        priceYearly: PLAN_PRICES.pro.yearly,
+        isPopular: true,
+        features: [t('plan.pro.f1'), t('plan.pro.f2'), t('plan.pro.f3'), t('plan.pro.f4'), t('plan.pro.f5')],
+        ctaLabel: t('plan.pro.cta')
+      },
+      {
+        id: 'team',
+        name: 'Team Studio',
+        description: t('plan.team.desc'),
+        priceMonthly: PLAN_PRICES.team.monthly,
+        priceYearly: PLAN_PRICES.team.yearly,
+        features: [t('plan.team.f1'), t('plan.team.f2'), t('plan.team.f3'), t('plan.team.f4')],
+        ctaLabel: t('plan.team.cta')
+      }
+    ];
+  });
 
   constructor() {
     this.maybeResetDailyQuota();
@@ -120,8 +117,9 @@ export class UserService {
     this.ideasUsed.set(count);
   }
 
-  openPaywall(reason: string): void {
-    this.paywallTriggerReason.set(reason);
+  /** @param reason already-translated sentence explaining why the paywall opened */
+  openPaywall(reason?: string): void {
+    this.paywallTriggerReason.set(reason ?? this.i18n.t('paywall.reason.default'));
     this.isPaywallOpen.set(true);
   }
 
@@ -142,7 +140,7 @@ export class UserService {
     }));
     this.saveUser();
     this.closePaywall();
-    this.toast.success('Parabéns! Você agora é RemindMe Pro', 'Todos os limites de tarefas, ideias e IA foram removidos.');
+    this.toast.success(this.i18n.t('toast.upgraded'), this.i18n.t('toast.upgraded.body'));
   }
 
   downgradeToFree(): void {
@@ -157,7 +155,7 @@ export class UserService {
       }
     }));
     this.saveUser();
-    this.toast.info('Plano alterado para Starter', 'Limites padrões reaplicados.');
+    this.toast.info(this.i18n.t('toast.downgraded'), this.i18n.t('toast.downgraded.body'));
   }
 
   incrementAiUsage(): boolean {
@@ -166,7 +164,7 @@ export class UserService {
 
     const current = this.currentUser();
     if (current.quotas.aiQueriesUsedToday >= current.quotas.aiQueriesPerDay) {
-      this.openPaywall(`Você atingiu o limite diário de ${FREE_AI_QUERIES_PER_DAY} consultas de IA no plano gratuito.`);
+      this.openPaywall(this.i18n.t('paywall.reason.ai', { count: FREE_AI_QUERIES_PER_DAY }));
       return false;
     }
 
@@ -179,6 +177,19 @@ export class UserService {
     }));
     this.saveUser();
     return true;
+  }
+
+  /** Gives a query back when the user cancels before getting an answer. */
+  refundAiUsage(): void {
+    if (this.isPro()) return;
+    this.currentUser.update(u => ({
+      ...u,
+      quotas: {
+        ...u.quotas,
+        aiQueriesUsedToday: Math.max(0, u.quotas.aiQueriesUsedToday - 1)
+      }
+    }));
+    this.saveUser();
   }
 
   private loadTasksCount(): number {
@@ -197,17 +208,6 @@ export class UserService {
     } catch {
       return 0;
     }
-  }
-
-  updateProfile(data: { name: string; email: string; avatarUrl?: string }): void {
-    this.currentUser.update(u => ({
-      ...u,
-      name: data.name.trim(),
-      email: data.email.trim().toLowerCase(),
-      avatarUrl: data.avatarUrl ?? u.avatarUrl
-    }));
-    this.saveUser();
-    this.toast.success('Perfil atualizado', `Bem-vindo, ${data.name.trim()}!`);
   }
 
   createProfile(data: { name: string; email: string; }): void {

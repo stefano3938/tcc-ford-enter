@@ -23,7 +23,7 @@
 
 .rm-card--glow {
   border-color: var(--rm-border-glow);
-  box-shadow: 0 0 30px -4px rgba(99, 102, 241, 0.25), 0 0 0 1px var(--rm-border-glow);
+  box-shadow: 0 0 30px -4px rgba(var(--rm-accent-rgb), 0.25), 0 0 0 1px var(--rm-border-glow);
 }
 
 @media (hover: hover) and (pointer: fine) {

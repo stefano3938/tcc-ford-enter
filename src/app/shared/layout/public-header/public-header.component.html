@@ -1,62 +1,47 @@
-<header class="rm-public-nav glass-panel">
+<header class="rm-public-nav">
   <div class="rm-public-nav__inner">
-    <a routerLink="/home" class="rm-public-brand" [attr.aria-label]="i18n.t('app.name')">
+    <a routerLink="/home" class="rm-public-brand" [attr.aria-label]="i18n.t('nav.home')">
       <span class="rm-public-logo-mark">
         <img src="assets/favicon-plate-64.png" alt="" width="32" height="32" />
       </span>
-      <span class="rm-public-logo-title">Remind<span class="text-accent">Me</span></span>
+      <span class="rm-public-logo-title">RemindMe</span>
     </a>
 
     <nav class="rm-public-links" [attr.aria-label]="i18n.t('nav.main')">
-      <a routerLink="/recursos" routerLinkActive="rm-public-link--active" ariaCurrentWhenActive="page" class="rm-public-link">
-        {{ i18n.t('home.nav.features') }}
-      </a>
-      <a routerLink="/demonstracao" routerLinkActive="rm-public-link--active" ariaCurrentWhenActive="page" class="rm-public-link">
-        {{ i18n.t('nav.demo') }}
-      </a>
-      <a routerLink="/como-funciona" routerLinkActive="rm-public-link--active" ariaCurrentWhenActive="page" class="rm-public-link">
-        {{ i18n.t('home.nav.how') }}
-      </a>
-      <a routerLink="/planos" routerLinkActive="rm-public-link--active" ariaCurrentWhenActive="page" class="rm-public-link">
-        {{ i18n.t('home.nav.plans') }}
-      </a>
+      @for (link of links; track link.path) {
+        <a [routerLink]="link.path" routerLinkActive="rm-public-link--active" ariaCurrentWhenActive="page" class="rm-public-link">
+          {{ i18n.t(link.label) }}
+        </a>
+      }
     </nav>
 
     <div class="rm-public-actions">
       <rm-lang-switcher></rm-lang-switcher>
       <button
         type="button"
-        class="rm-public-theme-btn"
+        class="rm-public-icon-btn"
         (click)="themeService.toggleTheme()"
         [attr.aria-label]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
         [title]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
       >
-        @if (themeService.theme() === 'dark') {
-          <rm-icon name="sun" [size]="16"></rm-icon>
-        } @else {
-          <rm-icon name="moon" [size]="16"></rm-icon>
-        }
+        <rm-icon [name]="themeService.theme() === 'dark' ? 'sun' : 'moon'" [size]="16"></rm-icon>
       </button>
 
-      @if (authService.isAuthenticated()) {
-        <rm-button variant="subtle" size="sm" (clicked)="goToApp()">
-          {{ i18n.t('home.nav.dashboard') }}
-        </rm-button>
-      } @else {
-        <rm-button class="rm-public-header-login" variant="subtle" size="sm" (clicked)="goToLogin()">
-          {{ i18n.t('home.nav.enter') }}
+      <!-- Signed out: two different destinations. Signed in: one way into the app. -->
+      @if (!authService.isAuthenticated()) {
+        <rm-button class="rm-public-header-login" variant="subtle" size="sm" (clicked)="cta.login()">
+          {{ i18n.t('nav.login') }}
         </rm-button>
       }
-
-      <rm-button variant="primary" size="sm" icon="plus" (clicked)="onStartNow()">
-        <span class="rm-public-nav-cta-text">{{ i18n.t('home.nav.start') }}</span>
+      <rm-button class="rm-public-header-cta" variant="primary" size="sm" (clicked)="cta.go()">
+        {{ cta.label() }}
       </rm-button>
 
       <button
         type="button"
-        class="rm-public-menu-btn"
+        class="rm-public-icon-btn rm-public-menu-btn"
         (click)="toggleMobileMenu()"
-        [attr.aria-label]="i18n.t('nav.menu')"
+        [attr.aria-label]="isMobileMenuOpen() ? i18n.t('nav.menu.close') : i18n.t('nav.menu')"
         [attr.aria-expanded]="isMobileMenuOpen()"
         aria-controls="rm-public-mobile-menu"
       >
@@ -66,33 +51,28 @@
   </div>
 
   @if (isMobileMenuOpen()) {
-    <nav id="rm-public-mobile-menu" class="rm-public-mobile-menu glass-panel" [attr.aria-label]="i18n.t('nav.menu')">
-      <a routerLink="/recursos" class="rm-public-mobile-link" (click)="closeMobileMenu()">
-        {{ i18n.t('home.nav.features') }}
-      </a>
-      <a routerLink="/demonstracao" class="rm-public-mobile-link" (click)="closeMobileMenu()">
-        {{ i18n.t('nav.demo') }}
-      </a>
-      <a routerLink="/como-funciona" class="rm-public-mobile-link" (click)="closeMobileMenu()">
-        {{ i18n.t('home.nav.how') }}
-      </a>
-      <a routerLink="/planos" class="rm-public-mobile-link" (click)="closeMobileMenu()">
-        {{ i18n.t('home.nav.plans') }}
-      </a>
+    <nav id="rm-public-mobile-menu" class="rm-public-mobile-menu" [attr.aria-label]="i18n.t('nav.main')">
+      @for (link of links; track link.path) {
+        <a
+          [routerLink]="link.path"
+          routerLinkActive="rm-public-mobile-link--active"
+          ariaCurrentWhenActive="page"
+          class="rm-public-mobile-link"
+          (click)="closeMobileMenu()"
+        >
+          {{ i18n.t(link.label) }}
+        </a>
+      }
 
       <div class="rm-public-mobile-actions">
-        @if (authService.isAuthenticated()) {
-          <rm-button variant="primary" size="md" (clicked)="goToApp()">
-            {{ i18n.t('home.nav.dashboard') }}
-          </rm-button>
-        } @else {
-          <rm-button variant="primary" size="md" (clicked)="goToLogin()">
-            {{ i18n.t('home.nav.enter') }}
+        <rm-button variant="primary" size="md" (clicked)="closeMobileMenu(); cta.go()">
+          {{ cta.label() }}
+        </rm-button>
+        @if (!authService.isAuthenticated()) {
+          <rm-button variant="secondary" size="md" (clicked)="closeMobileMenu(); cta.login()">
+            {{ i18n.t('nav.login') }}
           </rm-button>
         }
-        <rm-button variant="primary" size="md" (clicked)="onStartNow()">
-          {{ i18n.t('home.nav.start') }}
-        </rm-button>
       </div>
     </nav>
   }

@@ -8,9 +8,10 @@
 
 .rm-ai-hero {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px 16px;
   padding-bottom: 8px;
 }
 
@@ -18,6 +19,12 @@
   display: flex;
   align-items: center;
   gap: 14px;
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.rm-ai-hero__right {
+  flex-shrink: 0;
 }
 
 .rm-ai-spark-icon {
@@ -30,18 +37,19 @@
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  box-shadow: 0 0 24px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 24px rgba(14, 165, 233, 0.4);
   flex-shrink: 0;
 }
 
 .rm-ai-title-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 4px 8px;
 }
 
 .rm-ai-hero__title {
-  font-size: 20px;
+  font-size: clamp(18px, 4.5vw, 20px);
   font-weight: 700;
   color: var(--rm-text-primary);
   letter-spacing: -0.02em;
@@ -78,14 +86,14 @@
   transition: all var(--rm-transition-fast);
 
   &:hover {
-    border-color: rgba(139, 92, 246, 0.4);
+    border-color: rgba(14, 165, 233, 0.4);
     background: var(--rm-bg-hover);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 }
 
-.text-ai { color: #c084fc; }
+.text-ai { color: #7dd3fc; }
 .text-pro { color: #f59e0b; }
 .rm-chat-box {
   flex: 1;
@@ -190,7 +198,7 @@
   display: inline-block;
   width: 2px;
   height: 14px;
-  background: #c084fc;
+  background: #7dd3fc;
   margin-left: 2px;
   animation: blink 0.8s infinite;
   vertical-align: middle;
@@ -216,7 +224,7 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #c084fc;
+    background: #7dd3fc;
     animation: typingDot 1.4s infinite ease-in-out both;
 
     &:nth-child(1) { animation-delay: -0.32s; }
@@ -237,7 +245,7 @@
   margin-top: 8px;
   padding: 12px;
   background: var(--rm-bg-canvas);
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  border: 1px solid rgba(14, 165, 233, 0.25);
   border-radius: var(--rm-radius-md);
   display: flex;
   flex-direction: column;
@@ -250,7 +258,7 @@
   gap: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: #c084fc;
+  color: #7dd3fc;
 }
 
 .rm-suggested-cards {

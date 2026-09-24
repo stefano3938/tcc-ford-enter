@@ -1,26 +1,22 @@
 @if (isOpen()) {
-  <div
-    class="rm-modal-overlay"
-    role="dialog"
-    aria-modal="true"
-    [attr.aria-labelledby]="title() ? 'modal-title' : null"
-    (click)="onBackdropClick($event)"
-    (keydown)="onKeydown($event)"
-  >
+  <div class="rm-modal-overlay" (click)="onBackdropClick($event)">
     <div
       class="rm-modal-box"
-      #modalBox
+      [attr.role]="dialogRole()"
+      aria-modal="true"
+      [attr.aria-labelledby]="title() ? titleId : null"
+      [attr.aria-label]="!title() && ariaLabel() ? ariaLabel() : null"
+      [attr.aria-describedby]="subtitle() ? subtitleId : null"
       [style.max-width]="maxWidth()"
-      (click)="$event.stopPropagation()"
+      (keydown)="onKeydown($event)"
     >
-
-      <div class="rm-modal-header">
+      <div class="rm-modal-header" [class.rm-modal-header--bare]="!title() && !subtitle()">
         <div class="rm-modal-titles">
           @if (title()) {
-            <h3 id="modal-title" class="rm-modal-title">{{ title() }}</h3>
+            <h2 [id]="titleId" class="rm-modal-title">{{ title() }}</h2>
           }
           @if (subtitle()) {
-            <p class="rm-modal-subtitle">{{ subtitle() }}</p>
+            <p [id]="subtitleId" class="rm-modal-subtitle">{{ subtitle() }}</p>
           }
         </div>
 
@@ -28,7 +24,7 @@
           type="button"
           class="rm-modal-close"
           (click)="close()"
-          aria-label="Fechar janela"
+          [attr.aria-label]="i18n.t('modal.close')"
         >
           <rm-icon name="x" [size]="14"></rm-icon>
         </button>
@@ -36,9 +32,7 @@
       <div class="rm-modal-body">
         <ng-content></ng-content>
       </div>
-      <div class="rm-modal-footer">
-        <ng-content select="[modal-footer]"></ng-content>
-      </div>
+      <div class="rm-modal-footer"><ng-content select="[modal-footer]"></ng-content></div>
     </div>
   </div>
 }

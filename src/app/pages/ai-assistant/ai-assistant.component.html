@@ -8,10 +8,10 @@
       <div>
         <div class="rm-ai-title-row">
           <h2 class="rm-ai-hero__title">{{ i18n.t('ai.title') }}</h2>
-          <span class="ai-pill">MODO GENERATIVO</span>
+          <span class="ai-pill">{{ i18n.t('ai.mode') }}</span>
         </div>
         <p class="rm-ai-hero__subtitle">
-          Inteligência linear para decomposição de objetivos, priorização executiva e refinamento de sprints.
+          {{ i18n.t('ai.subtitle') }}
         </p>
       </div>
     </div>
@@ -22,9 +22,8 @@
         size="sm"
         icon="pi-trash"
         (clicked)="aiService.clearChat()"
-        title="Limpar histórico"
       >
-        Limpar Conversa
+        {{ i18n.t('ai.clear') }}
       </rm-button>
     </div>
   </div>
@@ -36,7 +35,7 @@
         (click)="applyPreset(preset)"
       >
         <i [class]="'pi ' + preset.icon + ' text-ai'" aria-hidden="true"></i>
-        <span class="rm-preset-chip__title">{{ preset.title }}</span>
+        <span class="rm-preset-chip__title">{{ i18n.t(preset.title) }}</span>
       </button>
     }
   </div>
@@ -53,7 +52,6 @@
               [src]="userService.currentUser().avatarUrl"
               [name]="userService.currentUser().name"
               size="sm"
-              alt="Usuário"
             ></rm-avatar>
           } @else {
             <div class="rm-ai-avatar-mark">
@@ -70,12 +68,12 @@
             <span class="rm-chat-bubble__time">{{ formatTime(msg.timestamp) }}</span>
           </div>
 
-          <div class="rm-chat-bubble__text" [innerHTML]="formatContentSafe(msg.content)"></div>
+          <div class="rm-chat-bubble__text" [innerHTML]="formatContentSafe(msg.id === welcomeId ? i18n.t('ai.welcome') : msg.content)"></div>
           @if (msg.suggestedTasks && msg.suggestedTasks.length > 0) {
             <div class="rm-ai-suggested-tasks">
               <div class="rm-suggested-header">
                 <i class="pi pi-bolt text-ai" aria-hidden="true"></i>
-                <span>Tarefas Acionáveis Geradas:</span>
+                <span>{{ i18n.t('ai.suggested') }}</span>
               </div>
 
               <div class="rm-suggested-cards">
@@ -84,7 +82,7 @@
                     <div class="rm-suggested-task-info">
                       <span class="rm-suggested-task-title">{{ task.title }}</span>
                       <div class="rm-suggested-task-tags">
-                        <rm-badge [type]="task.priority" [label]="task.priority.toUpperCase()"></rm-badge>
+                        <rm-badge [type]="task.priority" [label]="i18n.t('priority.' + task.priority)"></rm-badge>
                         @if (task.estimatedMinutes) {
                           <span class="rm-suggested-min">{{ task.estimatedMinutes }} min</span>
                         }
@@ -99,9 +97,10 @@
                   variant="ai"
                   size="sm"
                   icon="pi-check-circle"
-                  (clicked)="aiService.convertSuggestedTasksToLive(msg.suggestedTasks)"
+                  [disabled]="aiService.addedMessageIds().has(msg.id)"
+                  (clicked)="aiService.addSuggestedTasks(msg.id, msg.suggestedTasks)"
                 >
-                  Adicionar Todas ao Painel de Tarefas
+                  {{ aiService.addedMessageIds().has(msg.id) ? i18n.t('ai.added') : i18n.t('ai.addAll') }}
                 </rm-button>
               </div>
             </div>
@@ -120,7 +119,7 @@
         <div class="rm-chat-bubble">
           <div class="rm-chat-bubble__meta">
             <span class="rm-chat-bubble__author">{{ i18n.t('ai.author') }}</span>
-            <span class="rm-chat-bubble__time">Digitando...</span>
+            <span class="rm-chat-bubble__time">{{ i18n.t('ai.typing') }}</span>
           </div>
 
           <div class="rm-chat-bubble__text" [innerHTML]="formatContentSafe(streamed)"></div>
@@ -152,6 +151,7 @@
       #inputArea
       class="rm-chat-textarea"
       [placeholder]="i18n.t('ai.placeholder')"
+      [attr.aria-label]="i18n.t('ai.placeholder')"
       [value]="messageInput()"
       (input)="messageInput.set($any($event.target).value)"
       (keydown.enter)="onEnterPressed($event)"
@@ -161,9 +161,9 @@
     <div class="rm-chat-input-controls">
       <span class="rm-chat-quota-hint">
         @if (userService.isPro()) {
-          <span class="text-pro"><i class="pi pi-crown"></i> Acesso Pro Ilimitado</span>
+          <span class="text-pro"><i class="pi pi-crown" aria-hidden="true"></i> {{ i18n.t('ai.proUnlimited') }}</span>
         } @else {
-          <span>{{ userService.aiRemaining() }} consultas restantes hoje</span>
+          <span>{{ i18n.t('ai.remainingToday', { count: userService.aiRemaining() }) }}</span>
         }
       </span>
 
@@ -174,7 +174,7 @@
         [disabled]="!messageInput().trim() || aiService.isTyping() || aiService.isStreaming()"
         (clicked)="send()"
       >
-        Enviar
+        {{ i18n.t('ai.send') }}
       </rm-button>
     </div>
   </div>

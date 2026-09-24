@@ -1,0 +1,54 @@
+<rm-modal
+  [isOpen]="isOpen()"
+  [title]="i18n.t('auth.google.title')"
+  [subtitle]="i18n.t('auth.google.subtitle')"
+  maxWidth="420px"
+  (closed)="close()"
+>
+  @if (!useOther()) {
+    <ul class="rm-gpick-list">
+      @for (account of accounts; track account.email) {
+        <li>
+          <button type="button" class="rm-gpick-account" (click)="choose(account)">
+            <rm-avatar [name]="account.name" size="sm"></rm-avatar>
+            <span class="rm-gpick-account__text">
+              <span class="rm-gpick-account__name">{{ account.name }}</span>
+              <span class="rm-gpick-account__email">{{ account.email }}</span>
+            </span>
+          </button>
+        </li>
+      }
+      <li>
+        <button type="button" class="rm-gpick-account" (click)="useOther.set(true)">
+          <span class="rm-gpick-other-icon" aria-hidden="true">+</span>
+          <span class="rm-gpick-account__name">{{ i18n.t('auth.google.other') }}</span>
+        </button>
+      </li>
+    </ul>
+  } @else {
+    <form class="rm-gpick-form" (submit)="$event.preventDefault(); continueWithOther()" novalidate>
+      <rm-input
+        [label]="i18n.t('auth.name')"
+        autocomplete="name"
+        [value]="otherName()"
+        (valueChange)="otherName.set($event); nameError.set(null)"
+        [errorMessage]="nameError() ?? undefined"
+      ></rm-input>
+      <rm-input
+        [label]="i18n.t('auth.email')"
+        type="email"
+        autocomplete="email"
+        [placeholder]="i18n.t('auth.emailPlaceholder')"
+        [value]="otherEmail()"
+        (valueChange)="otherEmail.set($event); emailError.set(null)"
+        [errorMessage]="emailError() ?? undefined"
+      ></rm-input>
+      <div class="rm-gpick-form__actions">
+        <rm-button type="button" variant="subtle" (clicked)="useOther.set(false)">{{ i18n.t('legal.back') }}</rm-button>
+        <rm-button type="submit" variant="primary">{{ i18n.t('auth.google.continue') }}</rm-button>
+      </div>
+    </form>
+  }
+
+  <p class="rm-gpick-note">{{ i18n.t('auth.google.demo') }}</p>
+</rm-modal>

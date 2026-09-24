@@ -4,9 +4,11 @@
       type="button"
       class="rm-header__menu-btn"
       (click)="toggleMenu.emit()"
-      [attr.aria-label]="i18n.t('nav.menu')"
+      [attr.aria-label]="menuOpen() ? i18n.t('nav.menu.close') : i18n.t('nav.menu')"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="rm-sidebar"
     >
-      <rm-icon name="menu" [size]="16"></rm-icon>
+      <rm-icon name="menu" [size]="16" aria-hidden="true"></rm-icon>
     </button>
 
     <a routerLink="/dashboard" class="rm-logo">
@@ -29,22 +31,23 @@
 
   <div class="rm-header__right">
 
-    <div class="rm-header__ai-quota" (click)="openAiPaywall()">
+    <button type="button" class="rm-header__ai-quota rm-header__desktop-only" (click)="openAiPaywall()">
       <span class="ai-pill">
-        <rm-icon name="layers" [size]="12"></rm-icon>
+        <rm-icon name="layers" [size]="12" aria-hidden="true"></rm-icon>
         @if (userService.isPro()) {
           {{ i18n.t('nav.ai.unlimited') }}
         } @else {
           {{ userService.aiRemaining() }} {{ i18n.t('nav.ai.remaining') }}
         }
       </span>
-    </div>
+    </button>
     @if (!userService.isPro()) {
       <rm-button
+        class="rm-header__desktop-only"
         variant="ai"
         size="sm"
         icon="crown"
-        (clicked)="userService.openPaywall('Upgrade para desbloquear todos os superpoderes de IA.')"
+        (clicked)="userService.openPaywall()"
       >
         {{ i18n.t('nav.upgrade') }}
       </rm-button>
@@ -58,12 +61,12 @@
       [title]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
     >
       @if (themeService.theme() === 'dark') {
-        <rm-icon name="sun" [size]="15"></rm-icon>
+        <rm-icon name="sun" [size]="15" aria-hidden="true"></rm-icon>
       } @else {
-        <rm-icon name="moon" [size]="15"></rm-icon>
+        <rm-icon name="moon" [size]="15" aria-hidden="true"></rm-icon>
       }
     </button>
-    <div class="rm-user-pill" [title]="userService.currentUser().name">
+    <div class="rm-user-pill rm-header__desktop-only" [title]="userService.currentUser().name">
       <rm-avatar
         [src]="userService.currentUser().avatarUrl"
         [name]="userService.currentUser().name"
@@ -74,18 +77,18 @@
         <span class="rm-user-pill__name">{{ userService.currentUser().name }}</span>
         <rm-badge
           [type]="userService.isPro() ? 'pro' : 'neutral'"
-          [label]="userService.currentUser().plan.toUpperCase()"
+          [label]="userService.isPro() ? 'Pro' : 'Starter'"
         ></rm-badge>
       </div>
     </div>
     <button
       type="button"
-      class="rm-header__action-btn rm-header__action-btn--logout"
+      class="rm-header__action-btn rm-header__action-btn--logout rm-header__desktop-only"
       (click)="authService.logout()"
       [title]="i18n.t('nav.logout')"
       [attr.aria-label]="i18n.t('nav.logout')"
     >
-      <rm-icon name="log-out" [size]="15"></rm-icon>
+      <rm-icon name="log-out" [size]="15" aria-hidden="true"></rm-icon>
     </button>
   </div>
 </header>

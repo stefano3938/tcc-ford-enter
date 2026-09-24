@@ -1,11 +1,19 @@
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { I18nService } from '../../../core/services/i18n.service';
 import { ThemeService } from '../../../core/services/theme.service';
+import { StartCtaService } from '../../../core/services/start-cta.service';
 import { ButtonComponent } from '../../components/button/button.component';
 import { IconComponent } from '../../components/icon/icon.component';
 import { LangSwitcherComponent } from '../../components/lang-switcher/lang-switcher.component';
+
+export const PUBLIC_NAV_LINKS = [
+  { path: '/recursos', label: 'home.nav.features' },
+  { path: '/demonstracao', label: 'nav.demo' },
+  { path: '/como-funciona', label: 'home.nav.how' },
+  { path: '/planos', label: 'home.nav.plans' }
+] as const;
 
 @Component({
   selector: 'rm-public-header',
@@ -19,8 +27,10 @@ export class PublicHeaderComponent {
   readonly authService = inject(AuthService);
   readonly themeService = inject(ThemeService);
   readonly i18n = inject(I18nService);
-  private readonly router = inject(Router);
+  readonly cta = inject(StartCtaService);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
+
+  readonly links = PUBLIC_NAV_LINKS;
   readonly isMobileMenuOpen = signal(false);
 
   toggleMobileMenu(): void {
@@ -33,31 +43,15 @@ export class PublicHeaderComponent {
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
+    if (!this.isMobileMenuOpen()) return;
     this.closeMobileMenu();
+    this.elementRef.nativeElement.querySelector('.rm-public-menu-btn')?.focus();
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     if (this.isMobileMenuOpen() && !this.elementRef.nativeElement.contains(event.target as Node)) {
       this.closeMobileMenu();
-    }
-  }
-
-  goToApp(): void {
-    this.closeMobileMenu();
-    this.router.navigate(['/dashboard']);
-  }
-
-  goToLogin(): void {
-    this.closeMobileMenu();
-    this.router.navigate(['/login']);
-  }
-
-  onStartNow(): void {
-    if (this.authService.isAuthenticated()) {
-      this.goToApp();
-    } else {
-      this.goToLogin();
     }
   }
 }

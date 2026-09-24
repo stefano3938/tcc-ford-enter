@@ -1,37 +1,37 @@
 <rm-modal
   [isOpen]="isOpen()"
-  [title]="editingIdea() ? 'Editar Ideia' : 'Registrar Nova Ideia'"
-  [subtitle]="editingIdea() ? 'Ajuste os conceitos e tags da ideia.' : 'Capture insights rapidamente para posterior desdobramento com IA.'"
+  [title]="editingIdea() ? i18n.t('idea.form.editTitle') : i18n.t('dash.newIdea')"
+  [subtitle]="editingIdea() ? i18n.t('idea.form.editSub') : i18n.t('idea.form.newSub')"
   maxWidth="520px"
   (closed)="onClose()"
 >
   <form (submit)="onSubmit($event)" class="rm-form-grid">
 
     <rm-input
-      label="Título da Ideia"
-      placeholder="Ex: Modo Foco Linear estilo Dynamic Island"
+      [label]="i18n.t('idea.form.title')"
+      [placeholder]="i18n.t('idea.form.titlePlaceholder')"
       [(value)]="title"
       [required]="true"
       [errorMessage]="titleError()"
       prefixIcon="pi-lightbulb"
     ></rm-input>
     <div class="rm-form-group">
-      <label class="rm-form-label">Categoria Estratégica</label>
+      <label class="rm-form-label">{{ i18n.t('idea.form.category') }}</label>
       <select
         class="rm-select"
         [value]="category()"
         (change)="category.set($any($event.target).value)"
       >
-        <option value="product">Produto / Feature</option>
-        <option value="workflow">Fluxo de Trabalho</option>
-        <option value="research">Pesquisa / Estudo</option>
-        <option value="creative">Criativo</option>
-        <option value="personal">Pessoal</option>
+        <option value="product">{{ i18n.t('idea.cat.product') }}</option>
+        <option value="workflow">{{ i18n.t('idea.cat.workflow') }}</option>
+        <option value="research">{{ i18n.t('idea.cat.research') }}</option>
+        <option value="creative">{{ i18n.t('idea.cat.creative') }}</option>
+        <option value="personal">{{ i18n.t('idea.cat.personal') }}</option>
       </select>
     </div>
     <rm-input
-      label="Resumo do Conceito"
-      placeholder="Explique o valor, o problema que resolve ou o insight principal..."
+      [label]="i18n.t('idea.form.summary')"
+      [placeholder]="i18n.t('idea.form.summaryPlaceholder')"
       [(value)]="summary"
       [multiline]="true"
       [rows]="4"
@@ -39,8 +39,8 @@
       [errorMessage]="summaryError()"
     ></rm-input>
     <rm-input
-      label="Tags (separadas por vírgula)"
-      placeholder="IA, UX, Produtividade"
+      [label]="i18n.t('idea.form.tags')"
+      [placeholder]="i18n.t('idea.form.tagsPlaceholder')"
       [(value)]="tagsString"
       prefixIcon="pi-tag"
     ></rm-input>
@@ -48,14 +48,14 @@
 
   <div modal-footer class="rm-modal-actions">
     <rm-button variant="subtle" (clicked)="onClose()">
-      Cancelar
+      {{ i18n.t('common.cancel') }}
     </rm-button>
     <rm-button
       variant="primary"
       [icon]="editingIdea() ? 'pi-check' : 'pi-plus'"
       (clicked)="saveIdea()"
     >
-      {{ editingIdea() ? 'Salvar Ideia' : 'Registrar Ideia' }}
+      {{ editingIdea() ? i18n.t('common.save') : i18n.t('dash.newIdea') }}
     </rm-button>
   </div>
 </rm-modal>

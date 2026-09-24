@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { ToastItem, ToastService } from '../../../core/services/toast.service';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ToastService } from '../../../core/services/toast.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
@@ -12,9 +13,5 @@ import { IconComponent } from '../icon/icon.component';
 })
 export class ToastContainerComponent {
   readonly toastService = inject(ToastService);
-  readonly visibleToasts = computed(() => {
-    const all = this.toastService.toasts();
-    if (all.length <= 4) return all;
-    return all.slice(all.length - 4);
-  });
+  readonly i18n = inject(I18nService);
 }

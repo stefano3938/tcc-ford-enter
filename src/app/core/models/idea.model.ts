@@ -8,6 +8,8 @@ export interface Idea {
   tags: string[];
   createdAt: string;
   isExpandedByAi: boolean;
+  /** Set once the AI steps were turned into tasks, so they can't be added twice. */
+  convertedToTasks?: boolean;
   aiSuggestedBreakdown?: {
     overview: string;
     actionableSteps: string[];

@@ -1,20 +1,18 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
-import { ThemeService } from '../../core/services/theme.service';
 import { I18nService } from '../../core/services/i18n.service';
 import { PricingPlan } from '../../core/models/user.model';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { CardComponent } from '../../shared/components/card/card.component';
-import { IconComponent } from '../../shared/components/icon/icon.component';
-import { LangSwitcherComponent } from '../../shared/components/lang-switcher/lang-switcher.component';
+import { PublicShellComponent } from '../../shared/layout/public-shell/public-shell.component';
 
 @Component({
   selector: 'rm-paywall',
   standalone: true,
-  imports: [RouterLink, ButtonComponent, BadgeComponent, CardComponent, IconComponent, LangSwitcherComponent],
+  imports: [ButtonComponent, BadgeComponent, CardComponent, PublicShellComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './paywall.component.html',
   styleUrl: './paywall.component.css'
@@ -22,7 +20,6 @@ import { LangSwitcherComponent } from '../../shared/components/lang-switcher/lan
 export class PaywallComponent {
   readonly userService = inject(UserService);
   readonly authService = inject(AuthService);
-  readonly themeService = inject(ThemeService);
   readonly i18n = inject(I18nService);
   private readonly router = inject(Router);
 

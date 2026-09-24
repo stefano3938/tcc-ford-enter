@@ -1,14 +1,20 @@
-import { DOCUMENT } from '@angular/common';
-import { Injectable, inject } from '@angular/core';
+﻿import { Injectable, Injector, inject } from '@angular/core';
 import { ToastService } from './toast.service';
+import { I18nService } from './i18n.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
-  private readonly document = inject(DOCUMENT, { optional: true });
   private readonly toast = inject(ToastService, { optional: true });
+  private readonly injector = inject(Injector);
   private memoryFallback = new Map<string, string>();
+
+  /** I18nService itself depends on this service, so it is resolved lazily, only when a warning is shown. */
+  private warn(titleKey: string, messageKey: string): void {
+    const i18n = this.injector.get(I18nService);
+    this.toast?.warning(i18n.t(titleKey), i18n.t(messageKey));
+  }
 
   private hasStorage(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
@@ -64,7 +70,7 @@ export class StorageService {
     if (serialized.length > MAX_BYTES) {
 
       this.memoryFallback.set(key, serialized);
-      this.toast?.warning('Dados muito grandes', 'Conteúdo excede limite local — mantido em memória temporária.');
+      this.warn('toast.storageBig', 'toast.storageBig.body');
       return;
     }
 
@@ -81,7 +87,7 @@ export class StorageService {
         (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED' || error.code === 22);
 
       if (isQuotaExceeded) {
-        this.toast?.warning('Armazenamento cheio', 'Limite local excedido, usando fallback em memória.');
+        this.warn('toast.storageFull', 'toast.storageFull.body');
       }
 
       try {

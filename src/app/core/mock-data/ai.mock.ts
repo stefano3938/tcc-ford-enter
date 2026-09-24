@@ -1,41 +1,45 @@
 import { AiPromptPreset, ChatMessage } from '../models/ai.model';
 
+/** Preset chips. title/description/promptTemplate are i18n keys, translated when rendered. */
 export const AI_PROMPT_PRESETS: AiPromptPreset[] = [
   {
     id: 'breakdown',
     icon: 'layers',
-    title: 'Decompor em Tarefas Acionáveis',
-    description: 'Transforme uma ideia abstrata em passos executáveis com prioridades sugeridas.',
-    promptTemplate: 'Analise o seguinte objetivo e gere um checklist passo a passo de tarefas acionáveis com estimativa de tempo e prioridade recomendada: '
+    title: 'ai.preset.breakdown.title',
+    description: 'ai.preset.breakdown.desc',
+    promptTemplate: 'ai.preset.breakdown.prompt'
   },
   {
     id: 'prioritize',
     icon: 'zap',
-    title: 'Priorizar meu Dia',
-    description: 'Organize minhas tarefas pendentes usando a matriz de Eisenhower inteligente.',
-    promptTemplate: 'Considerando minha lista de tarefas de hoje, sugira a ordem ótima de execução para maximizar o foco e diminuir a fadiga mental.'
+    title: 'ai.preset.prioritize.title',
+    description: 'ai.preset.prioritize.desc',
+    promptTemplate: 'ai.preset.prioritize.prompt'
   },
   {
     id: 'creative-expand',
     icon: 'sparkles',
-    title: 'Expandir Ideia com Criatividade',
-    description: 'Explore novos ângulos, riscos não óbvios e diferenciais competitivos para uma ideia.',
-    promptTemplate: 'Expanda criticamente a seguinte proposta, propondo 3 diferenciais fortes e apontando 2 possíveis pontos fracos para mitigarmos: '
+    title: 'ai.preset.expand.title',
+    description: 'ai.preset.expand.desc',
+    promptTemplate: 'ai.preset.expand.prompt'
   },
   {
     id: 'summarize',
     icon: 'file-text',
-    title: 'Sintetizar & Resumir',
-    description: 'Crie uma visão executiva rápida das atividades concluídas e em andamento.',
-    promptTemplate: 'Crie um resumo conciso e profissional em formato de bullet points do progresso atual para apresentar em uma reunião rápida.'
+    title: 'ai.preset.summarize.title',
+    description: 'ai.preset.summarize.desc',
+    promptTemplate: 'ai.preset.summarize.prompt'
   }
 ];
 
+/** The greeting's text comes from i18n ('ai.welcome'); this id marks it. */
+export const AI_WELCOME_MESSAGE_ID = 'msg-001';
+
 export const INITIAL_AI_CHAT_MESSAGES: ChatMessage[] = [
   {
-    id: 'msg-001',
+    id: AI_WELCOME_MESSAGE_ID,
     role: 'assistant',
-    content: 'Olá! Sou o assistente de inteligência do **RemindMe**. Estou pronto para ajudá-lo a decompor ideias complexas, planejar sprints ou priorizar o que realmente importa hoje. Como posso otimizar seu fluxo?',
+    content: '',
     timestamp: new Date().toISOString(),
     isStreaming: false
   }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '../../../core/services/theme.service';
 import { UserService } from '../../../core/services/user.service';
@@ -26,11 +26,12 @@ export class HeaderComponent {
   readonly authService = inject(AuthService);
   readonly i18n = inject(I18nService);
 
+  readonly menuOpen = input(false);
   readonly toggleMenu = output<void>();
 
   openAiPaywall(): void {
     if (!this.userService.isPro()) {
-      this.userService.openPaywall('Acesso ilimitado à inteligência generativa e expansão de ideias.');
+      this.userService.openPaywall();
     }
   }
 }

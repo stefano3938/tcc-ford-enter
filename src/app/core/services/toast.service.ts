@@ -2,12 +2,18 @@ import { Injectable, signal } from '@angular/core';
 
 export type ToastType = 'success' | 'info' | 'warning' | 'error' | 'ai';
 
+export interface ToastAction {
+  label: string;
+  run: () => void;
+}
+
 export interface ToastItem {
   id: string;
   type: ToastType;
   title: string;
   message?: string;
   durationMs?: number;
+  action?: ToastAction;
 }
 
 @Injectable({
@@ -16,7 +22,7 @@ export interface ToastItem {
 export class ToastService {
   readonly toasts = signal<ToastItem[]>([]);
 
-  private readonly MAX_VISIBLE = 4;
+  private readonly MAX_VISIBLE = 3;
   private readonly DEBOUNCE_MS = 350;
   private lastToastKey: string | null = null;
   private lastToastTime = 0;
@@ -35,7 +41,8 @@ export class ToastService {
     const fullItem: ToastItem = {
       ...item,
       id,
-      durationMs: item.durationMs ?? 4000
+      // A toast with an action stays long enough to be used
+      durationMs: item.durationMs ?? (item.action ? 7000 : 4000)
     };
 
     this.toasts.update(current => {
@@ -64,16 +71,16 @@ export class ToastService {
     }
   }
 
-  success(title: string, message?: string): void {
-    this.show({ type: 'success', title, message });
+  success(title: string, message?: string, action?: ToastAction): void {
+    this.show({ type: 'success', title, message, action });
   }
 
-  info(title: string, message?: string): void {
-    this.show({ type: 'info', title, message });
+  info(title: string, message?: string, action?: ToastAction): void {
+    this.show({ type: 'info', title, message, action });
   }
 
-  warning(title: string, message?: string): void {
-    this.show({ type: 'warning', title, message });
+  warning(title: string, message?: string, action?: ToastAction): void {
+    this.show({ type: 'warning', title, message, action });
   }
 
   error(title: string, message?: string): void {
@@ -84,6 +91,11 @@ export class ToastService {
     this.show({ type: 'ai', title, message });
   }
 
+  runAction(toast: ToastItem): void {
+    toast.action?.run();
+    this.dismiss(toast.id);
+  }
+
   dismiss(id: string): void {
     const t = this.timeouts.get(id);
     if (t) {
@@ -92,6 +104,7 @@ export class ToastService {
     }
     this.toasts.update(current => current.filter(to => to.id !== id));
   }
+
   clearAll(): void {
     for (const [, tid] of this.timeouts) clearTimeout(tid);
     this.timeouts.clear();

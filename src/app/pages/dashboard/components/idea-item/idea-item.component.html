@@ -3,9 +3,9 @@
     <div class="rm-idea-title-area">
       <h4 class="rm-idea-title">{{ idea().title }}</h4>
       <div class="rm-idea-badges">
-        <rm-badge type="neutral" [label]="idea().category.toUpperCase()"></rm-badge>
+        <rm-badge type="neutral" [label]="i18n.t('idea.cat.' + idea().category)"></rm-badge>
         @if (idea().isExpandedByAi) {
-          <rm-badge type="ai" icon="pi-sparkles" label="EXPANDIDA"></rm-badge>
+          <rm-badge type="ai" icon="pi-sparkles" [label]="i18n.t('idea.expanded')"></rm-badge>
         }
       </div>
     </div>
@@ -15,8 +15,8 @@
         type="button"
         class="rm-idea-icon-btn"
         (click)="edit.emit(idea())"
-        title="Editar ideia"
-        aria-label="Editar ideia"
+        [title]="i18n.t('idea.edit')"
+        [attr.aria-label]="i18n.t('idea.edit')"
       >
         <i class="pi pi-pencil" aria-hidden="true"></i>
       </button>
@@ -24,8 +24,8 @@
         type="button"
         class="rm-idea-icon-btn rm-idea-icon-btn--delete"
         (click)="ideaService.deleteIdea(idea().id)"
-        title="Excluir ideia"
-        aria-label="Excluir ideia"
+        [title]="i18n.t('idea.delete')"
+        [attr.aria-label]="i18n.t('idea.delete')"
       >
         <i class="pi pi-trash" aria-hidden="true"></i>
       </button>
@@ -42,13 +42,13 @@
     <div class="rm-idea-breakdown">
       <div class="rm-breakdown-header">
         <i class="pi pi-sparkles text-ai" aria-hidden="true"></i>
-        <span class="rm-breakdown-title">Análise Estratégica & Decomposição por IA</span>
+        <span class="rm-breakdown-title">{{ i18n.t('idea.breakdown.title') }}</span>
       </div>
 
       <p class="rm-breakdown-overview">{{ breakdown.overview }}</p>
 
       <div class="rm-breakdown-steps">
-        <span class="rm-breakdown-section-title">Passos Acionáveis Recomendados:</span>
+        <span class="rm-breakdown-section-title">{{ i18n.t('idea.breakdown.steps') }}</span>
         <ul class="rm-steps-list">
           @for (step of breakdown.actionableSteps; track step) {
             <li class="rm-step-item">
@@ -60,7 +60,7 @@
       </div>
 
       <div class="rm-breakdown-risks">
-        <span class="rm-breakdown-section-title text-urgent">Possíveis Riscos a Mitigar:</span>
+        <span class="rm-breakdown-section-title text-urgent">{{ i18n.t('idea.breakdown.risks') }}</span>
         <ul class="rm-risks-list">
           @for (risk of breakdown.potentialRisks; track risk) {
             <li class="rm-risk-item">
@@ -78,7 +78,7 @@
           icon="pi-plus"
           (clicked)="convertStepsToTasks()"
         >
-          Converter Passos em Tarefas Reais
+          {{ i18n.t('idea.breakdown.convert') }}
         </rm-button>
       </div>
     </div>
@@ -92,7 +92,7 @@
         [loading]="isExpanding()"
         (clicked)="expandWithAi()"
       >
-        Expandir com RemindMe IA
+        {{ i18n.t('idea.expand') }}
       </rm-button>
     </div>
   }

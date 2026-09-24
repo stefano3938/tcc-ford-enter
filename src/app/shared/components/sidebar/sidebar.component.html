@@ -2,7 +2,7 @@
   <div class="rm-sidebar-backdrop" (click)="closeMobile.emit()"></div>
 }
 
-<aside class="rm-sidebar glass-panel" [class.rm-sidebar--open-mobile]="isOpenMobile()">
+<aside id="rm-sidebar" class="rm-sidebar glass-panel" [class.rm-sidebar--open-mobile]="isOpenMobile()">
 
   <nav class="rm-nav-group">
     <span class="rm-nav-group__title">{{ i18n.t('nav.group.productivity') }}</span>
@@ -12,13 +12,13 @@
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
       class="rm-nav-item"
-      (click)="closeMobile.emit()"
+      (click)="openDashboard()"
     >
       <div class="rm-nav-item__main">
         <rm-icon name="check-square" [size]="15" class="rm-nav-item__icon"></rm-icon>
         <span>{{ i18n.t('nav.dashboard') }}</span>
       </div>
-      <span class="rm-nav-item__count">{{ taskService.todoCount() }}</span>
+      <span class="rm-nav-item__count">{{ taskService.totalCount() }}</span>
     </a>
 
     <a
@@ -55,20 +55,8 @@
     <button
       type="button"
       class="rm-filter-btn"
-      [class.active]="taskService.statusFilter() === 'all' && taskService.priorityFilter() === 'all'"
-      (click)="setFilter('all', 'all')"
-    >
-      <div class="rm-nav-item__main">
-        <rm-icon name="list" [size]="14" class="rm-nav-item__icon"></rm-icon>
-        <span>{{ i18n.t('nav.filter.allTasks') }}</span>
-      </div>
-      <span class="rm-nav-item__count">{{ taskService.totalCount() }}</span>
-    </button>
-
-    <button
-      type="button"
-      class="rm-filter-btn"
-      [class.active]="taskService.priorityFilter() === 'urgent'"
+      [class.active]="isFilterActive('all', 'urgent')"
+      [attr.aria-pressed]="isFilterActive('all', 'urgent')"
       (click)="setFilter('all', 'urgent')"
     >
       <div class="rm-nav-item__main">
@@ -81,7 +69,8 @@
     <button
       type="button"
       class="rm-filter-btn"
-      [class.active]="taskService.statusFilter() === 'in-progress'"
+      [class.active]="isFilterActive('in-progress', 'all')"
+      [attr.aria-pressed]="isFilterActive('in-progress', 'all')"
       (click)="setFilter('in-progress', 'all')"
     >
       <div class="rm-nav-item__main">
@@ -94,7 +83,8 @@
     <button
       type="button"
       class="rm-filter-btn"
-      [class.active]="taskService.statusFilter() === 'done'"
+      [class.active]="isFilterActive('done', 'all')"
+      [attr.aria-pressed]="isFilterActive('done', 'all')"
       (click)="setFilter('done', 'all')"
     >
       <div class="rm-nav-item__main">
@@ -107,11 +97,11 @@
   @if (taskService.allTags().length > 0) {
     <div class="rm-nav-group">
       <div class="rm-tags-header">
-        <span class="rm-nav-group__title" style="padding-bottom:0">TAGS</span>
+        <span class="rm-nav-group__title" style="padding-bottom:0">{{ i18n.t('task.form.tags') }}</span>
         @if (taskService.allTags().length > 5) {
-          <button type="button" class="rm-tags-toggle" (click)="toggleShowAllTags()" [attr.aria-label]="showAllTags() ? 'Recolher tags' : 'Mostrar todas as tags'" [attr.aria-expanded]="showAllTags()">
+          <button type="button" class="rm-tags-toggle" (click)="toggleShowAllTags()" [attr.aria-label]="showAllTags() ? i18n.t('side.tags.collapse') : i18n.t('side.tags.expand')" [attr.aria-expanded]="showAllTags()">
             <rm-icon [name]="showAllTags() ? 'chevron-left' : 'chevron-right'" [size]="12"></rm-icon>
-            <span>{{ showAllTags() ? 'menos' : taskService.allTags().length + ' tags' }}</span>
+            <span>{{ showAllTags() ? i18n.t('side.tags.less') : i18n.t('side.tags.count', { count: taskService.allTags().length }) }}</span>
           </button>
         }
       </div>
@@ -138,12 +128,12 @@
           <rm-icon name="shield" [size]="14" class="text-pro"></rm-icon>
           <span class="rm-pro-badge-card__title">{{ i18n.t('nav.proActive') }}</span>
         </div>
-        <p class="rm-pro-badge-card__desc">Tarefas, ideias e IA sem limites.</p>
+        <p class="rm-pro-badge-card__desc">{{ i18n.t('side.pro.desc') }}</p>
       </div>
     } @else {
       <div class="rm-free-quota-card">
         <div class="rm-free-quota-card__header">
-          <span class="rm-free-quota-card__title">Plano Starter</span>
+          <span class="rm-free-quota-card__title">{{ i18n.t('side.starter') }}</span>
           <span class="rm-free-quota-card__val">{{ taskService.totalCount() }}/{{ userService.currentUser().quotas.tasksMax }}</span>
         </div>
         <div class="rm-progress-track">
@@ -154,16 +144,16 @@
         </div>
 
         <p class="rm-free-quota-card__note">
-          {{ userService.currentUser().quotas.tasksMax - taskService.totalCount() }} tarefas restantes
+          {{ i18n.t('side.tasksLeft', { count: userService.currentUser().quotas.tasksMax - taskService.totalCount() }) }}
         </p>
 
         <rm-button
           variant="ai"
           size="sm"
           icon="arrow-right"
-          (clicked)="userService.openPaywall('Desbloqueie tarefas, ideias e IA generativa infinitas com o Pro.')"
+          (clicked)="userService.openPaywall()"
         >
-          Liberar Ilimitado
+          {{ i18n.t('side.unlock') }}
         </rm-button>
       </div>
     }
@@ -173,7 +163,7 @@
       (click)="authService.logout()"
     >
       <rm-icon name="log-out" [size]="14"></rm-icon>
-      <span>Sair da Conta</span>
+      <span>{{ i18n.t('nav.logout') }}</span>
     </button>
   </div>
 </aside>

@@ -29,6 +29,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--rm-text-muted);
 }
 
@@ -74,4 +75,4 @@
 
 .text-urgent { color: var(--rm-urgent) !important; }
 .text-progress { color: var(--rm-in-progress) !important; }
-.text-ai { color: #c084fc !important; }
+.text-ai { color: #7dd3fc !important; }

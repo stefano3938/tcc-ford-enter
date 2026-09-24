@@ -2,6 +2,7 @@
 
 Angular 20, standalone components, `ChangeDetectionStrategy.OnPush`, SCSS-free (CSS puro).
 Tokens de cor/espaço/tipografia vivem em `src/styles.css` como `--rm-*`. **Não invente cor, raio ou sombra nova.**
+O sistema visual (paleta azul, Geist, filetes, campo de partículas) está descrito em `DESIGN.md`. **Nada de roxo/violeta.** Tons de azul derivados usam `rgba(var(--rm-accent-rgb), a)`.
 
 ## Layout: o container `.rm-page` é obrigatório
 

@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { Idea, IdeaCategory } from '../../../../core/models/idea.model';
 import { IdeaService } from '../../../../core/services/idea.service';
+import { I18nService } from '../../../../core/services/i18n.service';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -22,6 +23,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
   styleUrl: './idea-form-modal.component.css'
 })
 export class IdeaFormModalComponent {
+  readonly i18n = inject(I18nService);
   private readonly ideaService = inject(IdeaService);
 
   readonly isOpen = model<boolean>(false);
@@ -60,14 +62,14 @@ export class IdeaFormModalComponent {
 
     let hasError = false;
     if (!rawTitle) {
-      this.titleError.set('O título da ideia é obrigatório.');
+      this.titleError.set(this.i18n.t('idea.form.titleRequired'));
       hasError = true;
     } else {
       this.titleError.set(undefined);
     }
 
     if (!rawSummary) {
-      this.summaryError.set('O resumo é obrigatório.');
+      this.summaryError.set(this.i18n.t('idea.form.summaryRequired'));
       hasError = true;
     } else {
       this.summaryError.set(undefined);

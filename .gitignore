@@ -41,3 +41,16 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Ferramentas de IA / agentes (não fazem parte do site)
+/.claude/
+/.agents/
+/.impeccable/
+skills-lock.json
+
+# Cópias locais de build
+/dist*/
+
+# Logs e arquivos temporários do sistema
+*.log
+desktop.ini

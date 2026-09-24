@@ -9,9 +9,9 @@
     </div>
     <span class="ai-pill">
       <rm-icon name="sparkles" [size]="12"></rm-icon>
-      <span>DESBLOQUEIO DE PERFORMANCE</span>
+      <span>{{ i18n.t('paywall.badge') }}</span>
     </span>
-    <h2 class="rm-paywall-hero__title">Pense, organize e execute sem limites com RemindMe Pro</h2>
+    <h2 class="rm-paywall-hero__title">{{ i18n.t('pay.hero') }}</h2>
     <p class="rm-paywall-hero__reason">{{ userService.paywallTriggerReason() }}</p>
   </div>
   <div class="rm-billing-switch">
@@ -21,7 +21,7 @@
       [class.active]="billingCycle() === 'monthly'"
       (click)="billingCycle.set('monthly')"
     >
-      Mensal
+      {{ i18n.t('pay.monthly') }}
     </button>
     <button
       type="button"
@@ -29,7 +29,7 @@
       [class.active]="billingCycle() === 'yearly'"
       (click)="billingCycle.set('yearly')"
     >
-      Anual
+      {{ i18n.t('pay.yearly') }}
       <span class="rm-discount-badge">-20% OFF</span>
     </button>
   </div>
@@ -37,35 +37,35 @@
     <div class="rm-plan-highlight__header">
       <div>
         <h3 class="rm-plan-name">RemindMe Pro</h3>
-        <p class="rm-plan-sub">Acesso completo para indivíduos e criadores de alto impacto</p>
+        <p class="rm-plan-sub">{{ i18n.t('paywall.planSub') }}</p>
       </div>
       <div class="rm-plan-price">
         <span class="rm-plan-price__currency">R$</span>
         <span class="rm-plan-price__val">{{ billingCycle() === 'yearly' ? '24' : '29' }}</span>
-        <span class="rm-plan-price__period">/mês</span>
+        <span class="rm-plan-price__period">{{ i18n.t('pay.perMonth') }}</span>
       </div>
     </div>
 
     <div class="rm-plan-features-list">
       <div class="rm-feature-row">
         <rm-icon name="check" [size]="14" class="text-done"></rm-icon>
-        <span><strong>Tarefas Ilimitadas:</strong> crie quantos fluxos e backlogs desejar</span>
+        <span><strong>{{ i18n.t('paywall.f1.title') }}</strong> {{ i18n.t('paywall.f1.body') }}</span>
       </div>
       <div class="rm-feature-row">
         <rm-icon name="check" [size]="14" class="text-done"></rm-icon>
-        <span><strong>Banco de Ideias Sem Limites:</strong> anote insights a qualquer instante</span>
+        <span><strong>{{ i18n.t('paywall.f2.title') }}</strong> {{ i18n.t('paywall.f2.body') }}</span>
       </div>
       <div class="rm-feature-row">
         <rm-icon name="sparkles" [size]="14" class="text-ai"></rm-icon>
-        <span><strong>IA Generativa Ilimitada:</strong> sem restrição de 3 consultas/dia</span>
+        <span><strong>{{ i18n.t('paywall.f3.title') }}</strong> {{ i18n.t('paywall.f3.body') }}</span>
       </div>
       <div class="rm-feature-row">
         <rm-icon name="check" [size]="14" class="text-done"></rm-icon>
-        <span><strong>Decomposição de Ideias em 1-Clique:</strong> converte planos em tarefas reais</span>
+        <span><strong>{{ i18n.t('paywall.f4.title') }}</strong> {{ i18n.t('paywall.f4.body') }}</span>
       </div>
       <div class="rm-feature-row">
         <rm-icon name="check" [size]="14" class="text-done"></rm-icon>
-        <span><strong>Priorização Inteligente:</strong> sugestões contextuais de foco diário</span>
+        <span><strong>{{ i18n.t('paywall.f5.title') }}</strong> {{ i18n.t('paywall.f5.body') }}</span>
       </div>
     </div>
   </div>
@@ -75,7 +75,7 @@
       variant="subtle"
       (clicked)="userService.closePaywall()"
     >
-      Continuar no Starter
+      {{ i18n.t('paywall.stay') }}
     </rm-button>
 
     <rm-button
@@ -85,7 +85,7 @@
       [loading]="isUpgrading()"
       (clicked)="confirmUpgrade()"
     >
-      Ativar RemindMe Pro Agora
+      {{ i18n.t('pay.activate') }}
     </rm-button>
   </div>
 </rm-modal>

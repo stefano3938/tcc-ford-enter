@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { I18nService } from '../../../core/services/i18n.service';
 
 export type SkeletonVariant = 'card' | 'list-row' | 'kanban-col' | 'chat-bubble';
 
@@ -10,6 +11,7 @@ export type SkeletonVariant = 'card' | 'list-row' | 'kanban-col' | 'chat-bubble'
   styleUrl: './loading-skeleton.component.css'
 })
 export class LoadingSkeletonComponent {
+  readonly i18n = inject(I18nService);
   readonly variant = input<SkeletonVariant>('card');
   readonly count = input<number>(3);
 
