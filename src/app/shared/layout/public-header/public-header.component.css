@@ -1,0 +1,57 @@
+.rm-public-nav { position: sticky; top: 0; z-index: 100; padding: 10px 20px; padding-top: max(10px, env(safe-area-inset-top)); border-bottom: 1px solid var(--rm-border-base); background: var(--rm-bg-surface); }
+.rm-public-nav__inner { max-width: 1200px; margin: 0 auto; min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }
+.rm-public-brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex-shrink: 1; }
+.rm-public-logo-mark { width: 32px; height: 32px; border-radius: var(--rm-radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; &.small { width: 24px; height: 24px; } @media (max-width: 400px){ width: 28px; height: 28px; } }
+.rm-public-logo-mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rm-public-logo-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 17px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; }
+.text-accent { color: var(--rm-accent); }
+.rm-public-links { display: flex; align-items: center; gap: 24px; }
+.rm-public-link { font-size: 13.5px; font-weight: 500; color: var(--rm-text-secondary); transition: color var(--rm-transition-fast); }
+.rm-public-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.rm-public-theme-btn { position: relative; width: 36px; height: 36px; border-radius: var(--rm-radius-md); background: var(--rm-bg-hover); border: 1px solid var(--rm-border-base); color: var(--rm-text-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background var(--rm-transition-fast), color var(--rm-transition-fast), border-color var(--rm-transition-fast); &:active{ transform: scale(0.94); } &::after { content: ''; position: absolute; inset: -4px; } }
+.rm-public-menu-btn { position: relative; display: none; width: 36px; height: 36px; border-radius: var(--rm-radius-md); background: var(--rm-bg-hover); border: 1px solid var(--rm-border-base); color: var(--rm-text-secondary); align-items: center; justify-content: center; flex-shrink: 0; &:active{ transform: scale(0.94); } &::after { content: ''; position: absolute; inset: -4px; } }
+
+/* Tablet and below: collapse nav links into the sheet, keep one CTA */
+@media (max-width: 900px) {
+  .rm-public-nav { padding: 10px 16px; }
+  .rm-public-links { display: none; }
+  .rm-public-menu-btn { display: flex; }
+}
+@media (max-width: 480px) {
+  .rm-public-nav { padding: 8px 12px; }
+  .rm-public-nav__inner { gap: 8px; }
+  .rm-public-actions { gap: 6px; }
+  .rm-public-logo-title { font-size: 15px; }
+  .rm-public-logo-mark { width: 28px; height: 28px; }
+  .rm-public-nav-cta-text { display: none; }
+  .rm-public-header-login { display: none; }
+}
+.rm-public-mobile-menu { position: absolute; top: 100%; left: 0; right: 0; background: var(--rm-bg-surface); border-bottom: 1px solid var(--rm-border-base); padding: 8px 16px calc(16px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; box-shadow: 0 12px 32px rgba(0,0,0,0.12); z-index: 99; animation: rmFadeUp 0.22s cubic-bezier(0.16,1,0.3,1); }
+.rm-public-mobile-link { font-size: 15px; font-weight: 500; color: var(--rm-text-secondary); padding: 14px 0; border-bottom: 1px solid var(--rm-border-subtle); &:last-of-type{ border-bottom: none; } &:active{ color: var(--rm-text-primary); } }
+.rm-public-mobile-actions { display: flex; flex-direction: column; gap: 8px; padding-top: 14px; }
+.rm-public-link--active { color: var(--rm-accent); }
+.rm-public-brand:active,
+.rm-public-link:active,
+.rm-public-theme-btn:active,
+.rm-public-menu-btn:active {
+  transform: scale(0.96);
+}
+
+.rm-public-brand:focus-visible,
+.rm-public-link:focus-visible,
+.rm-public-theme-btn:focus-visible,
+.rm-public-menu-btn:focus-visible,
+.rm-public-mobile-link:focus-visible,
+.rm-public-actions rm-button:focus-visible {
+  outline: 2px solid var(--rm-accent);
+  outline-offset: 3px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .rm-public-link:hover { color: var(--rm-text-primary); }
+  .rm-public-link--active:hover { color: var(--rm-accent); }
+}
+@keyframes rmFadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+

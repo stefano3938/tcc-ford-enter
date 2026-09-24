@@ -36,6 +36,15 @@ The application keeps route-level screens in `src/app/pages`. Each Angular compo
 
 Reusable UI is organized in `src/app/shared/components`, while services, models, guards, and mock data live in `src/app/core`.
 
+The public marketing pages are split into:
+
+- `/home` — hero and product overview
+- `/demonstracao` — interactive product preview
+- `/recursos` — feature and workflow cards
+- `/como-funciona` — step-by-step explanation
+
+The public header, footer, and shell are shared by these pages under `src/app/shared/layout`.
+
 ## Building
 
 To build the project run:

@@ -1,0 +1,57 @@
+<rm-public-shell>
+  <section class="rm-preview-section rm-page">
+    <header class="rm-demo-header">
+      <span class="rm-hero-badge rm-hero-badge--upper">{{ i18n.t('nav.demo') }}</span>
+      <h1 class="rm-demo-title">{{ i18n.t('demo.title') }}</h1>
+      <p class="rm-demo-description">{{ i18n.t('demo.subtitle') }}</p>
+      <rm-button variant="primary" size="md" icon="arrow-right" (clicked)="onStartNow()">
+        {{ i18n.t('demo.cta') }}
+      </rm-button>
+    </header>
+    <div class="rm-mockup-frame glass-panel">
+      <div class="rm-mockup-header">
+        <div class="rm-mockup-dots">
+          <span class="rm-dot rm-dot--red"></span><span class="rm-dot rm-dot--yellow"></span><span class="rm-dot rm-dot--green"></span>
+        </div>
+        <div class="rm-mockup-url"><rm-icon name="lock" [size]="12"></rm-icon><span>app.remindme.com/dashboard</span><span class="rm-mockup-live"><span class="rm-live-dot"></span> {{ i18n.t('home.preview.live') }}</span></div>
+        <div class="rm-mockup-actions"><span class="rm-mockup-tabs"><span class="active">{{ i18n.t('dash.board') }}</span><span>{{ i18n.t('dash.list') }}</span></span><rm-badge type="neutral" [label]="i18n.t('home.preview.overview')"></rm-badge></div>
+      </div>
+  
+      <div class="rm-mockup-toolbar">
+        <div class="rm-mockup-search"><rm-icon name="search" [size]="13"></rm-icon><span>{{ i18n.t('home.preview.search') }}</span></div>
+        <div class="rm-mockup-filters"><span class="rm-mockup-filter active">{{ i18n.t('dash.filter.all') }}</span><span class="rm-mockup-filter">{{ i18n.t('dash.filter.urgent') }}</span><span class="rm-mockup-filter">{{ i18n.t('dash.filter.progress') }}</span></div>
+      </div>
+  
+      <div class="rm-mockup-body">
+        <div class="rm-mockup-stats-row">
+          <div class="rm-mini-card rm-mini-card--progress"><div class="rm-mini-card__top"><span class="rm-mini-card__label">{{ i18n.t('home.preview.production') }}</span><span class="rm-mini-card__pct">83%</span></div><div class="rm-mini-progress"><span style="width: 83%"></span></div><span class="rm-mini-card__val">12 / 14 <span class="rm-lower">{{ i18n.t('dash.done') }}</span></span></div>
+          <div class="rm-mini-card rm-mini-card--urgent"><span class="rm-mini-card__label">{{ i18n.t('home.preview.urgent') }}</span><div class="rm-mini-urgent-row"><span class="rm-mini-card__val text-urgent">2 {{ i18n.t('dash.filter.urgent') }}</span><span class="rm-mini-badge-urgent">{{ i18n.t('home.preview.today') }}</span></div><span class="rm-mini-card__sub">{{ i18n.t('home.preview.dueToday') }}</span></div>
+          <div class="rm-mini-card"><span class="rm-mini-card__label">{{ i18n.t('ai.title') }}</span><span class="rm-mini-card__val text-accent">3 {{ i18n.t('home.preview.suggestions') }}</span><span class="rm-mini-card__sub">{{ i18n.t('home.preview.ready') }}</span></div>
+        </div>
+  
+        <div class="rm-mockup-kanban-preview">
+          <div class="rm-kanban-col-preview">
+            <div class="rm-preview-col-title"><rm-icon name="list" [size]="14"></rm-icon><span>{{ i18n.t('dash.todo') }}</span><span class="rm-col-count">3</span></div>
+            <div class="rm-preview-item" [class.rm-preview-item--demo]="demoIndex() === 0"><div class="rm-preview-item__top"><span class="rm-preview-priority rm-preview-priority--high">{{ i18n.t('priority.high') }}</span><span class="rm-preview-time">30 min</span></div><span class="rm-preview-item__title">Revisar proposta comercial Q4</span><p class="rm-preview-item__desc">Validar escopo e margem com financeiro</p><div class="rm-preview-item__meta"><span class="rm-tag-pill">Planejamento</span><span class="rm-tag-pill">Q4</span><span class="rm-avatar-pill">SD</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item" [class.rm-preview-item--demo]="demoIndex() === 1"><div class="rm-preview-item__top"><span class="rm-preview-priority rm-preview-priority--medium">{{ i18n.t('priority.medium') }}</span><span class="rm-preview-time">45 min</span></div><span class="rm-preview-item__title">Definir escopo do MVP de onboarding</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Produto</span><span class="rm-tag-pill">MVP</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item rm-preview-item--muted" [class.rm-preview-item--demo]="demoIndex() === 2"><span class="rm-preview-item__title">Agendar entrevistas com 5 usuários</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Pesquisa</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+          </div>
+  
+          <div class="rm-kanban-col-preview">
+            <div class="rm-preview-col-title"><rm-icon name="clock" [size]="14"></rm-icon><span>{{ i18n.t('dash.doing') }}</span><span class="rm-col-count">3</span></div>
+            <div class="rm-preview-item border-accent" [class.rm-preview-item--demo]="demoIndex() === 3"><div class="rm-preview-item__top"><span class="rm-preview-priority rm-preview-priority--urgent">{{ i18n.t('priority.urgent') }}</span><span class="rm-preview-time">45 min</span></div><span class="rm-preview-item__title">Refinar fluxo de onboarding</span><p class="rm-preview-item__desc">Protótipo no Figma com estados vazios</p><div class="rm-preview-item__meta"><span class="rm-tag-pill">Produto</span><span class="rm-tag-pill">UX</span><span class="rm-avatar-pill">AV</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item" [class.rm-preview-item--demo]="demoIndex() === 4"><span class="rm-preview-item__title">Sincronizar design tokens</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Design System</span><span class="rm-preview-time">20 min</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item" [class.rm-preview-item--demo]="demoIndex() === 5"><span class="rm-preview-item__title">Validar acessibilidade dos modais</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">#A11y</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+          </div>
+  
+          <div class="rm-kanban-col-preview">
+            <div class="rm-preview-col-title"><rm-icon name="check-circle" [size]="14"></rm-icon><span>{{ i18n.t('dash.done') }}</span><span class="rm-col-count">4</span></div>
+            <div class="rm-preview-item done" [class.rm-preview-item--demo]="demoIndex() === 6"><span class="rm-preview-item__title">Mapear jornada do usuário</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Pesquisa</span><span class="rm-preview-check"><rm-icon name="check-circle" [size]="12"></rm-icon> {{ i18n.t('home.preview.yesterday') }}</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item done" [class.rm-preview-item--demo]="demoIndex() === 7"><span class="rm-preview-item__title">Entrevistar 5 usuários beta</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Entrevista</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+            <div class="rm-preview-item done" [class.rm-preview-item--demo]="demoIndex() === 8"><span class="rm-preview-item__title">Criar parser de datas</span><div class="rm-preview-item__meta"><span class="rm-tag-pill">Automação</span></div><span class="rm-click-ripple" aria-hidden="true"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</rm-public-shell>

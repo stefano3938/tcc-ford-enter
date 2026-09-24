@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--rm-bg-canvas);
+  color: var(--rm-text-primary);
+  overflow-x: clip;
+}
+
+:host > * {
+  width: 100%;
+  min-width: 0;
+}
+
+.rm-public-shell__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}

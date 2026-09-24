@@ -37,7 +37,8 @@ export class App {
   readonly isPublicPage = computed(() => {
     const url = this.currentUrl() || '';
     const clean = url.split('?')[0].split('#')[0];
-    return clean === '/' || clean.startsWith('/home') || clean.startsWith('/login') || clean.startsWith('/planos') || clean.startsWith('/privacidade');
+    const publicPaths = ['/home', '/demonstracao', '/recursos', '/como-funciona', '/login', '/planos', '/privacidade'];
+    return clean === '/' || publicPaths.some(path => clean === path || clean.startsWith(`${path}/`));
   });
 
   toggleMobileMenu(): void {

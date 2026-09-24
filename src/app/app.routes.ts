@@ -13,6 +13,21 @@ export const routes: Routes = [
       import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
+    path: 'demonstracao',
+    loadComponent: () =>
+      import('./pages/demonstracao/demonstracao.component').then(m => m.DemonstracaoComponent)
+  },
+  {
+    path: 'recursos',
+    loadComponent: () =>
+      import('./pages/recursos/recursos.component').then(m => m.RecursosComponent)
+  },
+  {
+    path: 'como-funciona',
+    loadComponent: () =>
+      import('./pages/como-funciona/como-funciona.component').then(m => m.ComoFuncionaComponent)
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('./pages/auth/login.component').then(m => m.LoginComponent)

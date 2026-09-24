@@ -1,0 +1,99 @@
+<header class="rm-public-nav glass-panel">
+  <div class="rm-public-nav__inner">
+    <a routerLink="/home" class="rm-public-brand" [attr.aria-label]="i18n.t('app.name')">
+      <span class="rm-public-logo-mark">
+        <img src="assets/favicon-plate-64.png" alt="" width="32" height="32" />
+      </span>
+      <span class="rm-public-logo-title">Remind<span class="text-accent">Me</span></span>
+    </a>
+
+    <nav class="rm-public-links" [attr.aria-label]="i18n.t('nav.main')">
+      <a routerLink="/recursos" routerLinkActive="rm-public-link--active" ariaCurrentWhenActive="page" class="rm-public-link">
+        {{ i18n.t('home.nav.features') }}
+      </a>
+      <a routerLink="/demonstracao" routerLinkActive="rm-public-link--active" ariaCurrentWhenActive="page" class="rm-public-link">
+        {{ i18n.t('nav.demo') }}
+      </a>
+      <a routerLink="/como-funciona" routerLinkActive="rm-public-link--active" ariaCurrentWhenActive="page" class="rm-public-link">
+        {{ i18n.t('home.nav.how') }}
+      </a>
+      <a routerLink="/planos" routerLinkActive="rm-public-link--active" ariaCurrentWhenActive="page" class="rm-public-link">
+        {{ i18n.t('home.nav.plans') }}
+      </a>
+    </nav>
+
+    <div class="rm-public-actions">
+      <rm-lang-switcher></rm-lang-switcher>
+      <button
+        type="button"
+        class="rm-public-theme-btn"
+        (click)="themeService.toggleTheme()"
+        [attr.aria-label]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
+        [title]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
+      >
+        @if (themeService.theme() === 'dark') {
+          <rm-icon name="sun" [size]="16"></rm-icon>
+        } @else {
+          <rm-icon name="moon" [size]="16"></rm-icon>
+        }
+      </button>
+
+      @if (authService.isAuthenticated()) {
+        <rm-button variant="subtle" size="sm" (clicked)="goToApp()">
+          {{ i18n.t('home.nav.dashboard') }}
+        </rm-button>
+      } @else {
+        <rm-button class="rm-public-header-login" variant="subtle" size="sm" (clicked)="goToLogin()">
+          {{ i18n.t('home.nav.enter') }}
+        </rm-button>
+      }
+
+      <rm-button variant="primary" size="sm" icon="plus" (clicked)="onStartNow()">
+        <span class="rm-public-nav-cta-text">{{ i18n.t('home.nav.start') }}</span>
+      </rm-button>
+
+      <button
+        type="button"
+        class="rm-public-menu-btn"
+        (click)="toggleMobileMenu()"
+        [attr.aria-label]="i18n.t('nav.menu')"
+        [attr.aria-expanded]="isMobileMenuOpen()"
+        aria-controls="rm-public-mobile-menu"
+      >
+        <rm-icon [name]="isMobileMenuOpen() ? 'x' : 'menu'" [size]="18"></rm-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (isMobileMenuOpen()) {
+    <nav id="rm-public-mobile-menu" class="rm-public-mobile-menu glass-panel" [attr.aria-label]="i18n.t('nav.menu')">
+      <a routerLink="/recursos" class="rm-public-mobile-link" (click)="closeMobileMenu()">
+        {{ i18n.t('home.nav.features') }}
+      </a>
+      <a routerLink="/demonstracao" class="rm-public-mobile-link" (click)="closeMobileMenu()">
+        {{ i18n.t('nav.demo') }}
+      </a>
+      <a routerLink="/como-funciona" class="rm-public-mobile-link" (click)="closeMobileMenu()">
+        {{ i18n.t('home.nav.how') }}
+      </a>
+      <a routerLink="/planos" class="rm-public-mobile-link" (click)="closeMobileMenu()">
+        {{ i18n.t('home.nav.plans') }}
+      </a>
+
+      <div class="rm-public-mobile-actions">
+        @if (authService.isAuthenticated()) {
+          <rm-button variant="primary" size="md" (clicked)="goToApp()">
+            {{ i18n.t('home.nav.dashboard') }}
+          </rm-button>
+        } @else {
+          <rm-button variant="primary" size="md" (clicked)="goToLogin()">
+            {{ i18n.t('home.nav.enter') }}
+          </rm-button>
+        }
+        <rm-button variant="primary" size="md" (clicked)="onStartNow()">
+          {{ i18n.t('home.nav.start') }}
+        </rm-button>
+      </div>
+    </nav>
+  }
+</header>

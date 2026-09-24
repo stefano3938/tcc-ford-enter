@@ -1,0 +1,56 @@
+<rm-public-shell>
+  <section class="rm-carousel-section rm-page">
+    <div class="rm-carousel-header">
+      <div>
+        <span class="rm-hero-badge rm-hero-badge--upper">{{ i18n.t('home.nav.features') }}</span>
+        <h2 class="rm-carousel-title">{{ i18n.t('resources.title') }}</h2>
+        <p class="rm-carousel-subtitle">{{ i18n.t('resources.subtitle') }}</p>
+      </div>
+      <div class="rm-carousel-controls">
+        <button type="button" class="rm-carousel-arrow" (click)="scrollCarousel(-1)" [attr.aria-label]="i18n.t('home.modes.prev')"><rm-icon name="chevron-left" [size]="18"></rm-icon></button>
+        <button type="button" class="rm-carousel-arrow" (click)="scrollCarousel(1)" [attr.aria-label]="i18n.t('home.modes.next')"><rm-icon name="chevron-right" [size]="18"></rm-icon></button>
+      </div>
+    </div>
+  
+    <div class="rm-carousel-viewport" #carouselViewport (scroll)="onCarouselScroll()">
+      <div class="rm-carousel-track">
+        @for (item of carouselItems(); track item.title) {
+          <div class="rm-carousel-slide">
+            <div class="rm-carousel-card glass-panel">
+              <div class="rm-carousel-card__icon"><rm-icon [name]="item.icon" [size]="22"></rm-icon></div>
+              <span class="rm-carousel-card__label">{{ item.label }}</span>
+              <h3 class="rm-carousel-card__title">{{ item.title }}</h3>
+              <p class="rm-carousel-card__desc">{{ item.description }}</p>
+              <div class="rm-carousel-card__preview">
+                @if (item.previewType === 'kanban') {
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#f97316"></span><span>Revisar proposta Q4</span><span class="rm-tag-mini">#Planejamento</span></div>
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#38bdf8"></span><span>Refinar fluxo onboarding</span><span class="rm-tag-mini">#Produto</span></div>
+                  <div class="rm-preview-progress"><span style="width: 68%"></span></div>
+                } @else if (item.previewType === 'assistant') {
+                  <div class="rm-chat-mini"><span class="rm-chat-mini--user">Priorizar meu dia</span><span class="rm-chat-mini--ai">Sugeri 3 tarefas urgentes →</span></div>
+                  <div class="rm-preview-row"><span class="rm-dot-mini"></span><span>Bloquear 90 min de foco</span><span class="rm-tag-mini">Urgente</span></div>
+                } @else if (item.previewType === 'ideas') {
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#8b5cf6"></span><span>Smart Summarizer</span><span class="rm-tag-mini">#IA</span></div>
+                  <div class="rm-preview-tags"><span>#Automação</span><span>#Sprint-1</span><span>#Pesquisa</span></div>
+                } @else if (item.previewType === 'focus') {
+                  <div class="rm-preview-timer"><span class="rm-timer-ring"></span><span class="rm-timer-text">25:00</span><span class="rm-timer-label">Pomodoro • Tarefa atual</span></div>
+                } @else if (item.previewType === 'progress') {
+                  <div class="rm-preview-stats"><span class="rm-stat-big">83%</span><span class="rm-stat-label">concluídas</span><div class="rm-preview-progress"><span style="width: 83%"></span></div><span class="rm-stat-sub">12 de 14 • 2 urgentes</span></div>
+                } @else {
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#10b981"></span><span>Dados no dispositivo</span><span class="rm-tag-mini">Seguro</span></div>
+                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#64748b"></span><span>Acesso offline</span><span class="rm-tag-mini">Local</span></div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  
+    <div class="rm-carousel-dots">
+      @for (page of carouselPages; track page; let i = $index) {
+        <button type="button" class="rm-carousel-dot" [class.active]="carouselPage() === i" (click)="scrollToPage(i)" [attr.aria-label]="i18n.t('carousel.page', { number: i + 1 })"></button>
+      }
+    </div>
+  </section>
+</rm-public-shell>
