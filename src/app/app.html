@@ -1,0 +1,30 @@
+<div class="rm-app-container">
+  @if (isPublicPage()) {
+    <!-- Public Layout: Full width for Home and Auth pages -->
+    <main class="rm-public-main">
+      <router-outlet></router-outlet>
+    </main>
+  } @else {
+    <!-- Protected App Layout: Header + Sidebar + Router Outlet -->
+    <rm-header (toggleMenu)="toggleMobileMenu()"></rm-header>
+
+    <div class="rm-layout-body">
+      <rm-sidebar
+        [isOpenMobile]="isMobileMenuOpen()"
+        (closeMobile)="isMobileMenuOpen.set(false)"
+      ></rm-sidebar>
+
+      <main class="rm-main-content">
+        <div class="rm-content-wrapper fade-in">
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+    </div>
+  }
+
+  <!-- Global Toast Feedback Viewport -->
+  <rm-toast-container></rm-toast-container>
+
+  <!-- Global Paywall / Upgrade Modal -->
+  <rm-paywall-modal></rm-paywall-modal>
+</div>
