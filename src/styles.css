@@ -1,0 +1,205 @@
+@import 'primeicons/primeicons.css';
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+
+  --rm-font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  --rm-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  --rm-font-mono: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
+  --rm-accent: #6366f1;
+  --rm-accent-hover: #4f46e5;
+  --rm-accent-light: rgba(99, 102, 241, 0.12);
+  --rm-accent-glow: 0 0 24px rgba(99, 102, 241, 0.35);
+
+  --rm-ai-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
+  --rm-ai-glow: 0 0 25px rgba(139, 92, 246, 0.35);
+  --rm-todo: #94a3b8;
+  --rm-todo-bg: rgba(148, 163, 184, 0.12);
+
+  --rm-in-progress: #38bdf8;
+  --rm-in-progress-bg: rgba(56, 189, 248, 0.12);
+
+  --rm-done: #10b981;
+  --rm-done-bg: rgba(16, 185, 129, 0.12);
+
+  --rm-urgent: #f43f5e;
+  --rm-urgent-bg: rgba(244, 63, 94, 0.12);
+
+  --rm-high: #f97316;
+  --rm-high-bg: rgba(249, 115, 22, 0.12);
+
+  --rm-medium: #eab308;
+  --rm-medium-bg: rgba(234, 179, 8, 0.12);
+
+  --rm-low: #64748b;
+  --rm-low-bg: rgba(100, 116, 139, 0.12);
+  --rm-radius-sm: 8px;
+  --rm-radius-md: 12px;
+  --rm-radius-lg: 18px;
+  --rm-radius-xl: 24px;
+  --rm-radius-full: 9999px;
+
+  --rm-transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --rm-transition-base: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --rm-transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.dark-mode {
+  --rm-bg-canvas: #09090b;
+  --rm-bg-surface: #121217;
+  --rm-bg-card: #18181f;
+  --rm-bg-hover: #22222b;
+  --rm-bg-active: #2a2a36;
+  --rm-bg-elevated: #202029;
+  --rm-bg-glass: rgba(18, 18, 23, 0.75);
+
+  --rm-border-subtle: rgba(255, 255, 255, 0.06);
+  --rm-border-base: rgba(255, 255, 255, 0.1);
+  --rm-border-strong: rgba(255, 255, 255, 0.18);
+  --rm-border-glow: rgba(99, 102, 241, 0.4);
+
+  --rm-text-primary: #f8fafc;
+  --rm-text-secondary: #94a3b8;
+  --rm-text-muted: #64748b;
+  --rm-text-inverse: #09090b;
+
+  --rm-shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --rm-shadow-dropdown: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --rm-shadow-modal: 0 24px 60px -8px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12);
+
+  color-scheme: dark;
+}
+body:not(.dark-mode) {
+  --rm-bg-canvas: #f8fafc;
+  --rm-bg-surface: #ffffff;
+  --rm-bg-card: #ffffff;
+  --rm-bg-hover: #f1f5f9;
+  --rm-bg-active: #e2e8f0;
+  --rm-bg-elevated: #ffffff;
+  --rm-bg-glass: rgba(255, 255, 255, 0.8);
+
+  --rm-border-subtle: rgba(0, 0, 0, 0.05);
+  --rm-border-base: rgba(0, 0, 0, 0.08);
+  --rm-border-strong: rgba(0, 0, 0, 0.15);
+  --rm-border-glow: rgba(99, 102, 241, 0.3);
+
+  --rm-text-primary: #0f172a;
+  --rm-text-secondary: #475569;
+  --rm-text-muted: #94a3b8;
+  --rm-text-inverse: #f8fafc;
+
+  --rm-shadow-card: 0 2px 12px -2px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --rm-shadow-dropdown: 0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  --rm-shadow-modal: 0 20px 50px -10px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.08);
+
+  color-scheme: light;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: var(--rm-font-sans);
+  background-color: var(--rm-bg-canvas);
+  color: var(--rm-text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color var(--rm-transition-base), color var(--rm-transition-base);
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rm-border-strong);
+  border-radius: var(--rm-radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--rm-text-muted);
+}
+:focus-visible {
+  outline: 2px solid var(--rm-accent);
+  outline-offset: 2px;
+}
+button, input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+.glass-panel {
+  background: var(--rm-bg-glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--rm-border-base);
+}
+
+.ai-pill {
+  background: var(--rm-ai-gradient);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: var(--rm-radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.3);
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-box {
+  background: linear-gradient(
+    90deg,
+    var(--rm-bg-hover) 25%,
+    var(--rm-bg-active) 37%,
+    var(--rm-bg-hover) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--rm-radius-sm);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn var(--rm-transition-base) forwards;
+}
+@keyframes aiPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+.ai-pulse {
+  animation: aiPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

@@ -20,7 +20,7 @@ import { AuthService } from './core/services/auth.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.css'
 })
 export class App {
   readonly authService = inject(AuthService);
