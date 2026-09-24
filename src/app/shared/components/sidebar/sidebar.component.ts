@@ -4,7 +4,6 @@ import { TaskService } from '../../../core/services/task.service';
 import { IdeaService } from '../../../core/services/idea.service';
 import { UserService } from '../../../core/services/user.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { BadgeComponent } from '../badge/badge.component';
 import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../icon/icon.component';
 import { I18nService } from '../../../core/services/i18n.service';
@@ -13,7 +12,7 @@ import { TaskPriority, TaskStatus } from '../../../core/models/task.model';
 @Component({
   selector: 'rm-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, BadgeComponent, ButtonComponent, IconComponent],
+  imports: [RouterLink, RouterLinkActive, ButtonComponent, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'

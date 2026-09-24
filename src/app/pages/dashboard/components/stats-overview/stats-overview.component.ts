@@ -2,13 +2,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TaskService } from '../../../../core/services/task.service';
 import { I18nService } from '../../../../core/services/i18n.service';
 import { IdeaService } from '../../../../core/services/idea.service';
-import { CardComponent } from '../../../../shared/components/card/card.component';
-import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 
 @Component({
   selector: 'rm-stats-overview',
   standalone: true,
-  imports: [CardComponent, BadgeComponent],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './stats-overview.component.html',
   styleUrl: './stats-overview.component.css'

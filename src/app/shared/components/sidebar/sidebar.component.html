@@ -2,7 +2,7 @@
   <div class="rm-sidebar-backdrop" (click)="closeMobile.emit()"></div>
 }
 
-<aside id="rm-sidebar" class="rm-sidebar glass-panel" [class.rm-sidebar--open-mobile]="isOpenMobile()">
+<aside id="rm-sidebar" class="rm-sidebar" [class.rm-sidebar--open-mobile]="isOpenMobile()">
 
   <nav class="rm-nav-group">
     <span class="rm-nav-group__title">{{ i18n.t('nav.group.productivity') }}</span>
@@ -15,7 +15,7 @@
       (click)="openDashboard()"
     >
       <div class="rm-nav-item__main">
-        <rm-icon name="check-square" [size]="15" class="rm-nav-item__icon"></rm-icon>
+        <rm-icon name="check-square" [size]="15" class="rm-nav-item__icon" aria-hidden="true"></rm-icon>
         <span>{{ i18n.t('nav.dashboard') }}</span>
       </div>
       <span class="rm-nav-item__count">{{ taskService.totalCount() }}</span>
@@ -28,10 +28,10 @@
       (click)="closeMobile.emit()"
     >
       <div class="rm-nav-item__main">
-        <rm-icon name="message-square" [size]="15" class="rm-nav-item__icon"></rm-icon>
-        <span>{{ i18n.t('ai.title') }}</span>
+        <rm-icon name="message-square" [size]="15" class="rm-nav-item__icon" aria-hidden="true"></rm-icon>
+        <span>{{ i18n.t('dash.ai') }}</span>
       </div>
-      <rm-badge type="ai" label="COPILOT"></rm-badge>
+      <rm-icon name="sparkles" [size]="13" class="rm-nav-item__hint" aria-hidden="true"></rm-icon>
     </a>
 
     <a
@@ -41,12 +41,9 @@
       (click)="closeMobile.emit()"
     >
       <div class="rm-nav-item__main">
-        <rm-icon name="crown" [size]="15" class="rm-nav-item__icon"></rm-icon>
+        <rm-icon name="crown" [size]="15" class="rm-nav-item__icon" aria-hidden="true"></rm-icon>
         <span>{{ i18n.t('nav.pricing') }}</span>
       </div>
-      @if (!userService.isPro()) {
-        <rm-badge type="pro" label="PRO"></rm-badge>
-      }
     </a>
   </nav>
   <div class="rm-nav-group">
@@ -60,7 +57,7 @@
       (click)="setFilter('all', 'urgent')"
     >
       <div class="rm-nav-item__main">
-        <rm-icon name="flame" [size]="14" class="rm-nav-item__icon text-urgent"></rm-icon>
+        <rm-icon name="flame" [size]="14" class="rm-nav-item__icon text-urgent" aria-hidden="true"></rm-icon>
         <span>{{ i18n.t('dash.filter.urgent') }}</span>
       </div>
       <span class="rm-nav-item__count text-urgent">{{ taskService.urgentCount() }}</span>
@@ -74,7 +71,7 @@
       (click)="setFilter('in-progress', 'all')"
     >
       <div class="rm-nav-item__main">
-        <rm-icon name="clock" [size]="14" class="rm-nav-item__icon text-progress"></rm-icon>
+        <rm-icon name="clock" [size]="14" class="rm-nav-item__icon text-progress" aria-hidden="true"></rm-icon>
         <span>{{ i18n.t('dash.doing') }}</span>
       </div>
       <span class="rm-nav-item__count">{{ taskService.inProgressCount() }}</span>
@@ -88,7 +85,7 @@
       (click)="setFilter('done', 'all')"
     >
       <div class="rm-nav-item__main">
-        <rm-icon name="check-circle" [size]="14" class="rm-nav-item__icon text-done"></rm-icon>
+        <rm-icon name="check-circle" [size]="14" class="rm-nav-item__icon text-done" aria-hidden="true"></rm-icon>
         <span>{{ i18n.t('dash.done') }}</span>
       </div>
       <span class="rm-nav-item__count">{{ taskService.doneCount() }}</span>
@@ -97,7 +94,7 @@
   @if (taskService.allTags().length > 0) {
     <div class="rm-nav-group">
       <div class="rm-tags-header">
-        <span class="rm-nav-group__title" style="padding-bottom:0">{{ i18n.t('task.form.tags') }}</span>
+        <span class="rm-nav-group__title">{{ i18n.t('task.form.tags') }}</span>
         @if (taskService.allTags().length > 5) {
           <button type="button" class="rm-tags-toggle" (click)="toggleShowAllTags()" [attr.aria-label]="showAllTags() ? i18n.t('side.tags.collapse') : i18n.t('side.tags.expand')" [attr.aria-expanded]="showAllTags()">
             <rm-icon [name]="showAllTags() ? 'chevron-left' : 'chevron-right'" [size]="12"></rm-icon>
@@ -134,7 +131,7 @@
       <div class="rm-free-quota-card">
         <div class="rm-free-quota-card__header">
           <span class="rm-free-quota-card__title">{{ i18n.t('side.starter') }}</span>
-          <span class="rm-free-quota-card__val">{{ taskService.totalCount() }}/{{ userService.currentUser().quotas.tasksMax }}</span>
+          <span class="rm-free-quota-card__val rm-num">{{ taskService.totalCount() }}/{{ userService.currentUser().quotas.tasksMax }}</span>
         </div>
         <div class="rm-progress-track">
           <div
@@ -148,7 +145,7 @@
         </p>
 
         <rm-button
-          variant="ai"
+          variant="outline"
           size="sm"
           icon="arrow-right"
           (clicked)="userService.openPaywall()"
