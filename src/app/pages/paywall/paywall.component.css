@@ -44,40 +44,57 @@
 
 .rm-billing-toggle {
   display: flex;
-  background: var(--rm-bg-hover);
-  padding: 4px;
-  border-radius: var(--rm-radius-md);
   gap: 4px;
-  margin-top: 4px;
+  margin-top: 8px;
+  padding: 4px;
+  border: 1px solid var(--rm-border-base);
+  border-radius: var(--rm-radius-md);
+  background: var(--rm-bg-surface);
 }
 
 .rm-toggle-option {
-  padding: 8px 18px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--rm-text-secondary);
-  border-radius: var(--rm-radius-sm);
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: all var(--rm-transition-fast);
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: var(--rm-radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--rm-text-secondary);
+  transition: background var(--rm-transition-fast), color var(--rm-transition-fast);
+
+  &:active { transform: scale(0.97); }
 
   &.active {
-    background: var(--rm-bg-elevated);
-    color: var(--rm-text-primary);
+    background: var(--rm-text-primary);
+    color: var(--rm-bg-canvas);
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rm-toggle-option:not(.active):hover {
+    color: var(--rm-text-primary);
+    background: var(--rm-bg-hover);
   }
 }
 
 .rm-save-tag {
-  font-size: 10px;
-  font-weight: 700;
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--rm-done);
   padding: 2px 6px;
   border-radius: var(--rm-radius-full);
+  background: var(--rm-done-bg);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--rm-done-text);
 }
+
+/* On the inverted active pill the tag follows the pill's own colours, in either theme */
+.rm-toggle-option.active .rm-save-tag {
+  background: color-mix(in srgb, currentColor 16%, transparent);
+  color: inherit;
+}
+
 .rm-page-hero,
 .rm-page-grid,
 .rm-page-section {
@@ -100,7 +117,7 @@
 }
 
 .rm-pricing-page > .rm-plans-grid {
-  margin-block-start: clamp(20px, 3vw, 32px);
+  margin-block-start: 0;
 }
 
 .rm-plans-grid {
@@ -142,15 +159,16 @@
 }
 
 .rm-plan-title {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
   color: var(--rm-text-primary);
 }
 
 .rm-plan-desc {
-  font-size: 12.5px;
+  font-size: 14px;
   color: var(--rm-text-secondary);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .rm-plan-pricing-box {
@@ -173,9 +191,10 @@
 }
 
 .rm-amount {
-  font-size: 36px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-size: 48px;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
   color: var(--rm-text-primary);
 }
 
@@ -185,8 +204,9 @@
 }
 
 .rm-plan-free-text {
-  font-size: 32px;
-  font-weight: 800;
+  font-size: 40px;
+  font-weight: 650;
+  letter-spacing: -0.035em;
   color: var(--rm-text-primary);
 }
 
@@ -233,19 +253,20 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 12.5px;
+  font-size: 14px;
   color: var(--rm-text-primary);
-  line-height: 1.4;
+  line-height: 1.45;
 
-  i {
-    font-size: 11px;
-    margin-top: 4px;
+  rm-icon {
+    margin-top: 3px;
     flex-shrink: 0;
+    color: var(--rm-accent);
   }
 }
 
-.text-done { color: var(--rm-done); }
-.text-pro { color: #f59e0b; }
+.text-done { color: var(--rm-done-text); }
+/* Pro is highlighted in the system blue, not a new hue */
+.text-pro { color: var(--rm-accent-text); }
 .font-bold { font-weight: 600; }
 .rm-comparison-section {
   display: flex;
@@ -254,8 +275,9 @@
 }
 
 .rm-comparison-title {
-  font-size: 18px;
+  font-size: clamp(24px, 2.8vw, 32px);
   font-weight: 700;
+  letter-spacing: -0.03em;
   color: var(--rm-text-primary);
 }
 
@@ -268,19 +290,30 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 13px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
 
   th, td {
     padding: 14px 18px;
     border-bottom: 1px solid var(--rm-border-subtle);
+    white-space: nowrap;
+  }
+
+  td:first-child {
+    white-space: normal;
+    min-width: 200px;
   }
 
   th {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    font-size: 13px;
+    font-weight: 600;
     color: var(--rm-text-muted);
     background: var(--rm-bg-surface);
+    border-bottom-color: var(--rm-border-strong);
+  }
+
+  rm-icon {
+    color: var(--rm-accent);
   }
 
   tr:last-child td {
@@ -294,47 +327,63 @@
 }
 
 .rm-faq-title {
-  font-size: 18px;
+  font-size: clamp(24px, 2.8vw, 32px);
   font-weight: 700;
+  letter-spacing: -0.03em;
   color: var(--rm-text-primary);
 }
 
-.rm-faq-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-  }
+.rm-faq-list {
+  border-top: 1px solid var(--rm-border-strong);
 }
 
 .rm-faq-item {
-  padding: 18px;
-  background: var(--rm-bg-card);
-  border: 1px solid var(--rm-border-base);
-  border-radius: var(--rm-radius-md);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  border-bottom: 1px solid var(--rm-border-base);
 }
 
 .rm-faq-q {
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 56px;
+  padding-block: 16px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 17px;
   font-weight: 600;
+  letter-spacing: -0.015em;
   color: var(--rm-text-primary);
+
+  &::-webkit-details-marker { display: none; }
+  &:active { opacity: 0.72; }
+  &:focus-visible {
+    outline: 2px solid var(--rm-accent);
+    outline-offset: 2px;
+    border-radius: var(--rm-radius-sm);
+  }
+}
+
+.rm-faq-chevron {
+  flex-shrink: 0;
+  color: var(--rm-text-muted);
+  transition: transform var(--rm-transition-base);
+}
+
+.rm-faq-item[open] .rm-faq-chevron {
+  transform: rotate(180deg);
 }
 
 .rm-faq-a {
-  font-size: 12.5px;
+  max-width: 68ch;
+  padding-bottom: 20px;
+  font-size: 15px;
+  line-height: 1.6;
   color: var(--rm-text-secondary);
-  line-height: 1.45;
+}
 
-  code {
-    font-family: var(--rm-font-mono);
-    background: var(--rm-bg-hover);
-    padding: 2px 5px;
-    border-radius: 4px;
-    font-size: 11px;
+@media (hover: hover) and (pointer: fine) {
+  .rm-faq-q:hover .rm-faq-chevron {
+    color: var(--rm-text-primary);
   }
 }

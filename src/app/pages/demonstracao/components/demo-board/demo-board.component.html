@@ -1,0 +1,133 @@
+<div class="rm-board">
+  <div class="rm-board__chrome">
+    <span class="rm-board__dots" aria-hidden="true"><span></span><span></span><span></span></span>
+    <span class="rm-board__url"><rm-icon name="lock" [size]="11" aria-hidden="true"></rm-icon>app.remindme.com/dashboard</span>
+    <button type="button" class="rm-board__reset" (click)="reset()">
+      <rm-icon name="refresh" [size]="14" aria-hidden="true"></rm-icon>
+      <span>{{ i18n.t('dash.resetShort') }}</span>
+    </button>
+  </div>
+
+  <div class="rm-board__toolbar">
+    <form class="rm-board__add" (submit)="addTask($event)">
+      <label class="rm-sr-only" for="rm-demo-title">{{ i18n.t('task.form.title') }}</label>
+      <input
+        id="rm-demo-title"
+        class="rm-board__field rm-board__field--grow"
+        type="text"
+        autocomplete="off"
+        maxlength="80"
+        [placeholder]="i18n.t('task.form.titlePlaceholder')"
+        [value]="draftTitle()"
+        (input)="onInput($event.target, 'draft')"
+      />
+      <label class="rm-sr-only" for="rm-demo-priority">{{ i18n.t('dash.priority.label') }}</label>
+      <select
+        id="rm-demo-priority"
+        class="rm-board__field rm-board__select"
+        [value]="draftPriority()"
+        (change)="onPriority($event.target)"
+      >
+        @for (priority of priorities; track priority) {
+          <option [value]="priority" [selected]="draftPriority() === priority">{{ i18n.t('priority.' + priority) }}</option>
+        }
+      </select>
+      <button type="submit" class="rm-board__submit" [disabled]="!draftTitle().trim()">
+        <rm-icon name="plus" [size]="16" aria-hidden="true"></rm-icon>
+        <span>{{ i18n.t('dash.newTask') }}</span>
+      </button>
+    </form>
+
+    <div class="rm-board__filters">
+      <div class="rm-board__search">
+        <rm-icon name="search" [size]="14" aria-hidden="true"></rm-icon>
+        <label class="rm-sr-only" for="rm-demo-search">{{ i18n.t('dash.search') }}</label>
+        <input
+          id="rm-demo-search"
+          class="rm-board__field rm-board__field--bare"
+          type="search"
+          autocomplete="off"
+          [placeholder]="i18n.t('dash.search')"
+          [value]="query()"
+          (input)="onInput($event.target, 'query')"
+        />
+      </div>
+      <div class="rm-board__chips" role="group" [attr.aria-label]="i18n.t('dash.status.label')">
+        <button type="button" class="rm-board__chip" [class.rm-board__chip--on]="filter() === 'all'" [attr.aria-pressed]="filter() === 'all'" (click)="setFilter('all')">{{ i18n.t('dash.filter.all') }}</button>
+        <button type="button" class="rm-board__chip" [class.rm-board__chip--on]="filter() === 'urgent'" [attr.aria-pressed]="filter() === 'urgent'" (click)="setFilter('urgent')">{{ i18n.t('dash.filter.urgent') }}</button>
+        <button type="button" class="rm-board__chip" [class.rm-board__chip--on]="filter() === 'doing'" [attr.aria-pressed]="filter() === 'doing'" (click)="setFilter('doing')">{{ i18n.t('dash.filter.progress') }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rm-board__body">
+    <div class="rm-board__stats" aria-live="polite">
+      <div class="rm-board__stat">
+        <span class="rm-board__label">{{ i18n.t('home.preview.production') }}</span>
+        <span class="rm-board__value rm-num">{{ doneCount() }} / {{ total() }}</span>
+        <span class="rm-board__bar"><span class="rm-board__bar-fill" [style.width.%]="progress()"></span></span>
+      </div>
+      <div class="rm-board__stat">
+        <span class="rm-board__label">{{ i18n.t('home.preview.urgent') }}</span>
+        <span class="rm-board__value rm-board__value--urgent"><span class="rm-num">{{ urgentOpen() }}</span> {{ i18n.t('dash.filter.urgent') }}</span>
+      </div>
+      <div class="rm-board__stat">
+        <span class="rm-board__label">{{ i18n.t('dash.stats.progress') }}</span>
+        <span class="rm-board__value rm-board__value--accent rm-num">{{ progress() }}%</span>
+      </div>
+    </div>
+
+    <div class="rm-board__columns">
+      @for (column of columns; track column.key) {
+        <section class="rm-board__column" [attr.aria-label]="i18n.t(column.label)">
+          <header class="rm-board__column-head">
+            <rm-icon [name]="column.icon" [size]="14" aria-hidden="true"></rm-icon>
+            <span>{{ i18n.t(column.label) }}</span>
+            <span class="rm-board__count rm-num">{{ byColumn()[column.key].length }}</span>
+          </header>
+
+          <ul class="rm-board__list">
+            @for (task of byColumn()[column.key]; track task.id) {
+              <li
+                class="rm-board__card"
+                [class.rm-board__card--done]="task.status === 'done'"
+                [class.rm-board__card--fresh]="lastTouched() === task.id"
+              >
+                <button
+                  type="button"
+                  class="rm-board__toggle"
+                  [class]="'rm-board__toggle rm-board__toggle--' + task.status"
+                  [attr.aria-label]="i18n.t('task.toggle', { title: task.title })"
+                  (click)="advance(task)"
+                >
+                  @if (task.status === 'done') {
+                    <rm-icon name="check" [size]="12" [strokeWidth]="3" aria-hidden="true"></rm-icon>
+                  }
+                </button>
+
+                <div class="rm-board__card-main">
+                  <div class="rm-board__card-top">
+                    <span [class]="'rm-board__priority rm-board__priority--' + task.priority">{{ i18n.t('priority.' + task.priority) }}</span>
+                    @if (task.time) { <span class="rm-board__time rm-num">{{ task.time }}</span> }
+                  </div>
+                  <span class="rm-board__title">{{ task.title }}</span>
+                  @if (task.tags.length) {
+                    <div class="rm-board__tags">
+                      @for (tag of task.tags; track tag) { <span class="rm-board__tag">{{ tag }}</span> }
+                    </div>
+                  }
+                </div>
+
+                <button type="button" class="rm-board__delete" [attr.aria-label]="i18n.t('task.delete')" (click)="remove(task)">
+                  <rm-icon name="x" [size]="14" aria-hidden="true"></rm-icon>
+                </button>
+              </li>
+            } @empty {
+              <li class="rm-board__empty">{{ i18n.t(isFiltering() ? 'dash.kanban.emptyFiltered' : column.empty) }}</li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  </div>
+</div>

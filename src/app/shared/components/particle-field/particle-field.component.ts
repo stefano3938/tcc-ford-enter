@@ -8,18 +8,40 @@ import {
   PLATFORM_ID,
   ViewChild,
   effect,
-  inject
+  inject,
+  input
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ThemeService } from '../../../core/services/theme.service';
 
+/**
+ * ring    ideas orbit the pointer (a ghost cursor wanders when there is none)
+ * scatter loose ideas drifting apart
+ * grid    ideas snapped into board columns
+ * flow    ideas moving in one direction, like work shipping
+ */
+export type ParticleFormation = 'ring' | 'scatter' | 'grid' | 'flow';
+
+/** hero: full strength. ambient: a quieter band behind an inner-page title. */
+export type ParticleVariant = 'hero' | 'ambient';
+
+/** Where the text sits, so the field thins out behind it */
+export type ParticleQuietZone = 'center' | 'left' | 'none';
+
 interface Particle {
   hx: number;
   hy: number;
+  /** Board-column slot used by the grid formation */
+  gx: number;
+  gy: number;
+  /** Last flow position, to detect the wrap and teleport instead of flying back */
+  fx: number;
   x: number;
   y: number;
   vx: number;
   vy: number;
+  dirX: number;
+  dirY: number;
   /** 0 = far, 1 = mid, 2 = near: size, alpha and pull all scale with it */
   plane: number;
   color: number;
@@ -30,27 +52,37 @@ interface Particle {
 }
 
 const PLANES = [
-  { scale: 0.62, alpha: 0.38, pull: 0.035, drift: 5 },
-  { scale: 0.85, alpha: 0.6, pull: 0.05, drift: 8 },
-  { scale: 1.1, alpha: 0.9, pull: 0.07, drift: 12 }
+  { scale: 0.62, alpha: 0.38, pull: 0.035, drift: 5, speed: 18 },
+  { scale: 0.85, alpha: 0.6, pull: 0.05, drift: 8, speed: 30 },
+  { scale: 1.1, alpha: 0.9, pull: 0.07, drift: 12, speed: 44 }
 ];
 
+const FORMATIONS: ReadonlyArray<ParticleFormation> = ['ring', 'scatter', 'grid', 'flow'];
 const ALPHA_STEPS = 5;
+const GRID_COL = 44;
+const GRID_ROW = 12;
 
 /**
- * Field of short dashes that gathers into a wobbling ring around the pointer.
- * With no pointer (touch, keyboard, first paint) a slow "ghost" cursor wanders
- * so the effect still reads. Runs outside Angular and pauses off-screen.
- * Under prefers-reduced-motion it never moves by itself; it only follows the pointer.
+ * Field of short dashes. It gathers into a wobbling ring around the pointer and can
+ * morph between formations (see ParticleFormation). Runs outside Angular, pauses
+ * off-screen, and under prefers-reduced-motion never moves by itself: it only
+ * follows the pointer and switches formation without the in-between travel.
  */
 @Component({
   selector: 'rm-particle-field',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './particle-field.component.html',
-  styleUrl: './particle-field.component.css'
+  styleUrl: './particle-field.component.css',
+  host: {
+    '[class.rm-particle-field--ambient]': "variant() === 'ambient'"
+  }
 })
 export class ParticleFieldComponent implements AfterViewInit, OnDestroy {
+  readonly variant = input<ParticleVariant>('hero');
+  readonly formation = input<ParticleFormation>('ring');
+  readonly quiet = input<ParticleQuietZone>('center');
+
   @ViewChild('canvas', { static: true }) private canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -79,6 +111,9 @@ export class ParticleFieldComponent implements AfterViewInit, OnDestroy {
   private focusX = 0;
   private focusY = 0;
 
+  /** Eased weight of each formation; they always sum to ~1 */
+  private weights: Record<ParticleFormation, number> = { ring: 1, scatter: 0, grid: 0, flow: 0 };
+
   private resizeObserver?: ResizeObserver;
   private intersectionObserver?: IntersectionObserver;
   private motionQuery?: MediaQueryList;
@@ -94,6 +129,15 @@ export class ParticleFieldComponent implements AfterViewInit, OnDestroy {
           if (!this.running) this.drawStill();
         });
       }
+    });
+
+    effect(() => {
+      const target = this.formation();
+      // No travel under reduced motion, and none before the first frame
+      if (this.reducedMotion || !this.particles.length) {
+        for (const name of FORMATIONS) this.weights[name] = name === target ? 1 : 0;
+      }
+      if (this.isBrowser && !this.running) requestAnimationFrame(() => this.drawStill());
     });
   }
 
@@ -211,9 +255,11 @@ export class ParticleFieldComponent implements AfterViewInit, OnDestroy {
 
   /** Jittered grid: even coverage without the mechanical look of a lattice */
   private seed(): void {
-    const spacing = this.width < 640 ? 26 : 22;
+    const ambient = this.variant() === 'ambient';
+    const spacing = (this.width < 640 ? 26 : 22) + (ambient ? 4 : 0);
     const cols = Math.ceil(this.width / spacing);
     const rows = Math.ceil(this.height / spacing);
+    const gridOffset = (this.width % GRID_COL) / 2;
     const particles: Particle[] = [];
 
     for (let row = 0; row < rows; row++) {
@@ -227,10 +273,15 @@ export class ParticleFieldComponent implements AfterViewInit, OnDestroy {
         particles.push({
           hx,
           hy,
+          gx: gridOffset + Math.round((hx - gridOffset) / GRID_COL) * GRID_COL + (plane - 1) * 5,
+          gy: Math.round(hy / GRID_ROW) * GRID_ROW,
+          fx: hx,
           x: hx + (Math.random() - 0.5) * 60,
           y: hy + (Math.random() - 0.5) * 60,
           vx: 0,
           vy: 0,
+          dirX: Math.cos(angle),
+          dirY: Math.sin(angle),
           plane,
           color: plane === 2 ? (Math.random() < 0.7 ? 0 : 3) : plane === 1 ? (Math.random() < 0.6 ? 1 : 0) : 2,
           len: 3 + Math.random() * 4,
@@ -249,6 +300,12 @@ export class ParticleFieldComponent implements AfterViewInit, OnDestroy {
     // but the field still answers the pointer, which is motion the user drives.
     const t = this.reducedMotion ? 0 : (now - this.startedAt) / 1000;
 
+    const target = this.formation();
+    for (const name of FORMATIONS) {
+      const goal = name === target ? 1 : 0;
+      this.weights[name] = this.reducedMotion ? goal : this.weights[name] + (goal - this.weights[name]) * 0.045;
+    }
+
     // Ghost cursor: a slow Lissajous path through the upper-middle of the field
     const ghostX = this.reducedMotion ? this.width * 0.72 : this.width * (0.5 + 0.3 * Math.sin(t * 0.21));
     const ghostY = this.reducedMotion ? this.height * 0.38 : this.height * (0.46 + 0.22 * Math.sin(t * 0.29 + 1.3));
@@ -263,35 +320,106 @@ export class ParticleFieldComponent implements AfterViewInit, OnDestroy {
     this.draw(this.reducedMotion ? 1 : Math.min(1, t / 0.9));
   }
 
+  /** How strongly the ring pulls: full in the ring formation, pointer-only elsewhere */
+  private ringStrength(): number {
+    return Math.max(this.weights.ring, this.pointerWeight * 0.75);
+  }
+
+  private reach(): number {
+    const base = Math.min(260, Math.max(170, this.width * 0.2));
+    return this.variant() === 'ambient' ? base * 0.75 : base;
+  }
+
   private update(t: number): void {
+    const w = this.weights;
     const cx = this.focusX;
     const cy = this.focusY;
-    const reach = Math.min(260, Math.max(170, this.width * 0.2));
+    const reach = this.reach();
+    const ring = this.ringStrength();
+    const span = this.width + 40;
 
     for (const p of this.particles) {
       const plane = PLANES[p.plane];
-      let tx = p.hx + Math.sin(t * 0.6 + p.phase) * plane.drift;
-      let ty = p.hy + Math.cos(t * 0.5 + p.phase * 1.3) * plane.drift;
+      let tx = 0;
+      let ty = 0;
+      let dx = 0;
+      let dy = 0;
 
-      const dx = p.hx - cx;
-      const dy = p.hy - cy;
-      const dist = Math.hypot(dx, dy) || 0.0001;
-      if (dist < reach) {
+      const calm = w.ring + w.scatter;
+      if (calm > 0.001) {
+        const drift = plane.drift * (1 + w.scatter * 2.2);
+        const sx = p.hx + Math.sin(t * 0.6 + p.phase) * drift + p.baseDx * w.scatter * 18;
+        const sy = p.hy + Math.cos(t * 0.5 + p.phase * 1.3) * drift + p.baseDy * w.scatter * 18;
+        tx += sx * calm;
+        ty += sy * calm;
+        dx += p.baseDx * calm;
+        dy += p.baseDy * calm;
+      }
+
+      if (w.grid > 0.001) {
+        tx += (p.gx + Math.sin(t * 0.8 + p.phase) * 1.2) * w.grid;
+        ty += p.gy * w.grid;
+        dy += w.grid;
+      }
+
+      if (w.flow > 0.001) {
+        const raw = p.hx + t * plane.speed;
+        const fx = (((raw % span) + span) % span) - 20;
+        const fy = p.hy + Math.sin(fx * 0.012 + p.phase) * 10;
+        // Wrapped from the right edge: jump with it instead of streaking back across
+        if (w.flow > 0.5 && fx < p.fx - span / 2) {
+          p.x = fx;
+          p.vx = 0;
+        }
+        p.fx = fx;
+        tx += fx * w.flow;
+        ty += fy * w.flow;
+        dx += w.flow;
+        dy += Math.cos(fx * 0.012 + p.phase) * 0.12 * w.flow;
+      }
+
+      // The ring bends every formation around the focus point
+      const rx = tx - cx;
+      const ry = ty - cy;
+      const dist = Math.hypot(rx, ry) || 0.0001;
+      if (ring > 0.001 && dist < reach) {
         const falloff = 1 - dist / reach;
         // Aggressive curve: most of the neighbourhood collapses onto the ring
-        const ease = Math.pow(falloff, 0.55);
-        const angle = Math.atan2(dy, dx) + ease * 0.45;
+        const ease = Math.pow(falloff, 0.55) * ring;
+        const angle = Math.atan2(ry, rx) + ease * 0.45;
         // The ring wobbles with angle and time, so it reads as alive, not a stamp
-        const ring = reach * 0.36 + Math.sin(angle * 3 + t * 1.6) * 9 + p.plane * 6;
-        const radius = dist + (ring - dist) * ease;
-        tx = cx + Math.cos(angle) * radius;
-        ty = cy + Math.sin(angle) * radius;
+        const radius = reach * 0.36 + Math.sin(angle * 3 + t * 1.6) * 9 + p.plane * 6;
+        const r = dist + (radius - dist) * ease;
+        tx = cx + Math.cos(angle) * r;
+        ty = cy + Math.sin(angle) * r;
       }
+
+      const len = Math.hypot(dx, dy) || 1;
+      p.dirX = dx / len;
+      p.dirY = dy / len;
 
       p.vx = (p.vx + (tx - p.x) * plane.pull) * 0.84;
       p.vy = (p.vy + (ty - p.y) * plane.pull) * 0.84;
       p.x += p.vx;
       p.y += p.vy;
+    }
+  }
+
+  /** 0..1: how much of the field shows at a point, thinner behind the text */
+  private presence(x: number, y: number): number {
+    switch (this.quiet()) {
+      case 'none':
+        return 1;
+      case 'left': {
+        const ex = (x - this.width * 0.3) / (this.width * 0.36);
+        const ey = (y - this.height * 0.55) / (this.height * 0.42);
+        return Math.min(1, Math.max(0, Math.hypot(ex, ey) - 0.4));
+      }
+      default: {
+        const ex = (x - this.width / 2) / Math.min(this.width * 0.36, 460);
+        const ey = (y - this.height / 2) / Math.min(this.height * 0.26, 200);
+        return Math.min(1, Math.max(0, Math.hypot(ex, ey) - 0.35));
+      }
     }
   }
 
@@ -303,11 +431,11 @@ export class ParticleFieldComponent implements AfterViewInit, OnDestroy {
 
     const cx = this.focusX;
     const cy = this.focusY;
-    const reach = Math.min(260, Math.max(170, this.width * 0.2));
-    const midX = this.width / 2;
-    const midY = this.height / 2;
-    const textRx = Math.min(this.width * 0.36, 460);
-    const textRy = Math.min(this.height * 0.26, 200);
+    const reach = this.reach();
+    const ring = this.ringStrength();
+    const strength = this.variant() === 'ambient' ? 0.8 : 1;
+    // Without the ring's highlight the other formations need a brighter resting state to read
+    const base = 0.5 + 0.4 * (1 - this.weights.ring);
 
     // Bucket by colour x plane x alpha step: a few dozen strokes instead of thousands
     const buckets = new Map<string, number[]>();
@@ -317,22 +445,17 @@ export class ParticleFieldComponent implements AfterViewInit, OnDestroy {
       const dx = p.x - cx;
       const dy = p.y - cy;
       const dist = Math.hypot(dx, dy) || 0.0001;
-      const near = Math.max(0, 1 - Math.abs(dist - reach * 0.36) / (reach * 0.55));
+      const near = Math.max(0, 1 - Math.abs(dist - reach * 0.36) / (reach * 0.55)) * ring;
 
-      // Dashes point away from the focus when close, keep their own heading when far
-      let dirX = p.baseDx * (1 - near) + (dx / dist) * near;
-      let dirY = p.baseDy * (1 - near) + (dy / dist) * near;
+      // Dashes point away from the focus on the ring, keep the formation's heading elsewhere
+      let dirX = p.dirX * (1 - near) + (dx / dist) * near;
+      let dirY = p.dirY * (1 - near) + (dy / dist) * near;
       const dirLen = Math.hypot(dirX, dirY) || 1;
       dirX /= dirLen;
       dirY /= dirLen;
 
-      // Quieter behind the headline, unless the ring is right there
-      const ex = (p.x - midX) / textRx;
-      const ey = (p.y - midY) / textRy;
-      const textZone = Math.min(1, Math.max(0, Math.hypot(ex, ey) - 0.35));
-      const quiet = 0.22 + 0.78 * Math.max(textZone, near);
-
-      const alpha = Math.min(1, plane.alpha * quiet * (0.5 + 0.9 * near)) * intro;
+      const quiet = 0.22 + 0.78 * Math.max(this.presence(p.x, p.y), near);
+      const alpha = Math.min(1, plane.alpha * quiet * (base + 0.9 * near)) * intro * strength;
       if (alpha < 0.03) continue;
       const step = Math.min(ALPHA_STEPS, Math.max(1, Math.round(alpha * ALPHA_STEPS)));
       const half = (p.len * plane.scale * (1 + near * 0.9)) / 2;

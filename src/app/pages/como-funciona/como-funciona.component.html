@@ -1,26 +1,58 @@
 <rm-public-shell>
-  <section id="como-funciona" class="rm-how rm-page">
-    <header class="rm-how__head">
-      <div class="rm-page-head">
-        <h1 class="rm-page-title">{{ i18n.t('home.how.title') }}</h1>
-        <p class="rm-page-lede">{{ i18n.t('how.subtitle') }}</p>
-      </div>
-      <rm-button variant="primary" size="lg" icon="arrow-right" (clicked)="onStartNow()">{{ i18n.t('home.how.cta') }}</rm-button>
-    </header>
+  <section class="rm-page-band">
+    <rm-particle-field variant="ambient" quiet="left"></rm-particle-field>
+    <div class="rm-page">
+      <header class="rm-how__head">
+        <div class="rm-page-head">
+          <h1 class="rm-page-title">{{ i18n.t('home.how.title') }}</h1>
+          <p class="rm-page-lede">{{ i18n.t('how.subtitle') }}</p>
+        </div>
+        <rm-button variant="primary" size="lg" icon="arrow-right" (clicked)="onStartNow()">{{ i18n.t('home.how.cta') }}</rm-button>
+      </header>
+    </div>
+  </section>
 
-    <ol class="rm-how__list">
+  <section id="como-funciona" class="rm-story rm-page">
+    <ol class="rm-story__steps">
       @for (step of steps; track step.key; let i = $index) {
-        <li class="rm-how__step">
-          <span class="rm-how__index rm-num" aria-hidden="true">0{{ i + 1 }}</span>
-          <div class="rm-how__copy">
-            <h2 class="rm-how__title">
-              <rm-icon [name]="step.icon" [size]="22" aria-hidden="true"></rm-icon>
-              <span>{{ i18n.t('home.how.' + step.key + '.title') }}</span>
-            </h2>
-            <p class="rm-how__body">{{ i18n.t('home.how.' + step.key + '.body') }}</p>
-          </div>
+        <li #stepEl class="rm-story__step" [attr.data-step]="i" [class.rm-story__step--active]="active() === i">
+          <span class="rm-story__index rm-num" aria-hidden="true">0{{ i + 1 }}</span>
+          <h2 class="rm-story__title">
+            <rm-icon [name]="step.icon" [size]="22" aria-hidden="true"></rm-icon>
+            <span>{{ i18n.t('home.how.' + step.key + '.title') }}</span>
+          </h2>
+          <p class="rm-story__body">{{ i18n.t('home.how.' + step.key + '.body') }}</p>
+
+          @if (narrow()) {
+            <rm-app-preview class="rm-story__inline" [variant]="step.preview" [compact]="true"></rm-app-preview>
+          }
         </li>
       }
     </ol>
+
+    @if (!narrow()) {
+      <div class="rm-story__aside" aria-hidden="true">
+        <div class="rm-stage">
+          @for (step of steps; track step.key; let i = $index) {
+            <rm-app-preview
+              class="rm-stage__preview"
+              [class.rm-stage__preview--on]="active() === i"
+              [variant]="step.preview"
+              [compact]="true"
+            ></rm-app-preview>
+          }
+        </div>
+      </div>
+    }
+  </section>
+
+  <section class="rm-close rm-page" aria-labelledby="rm-close-title" rmReveal>
+    <div class="rm-close__inner">
+      <h2 id="rm-close-title" class="rm-close__title">{{ i18n.t('demo.title') }}</h2>
+      <div class="rm-close__actions">
+        <rm-button variant="outline" size="lg" (clicked)="goTo('/demonstracao')">{{ i18n.t('nav.demo') }}</rm-button>
+        <rm-button variant="primary" size="lg" icon="arrow-right" (clicked)="onStartNow()">{{ i18n.t('home.hero.cta') }}</rm-button>
+      </div>
+    </div>
   </section>
 </rm-public-shell>

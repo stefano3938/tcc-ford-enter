@@ -44,7 +44,14 @@ All colors are tokens in `src/styles.css`. There is no purple anywhere; the old 
 ## Motion
 
 - **Signature:** `<rm-particle-field>` (`src/app/shared/components/particle-field`). It draws on a canvas outside Angular's zone, has three depth planes, and a ghost cursor wanders when there is no pointer. It pauses off-screen and when the tab is hidden. Under `prefers-reduced-motion` it paints a single still frame. Used on the home hero and behind the login card.
-- Hero copy enters with fade + 14px rise + blur, 900ms, `--rm-ease-out`. Nothing else on the page has an entrance animation.
+  - Inputs: `variant` (`hero` | `ambient`: a quieter band that fades out downward, for inner-page titles), `formation` (`ring` | `scatter` | `grid` | `flow`, eased morph between them; instant under reduced motion), `quiet` (`center` | `left` | `none`: where the text sits, so the field thins behind it).
+- Hero copy enters with fade + 14px rise + blur, 900ms, `--rm-ease-out`.
+- Sections below the fold use the `rmReveal` directive (`src/app/shared/directives/reveal.directive.ts`): one entrance per section (fade + 18px rise + blur, 800ms), optional `[rmRevealDelay]`. Content stays visible without JS.
+
+## Product imagery
+
+- `<rm-app-preview>` (`src/app/shared/components/app-preview`) is the read-only replica of the app used on public pages: `variant` = `kanban` | `ideas` | `assistant` | `progress`, `[highlight]` spotlights a kanban card, `compact` drops toolbar/stats to sit beside text.
+- Interface labels go through i18n; task titles are demo content. Inside an `rmReveal` it plays one short stagger (list items, bars filling).
 - Ease: `--rm-ease-out` = `cubic-bezier(0.16, 1, 0.3, 1)`.
 
 ## Components

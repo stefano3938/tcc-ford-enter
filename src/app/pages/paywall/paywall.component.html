@@ -1,6 +1,6 @@
 <rm-public-shell>
-<div class="rm-pricing-page">
-
+<section class="rm-page-band">
+  <rm-particle-field variant="ambient" quiet="center"></rm-particle-field>
   <div class="rm-pricing-hero rm-page-hero">
     <h1 class="rm-page-title">{{ i18n.t('pay.heroShort') }}</h1>
     <p class="rm-page-lede">{{ i18n.t('pay.subtitle') }}</p>
@@ -9,6 +9,7 @@
         type="button"
         class="rm-toggle-option"
         [class.active]="billing() === 'monthly'"
+        [attr.aria-pressed]="billing() === 'monthly'"
         (click)="billing.set('monthly')"
       >
         {{ i18n.t('pay.monthly') }}
@@ -17,13 +18,17 @@
         type="button"
         class="rm-toggle-option"
         [class.active]="billing() === 'yearly'"
+        [attr.aria-pressed]="billing() === 'yearly'"
         (click)="billing.set('yearly')"
       >
         {{ i18n.t('pay.yearly') }}
-        <span class="rm-save-tag">-20% OFF</span>
+        <span class="rm-save-tag rm-num">−20%</span>
       </button>
     </div>
   </div>
+</section>
+
+<div class="rm-pricing-page">
   <div class="rm-plans-grid rm-page-grid">
     @for (plan of userService.pricingPlans(); track plan.id) {
       <rm-card
@@ -37,7 +42,7 @@
           <div class="rm-plan-title-wrap">
             <h3 class="rm-plan-title">{{ plan.name }}</h3>
             @if (plan.isPopular) {
-              <rm-badge type="pro" [label]="i18n.t('pay.popular')"></rm-badge>
+              <rm-badge type="ai" [label]="i18n.t('pay.popular')"></rm-badge>
             }
           </div>
           <p class="rm-plan-desc">{{ plan.description }}</p>
@@ -66,12 +71,12 @@
               size="lg"
               [disabled]="true"
             >
-              <i class="pi pi-check" aria-hidden="true"></i>
+              <rm-icon name="check" [size]="14" aria-hidden="true"></rm-icon>
               {{ i18n.t('pay.current') }}
             </rm-button>
           } @else if (plan.id === 'pro') {
             <rm-button
-              variant="ai"
+              variant="primary"
               size="lg"
               icon="pi-bolt"
               [loading]="isProcessing() && planToSelect() === 'pro'"
@@ -89,7 +94,7 @@
             </rm-button>
           } @else {
             <rm-button
-              variant="secondary"
+              variant="outline"
               size="lg"
               (clicked)="selectPlan('team')"
             >
@@ -104,7 +109,7 @@
           <ul class="rm-features-items">
             @for (feat of plan.features; track feat) {
               <li class="rm-feature-item">
-                <i class="pi pi-check text-done" aria-hidden="true"></i>
+                <rm-icon name="check" [size]="14" class="text-done" aria-hidden="true"></rm-icon>
                 <span>{{ feat }}</span>
               </li>
             }
@@ -114,7 +119,7 @@
     }
   </div>
   <div class="rm-comparison-section rm-page-section">
-    <h3 class="rm-comparison-title">{{ i18n.t('pay.compare') }}</h3>
+    <h2 class="rm-comparison-title">{{ i18n.t('pay.compare') }}</h2>
 
     <div class="rm-table-wrapper glass-panel">
       <table class="rm-comparison-table">
@@ -132,7 +137,7 @@
               <td>{{ i18n.t(row.feature) }}</td>
               @for (cell of row.cells; track $index) {
                 @if (cell === true) {
-                  <td [class.text-done]="true" [class.font-bold]="true"><i class="pi pi-check" aria-hidden="true"></i></td>
+                  <td [class.text-done]="true" [class.font-bold]="true"><rm-icon name="check" [size]="14" aria-hidden="true"></rm-icon></td>
                 } @else if (cell === false) {
                   <td>—</td>
                 } @else {
@@ -146,13 +151,16 @@
     </div>
   </div>
   <div class="rm-faq-section rm-page-section">
-    <h3 class="rm-faq-title">{{ i18n.t('pay.faqTitle') }}</h3>
-    <div class="rm-faq-grid">
-      @for (faq of faqs; track faq.q) {
-        <div class="rm-faq-item">
-          <h4 class="rm-faq-q">{{ i18n.t(faq.q) }}</h4>
+    <h2 class="rm-faq-title">{{ i18n.t('pay.faqTitle') }}</h2>
+    <div class="rm-faq-list">
+      @for (faq of faqs; track faq.q; let first = $first) {
+        <details class="rm-faq-item" [open]="first">
+          <summary class="rm-faq-q">
+            <span>{{ i18n.t(faq.q) }}</span>
+            <rm-icon name="chevron-down" [size]="18" class="rm-faq-chevron" aria-hidden="true"></rm-icon>
+          </summary>
           <p class="rm-faq-a">{{ i18n.t(faq.a) }}</p>
-        </div>
+        </details>
       }
     </div>
   </div>

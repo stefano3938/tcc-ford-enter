@@ -1,0 +1,139 @@
+<div class="rm-app" [class.rm-app--compact]="compact()">
+  <div class="rm-app__chrome">
+    <span class="rm-app__dots"><span></span><span></span><span></span></span>
+    <span class="rm-app__url"><rm-icon name="lock" [size]="11"></rm-icon>app.remindme.com/{{ path() }}</span>
+    <span class="rm-app__live"><span class="rm-app__live-dot"></span>{{ i18n.t('home.preview.live') }}</span>
+  </div>
+
+  @switch (variant()) {
+    @case ('kanban') {
+      @if (!compact()) {
+        <div class="rm-app__toolbar">
+          <span class="rm-app__search"><rm-icon name="search" [size]="13"></rm-icon><span>{{ i18n.t('dash.search') }}</span></span>
+          <span class="rm-app__chips">
+            <span class="rm-app__chip rm-app__chip--on">{{ i18n.t('dash.filter.all') }}</span>
+            <span class="rm-app__chip">{{ i18n.t('dash.filter.urgent') }}</span>
+            <span class="rm-app__chip">{{ i18n.t('dash.filter.progress') }}</span>
+          </span>
+        </div>
+      }
+
+      <div class="rm-app__body">
+        @if (!compact()) {
+          <div class="rm-app__stats">
+            <div class="rm-app__stat">
+              <span class="rm-app__label">{{ i18n.t('home.preview.production') }}</span>
+              <span class="rm-app__value rm-num">12 / 14</span>
+              <span class="rm-app__bar"><span class="rm-app__bar-fill" style="--fill: 86%"></span></span>
+            </div>
+            <div class="rm-app__stat">
+              <span class="rm-app__label">{{ i18n.t('home.preview.urgent') }}</span>
+              <span class="rm-app__value rm-app__value--urgent"><span class="rm-num">2</span> {{ i18n.t('dash.filter.urgent') }}</span>
+              <span class="rm-app__sub">{{ i18n.t('home.preview.dueToday') }}</span>
+            </div>
+            <div class="rm-app__stat">
+              <span class="rm-app__label">{{ i18n.t('ai.title') }}</span>
+              <span class="rm-app__value rm-app__value--accent"><span class="rm-num">3</span> {{ i18n.t('home.preview.suggestions') }}</span>
+              <span class="rm-app__sub">{{ i18n.t('home.preview.ready') }}</span>
+            </div>
+          </div>
+        }
+
+        <div class="rm-app__board">
+          @for (column of columns; track column.key; let c = $index) {
+            <div class="rm-app__column">
+              <div class="rm-app__column-head">
+                <rm-icon [name]="column.icon" [size]="13"></rm-icon>
+                <span>{{ i18n.t('dash.' + column.key) }}</span>
+                <span class="rm-app__count rm-num">{{ column.tasks.length }}</span>
+              </div>
+              @for (task of column.tasks; track task.title; let r = $index) {
+                @if (!compact() || r < 2) {
+                  <div
+                    class="rm-app__card"
+                    [class.rm-app__card--done]="column.key === 'done'"
+                    [class.rm-app__card--spot]="highlight() === cardIndex(c, r)"
+                  >
+                    @if (task.priority || task.time) {
+                      <div class="rm-app__card-top">
+                        @if (task.priority) {
+                          <span class="rm-app__priority" [class]="'rm-app__priority rm-app__priority--' + task.priority">{{ i18n.t('priority.' + task.priority) }}</span>
+                        }
+                        @if (task.time) { <span class="rm-app__time rm-num">{{ task.time }}</span> }
+                      </div>
+                    }
+                    <span class="rm-app__card-title">{{ task.title }}</span>
+                    @if (task.desc && !compact()) { <span class="rm-app__card-desc">{{ task.desc }}</span> }
+                    <div class="rm-app__card-meta">
+                      @for (tag of task.tags; track tag) { <span class="rm-app__tag">{{ tag }}</span> }
+                      @if (column.key === 'done') {
+                        <span class="rm-app__check"><rm-icon name="check-circle" [size]="12"></rm-icon></span>
+                      } @else if (task.owner) {
+                        <span class="rm-app__owner">{{ task.owner }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @case ('ideas') {
+      <div class="rm-app__body">
+        <span class="rm-app__search"><rm-icon name="search" [size]="13"></rm-icon><span>{{ i18n.t('dash.search') }}</span></span>
+        <div class="rm-app__ideas">
+          @for (idea of ideas; track idea.title; let i = $index) {
+            <div class="rm-app__idea rm-app__stagger" [style.--i]="i">
+              <div class="rm-app__idea-text">
+                <span class="rm-app__card-title">{{ idea.title }}</span>
+                <span class="rm-app__card-desc">{{ idea.body }}</span>
+                <div class="rm-app__card-meta">
+                  @for (tag of idea.tags; track tag) { <span class="rm-app__tag">#{{ tag }}</span> }
+                </div>
+              </div>
+              @if (i === 0) {
+                <span class="rm-app__action"><rm-icon name="sparkles" [size]="12"></rm-icon>{{ i18n.t('ai.preset.breakdown.title') }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @case ('assistant') {
+      <div class="rm-app__body rm-app__chat">
+        <span class="rm-app__bubble rm-app__bubble--user rm-app__stagger" style="--i: 0">{{ i18n.t('ai.preset.prioritize.title') }}</span>
+        <div class="rm-app__bubble rm-app__bubble--ai rm-app__stagger" style="--i: 1">
+          <span class="rm-app__author"><rm-icon name="sparkles" [size]="12"></rm-icon>{{ i18n.t('ai.author') }}</span>
+          <span class="rm-app__label">{{ i18n.t('ai.suggested') }}</span>
+          @for (item of suggestions; track item.title; let i = $index) {
+            <div class="rm-app__suggestion rm-app__stagger" [style.--i]="i + 2">
+              <span class="rm-app__priority" [class]="'rm-app__priority rm-app__priority--' + item.priority">{{ i18n.t('priority.' + item.priority) }}</span>
+              <span class="rm-app__suggestion-title">{{ item.title }}</span>
+              <span class="rm-app__time rm-num">{{ item.time }}</span>
+            </div>
+          }
+          <span class="rm-app__cta rm-app__stagger" style="--i: 5"><rm-icon name="plus" [size]="12"></rm-icon>{{ i18n.t('ai.addAll') }}</span>
+        </div>
+      </div>
+    }
+
+    @case ('progress') {
+      <div class="rm-app__body rm-app__progress">
+        <div class="rm-app__big">
+          <span class="rm-app__big-value rm-num">83%</span>
+          <span class="rm-app__label">{{ i18n.t('dash.stats.progress') }}</span>
+        </div>
+        <span class="rm-app__bar rm-app__bar--big"><span class="rm-app__bar-fill" style="--fill: 83%"></span></span>
+        <div class="rm-app__rows">
+          <div class="rm-app__row"><span>{{ i18n.t('dash.todo') }}</span><span class="rm-app__bar"><span class="rm-app__bar-fill rm-app__bar-fill--muted" style="--fill: 8%"></span></span><span class="rm-num">1</span></div>
+          <div class="rm-app__row"><span>{{ i18n.t('dash.doing') }}</span><span class="rm-app__bar"><span class="rm-app__bar-fill rm-app__bar-fill--sky" style="--fill: 8%"></span></span><span class="rm-num">1</span></div>
+          <div class="rm-app__row"><span>{{ i18n.t('dash.done') }}</span><span class="rm-app__bar"><span class="rm-app__bar-fill rm-app__bar-fill--done" style="--fill: 83%"></span></span><span class="rm-num">10</span></div>
+        </div>
+      </div>
+    }
+  }
+</div>

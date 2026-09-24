@@ -18,7 +18,7 @@
         [title]="i18n.t('idea.edit')"
         [attr.aria-label]="i18n.t('idea.edit')"
       >
-        <i class="pi pi-pencil" aria-hidden="true"></i>
+        <rm-icon name="pencil" [size]="14" aria-hidden="true"></rm-icon>
       </button>
       <button
         type="button"
@@ -27,7 +27,7 @@
         [title]="i18n.t('idea.delete')"
         [attr.aria-label]="i18n.t('idea.delete')"
       >
-        <i class="pi pi-trash" aria-hidden="true"></i>
+        <rm-icon name="trash" [size]="14" aria-hidden="true"></rm-icon>
       </button>
     </div>
   </div>
@@ -41,7 +41,7 @@
   @if (idea().isExpandedByAi && idea().aiSuggestedBreakdown; as breakdown) {
     <div class="rm-idea-breakdown">
       <div class="rm-breakdown-header">
-        <i class="pi pi-sparkles text-ai" aria-hidden="true"></i>
+        <rm-icon name="sparkles" [size]="14" class="text-ai" aria-hidden="true"></rm-icon>
         <span class="rm-breakdown-title">{{ i18n.t('idea.breakdown.title') }}</span>
       </div>
 
@@ -52,7 +52,7 @@
         <ul class="rm-steps-list">
           @for (step of breakdown.actionableSteps; track step) {
             <li class="rm-step-item">
-              <i class="pi pi-arrow-right" aria-hidden="true"></i>
+              <rm-icon name="arrow-right" [size]="14" aria-hidden="true"></rm-icon>
               <span>{{ step }}</span>
             </li>
           }
@@ -64,7 +64,7 @@
         <ul class="rm-risks-list">
           @for (risk of breakdown.potentialRisks; track risk) {
             <li class="rm-risk-item">
-              <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+              <rm-icon name="exclamation-triangle" [size]="14" aria-hidden="true"></rm-icon>
               <span>{{ risk }}</span>
             </li>
           }

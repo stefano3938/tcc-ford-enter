@@ -7,12 +7,14 @@ import { PricingPlan } from '../../core/models/user.model';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { CardComponent } from '../../shared/components/card/card.component';
+import { ParticleFieldComponent } from '../../shared/components/particle-field/particle-field.component';
 import { PublicShellComponent } from '../../shared/layout/public-shell/public-shell.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'rm-paywall',
   standalone: true,
-  imports: [ButtonComponent, BadgeComponent, CardComponent, PublicShellComponent],
+  imports: [ButtonComponent, BadgeComponent, CardComponent, IconComponent, ParticleFieldComponent, PublicShellComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './paywall.component.html',
   styleUrl: './paywall.component.css'
@@ -33,7 +35,6 @@ export class PaywallComponent {
     { feature: 'pay.row.ai', cells: ['pay.cell.3perday', 'pay.cell.unlimited', 'pay.cell.unlimited'], pro: 1 },
     { feature: 'pay.row.decompose', cells: [false, true, true], pro: 1 },
     { feature: 'pay.row.views', cells: [true, true, true], pro: 1 },
-    { feature: 'pay.row.focus', cells: [false, true, true], pro: 1 },
     { feature: 'pay.row.storage', cells: [true, true, true], pro: 1 },
     { feature: 'pay.row.workspaces', cells: [false, false, true], pro: 2 }
   ];

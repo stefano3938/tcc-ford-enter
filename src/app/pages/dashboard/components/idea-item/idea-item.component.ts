@@ -6,11 +6,12 @@ import { AiService } from '../../../../core/services/ai.service';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'rm-idea-item',
   standalone: true,
-  imports: [BadgeComponent, ButtonComponent, CardComponent],
+  imports: [BadgeComponent, ButtonComponent, CardComponent, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './idea-item.component.html',
   styleUrl: './idea-item.component.css'

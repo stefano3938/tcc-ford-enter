@@ -1,54 +1,47 @@
 <rm-public-shell>
-  <section class="rm-carousel-section rm-page">
-    <div class="rm-carousel-header">
+  <section class="rm-page-band">
+    <rm-particle-field variant="ambient" quiet="left"></rm-particle-field>
+    <div class="rm-page">
       <div class="rm-page-head">
         <h1 class="rm-page-title">{{ i18n.t('resources.title') }}</h1>
         <p class="rm-page-lede">{{ i18n.t('resources.subtitle') }}</p>
       </div>
-      <div class="rm-carousel-controls">
-        <button type="button" class="rm-carousel-arrow" (click)="scrollCarousel(-1)" [attr.aria-label]="i18n.t('home.modes.prev')"><rm-icon name="chevron-left" [size]="18"></rm-icon></button>
-        <button type="button" class="rm-carousel-arrow" (click)="scrollCarousel(1)" [attr.aria-label]="i18n.t('home.modes.next')"><rm-icon name="chevron-right" [size]="18"></rm-icon></button>
-      </div>
     </div>
-  
-    <div class="rm-carousel-viewport" #carouselViewport (scroll)="onCarouselScroll()">
-      <div class="rm-carousel-track">
-        @for (item of carouselItems(); track item.title) {
-          <div class="rm-carousel-slide">
-            <div class="rm-carousel-card">
-              <div class="rm-carousel-card__icon" aria-hidden="true"><rm-icon [name]="item.icon" [size]="20"></rm-icon></div>
-              <h3 class="rm-carousel-card__title">{{ item.title }}</h3>
-              <p class="rm-carousel-card__desc">{{ item.description }}</p>
-              <div class="rm-carousel-card__preview">
-                @if (item.previewType === 'kanban') {
-                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#f97316"></span><span>Revisar proposta Q4</span><span class="rm-tag-mini">#Planejamento</span></div>
-                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#38bdf8"></span><span>Refinar fluxo onboarding</span><span class="rm-tag-mini">#Produto</span></div>
-                  <div class="rm-preview-progress"><span style="width: 68%"></span></div>
-                } @else if (item.previewType === 'assistant') {
-                  <div class="rm-chat-mini"><span class="rm-chat-mini--user">Priorizar meu dia</span><span class="rm-chat-mini--ai">Sugeri 3 tarefas urgentes →</span></div>
-                  <div class="rm-preview-row"><span class="rm-dot-mini"></span><span>Bloquear 90 min de foco</span><span class="rm-tag-mini">Urgente</span></div>
-                } @else if (item.previewType === 'ideas') {
-                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#0ea5e9"></span><span>Smart Summarizer</span><span class="rm-tag-mini">#IA</span></div>
-                  <div class="rm-preview-tags"><span>#Automação</span><span>#Sprint-1</span><span>#Pesquisa</span></div>
-                } @else if (item.previewType === 'focus') {
-                  <div class="rm-preview-timer"><span class="rm-timer-ring"></span><span class="rm-timer-text">25:00</span><span class="rm-timer-label">Pomodoro • Tarefa atual</span></div>
-                } @else if (item.previewType === 'progress') {
-                  <div class="rm-preview-stats"><span class="rm-stat-big">83%</span><span class="rm-stat-label">concluídas</span><div class="rm-preview-progress"><span style="width: 83%"></span></div><span class="rm-stat-sub">12 de 14 • 2 urgentes</span></div>
-                } @else {
-                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#10b981"></span><span>Dados no dispositivo</span><span class="rm-tag-mini">Seguro</span></div>
-                  <div class="rm-preview-row"><span class="rm-dot-mini" style="background:#64748b"></span><span>Acesso offline</span><span class="rm-tag-mini">Local</span></div>
-                }
-              </div>
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-  
-    <div class="rm-carousel-dots">
-      @for (page of carouselPages; track page; let i = $index) {
-        <button type="button" class="rm-carousel-dot" [class.active]="carouselPage() === i" (click)="scrollToPage(i)" [attr.aria-label]="i18n.t('carousel.page', { number: i + 1 })"></button>
+  </section>
+
+  <section class="rm-features rm-page">
+    @for (feature of features; track feature.key; let odd = $odd) {
+      <article class="rm-feature" [class.rm-feature--flip]="odd" rmReveal>
+        <div class="rm-feature__copy">
+          <span class="rm-feature__icon" aria-hidden="true"><rm-icon [name]="feature.icon" [size]="22"></rm-icon></span>
+          <h2 class="rm-feature__title">{{ i18n.t('resources.item.' + feature.key + '.title') }}</h2>
+          <p class="rm-feature__body">{{ i18n.t('resources.item.' + feature.key + '.body') }}</p>
+        </div>
+        <rm-app-preview class="rm-feature__media" [variant]="feature.preview" [compact]="true"></rm-app-preview>
+      </article>
+    }
+  </section>
+
+  <section class="rm-more rm-page" aria-labelledby="rm-more-title" rmReveal>
+    <h2 id="rm-more-title" class="rm-more__title">{{ i18n.t('resources.more.title') }}</h2>
+    <ul class="rm-more__grid">
+      @for (item of more; track item.key) {
+        <li class="rm-more__item">
+          <span class="rm-more__icon" aria-hidden="true"><rm-icon [name]="item.icon" [size]="20"></rm-icon></span>
+          <h3 class="rm-more__item-title">{{ i18n.t('resources.item.' + item.key + '.title') }}</h3>
+          <p class="rm-more__item-body">{{ i18n.t('resources.item.' + item.key + '.body') }}</p>
+        </li>
       }
+    </ul>
+  </section>
+
+  <section class="rm-close rm-page" aria-labelledby="rm-close-title" rmReveal>
+    <div class="rm-close__inner">
+      <h2 id="rm-close-title" class="rm-close__title">{{ i18n.t('demo.title') }}</h2>
+      <div class="rm-close__actions">
+        <rm-button variant="outline" size="lg" (clicked)="goTo('/demonstracao')">{{ i18n.t('nav.demo') }}</rm-button>
+        <rm-button variant="primary" size="lg" icon="arrow-right" (clicked)="onStartNow()">{{ i18n.t('home.hero.cta') }}</rm-button>
+      </div>
     </div>
   </section>
 </rm-public-shell>

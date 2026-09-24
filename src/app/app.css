@@ -47,6 +47,7 @@
 }
 
 /* A full-bleed hero sits flush under the header */
+.rm-public-shell__content > .rm-page-band:first-child,
 .rm-public-shell__content > .rm-hero:first-child,
 .rm-public-shell__content > .rm-hero:last-child {
   margin-block: 0;

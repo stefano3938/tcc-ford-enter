@@ -19,11 +19,12 @@ import { AiPromptPreset, ChatMessage } from '../../core/models/ai.model';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'rm-ai-assistant',
   standalone: true,
-  imports: [ButtonComponent, BadgeComponent, AvatarComponent],
+  imports: [ButtonComponent, BadgeComponent, AvatarComponent, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './ai-assistant.component.html',
   styleUrl: './ai-assistant.component.css'

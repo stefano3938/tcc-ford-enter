@@ -1,8 +1,15 @@
-/* Translucent on purpose: the hero's particle field keeps moving under it while scrolling */
-.rm-public-nav {
+/* The host is what sticks: a sticky element can't leave its parent's box, and the
+   inner <header> is exactly as tall as this host, so on its own it scrolled away. */
+:host {
   position: sticky;
   top: 0;
   z-index: 100;
+  display: block;
+}
+
+/* Translucent on purpose: the particle fields keep moving under it while scrolling */
+.rm-public-nav {
+  position: relative;
   padding: 10px clamp(16px, 4vw, 32px);
   padding-top: max(10px, env(safe-area-inset-top));
   border-bottom: 1px solid var(--rm-border-subtle);

@@ -3,7 +3,7 @@
   <div class="rm-ai-hero">
     <div class="rm-ai-hero__left">
       <div class="rm-ai-spark-icon">
-        <i class="pi pi-sparkles" aria-hidden="true"></i>
+        <rm-icon name="sparkles" [size]="14" aria-hidden="true"></rm-icon>
       </div>
       <div>
         <div class="rm-ai-title-row">
@@ -55,7 +55,7 @@
             ></rm-avatar>
           } @else {
             <div class="rm-ai-avatar-mark">
-              <i class="pi pi-sparkles" aria-hidden="true"></i>
+              <rm-icon name="sparkles" [size]="14" aria-hidden="true"></rm-icon>
             </div>
           }
         </div>
@@ -72,7 +72,7 @@
           @if (msg.suggestedTasks && msg.suggestedTasks.length > 0) {
             <div class="rm-ai-suggested-tasks">
               <div class="rm-suggested-header">
-                <i class="pi pi-bolt text-ai" aria-hidden="true"></i>
+                <rm-icon name="bolt" [size]="14" class="text-ai" aria-hidden="true"></rm-icon>
                 <span>{{ i18n.t('ai.suggested') }}</span>
               </div>
 
@@ -112,7 +112,7 @@
       <div class="rm-chat-message rm-chat-message--assistant">
         <div class="rm-chat-avatar">
           <div class="rm-ai-avatar-mark ai-pulse">
-            <i class="pi pi-sparkles" aria-hidden="true"></i>
+            <rm-icon name="sparkles" [size]="14" aria-hidden="true"></rm-icon>
           </div>
         </div>
 
@@ -131,7 +131,7 @@
       <div class="rm-chat-message rm-chat-message--assistant">
         <div class="rm-chat-avatar">
           <div class="rm-ai-avatar-mark ai-pulse">
-            <i class="pi pi-sparkles" aria-hidden="true"></i>
+            <rm-icon name="sparkles" [size]="14" aria-hidden="true"></rm-icon>
           </div>
         </div>
 
@@ -161,7 +161,7 @@
     <div class="rm-chat-input-controls">
       <span class="rm-chat-quota-hint">
         @if (userService.isPro()) {
-          <span class="text-pro"><i class="pi pi-crown" aria-hidden="true"></i> {{ i18n.t('ai.proUnlimited') }}</span>
+          <span class="text-pro"><rm-icon name="crown" [size]="14" aria-hidden="true"></rm-icon> {{ i18n.t('ai.proUnlimited') }}</span>
         } @else {
           <span>{{ i18n.t('ai.remainingToday', { count: userService.aiRemaining() }) }}</span>
         }

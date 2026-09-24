@@ -304,11 +304,47 @@ h1, h2, h3, h4, p, span, li, a, td, th {
   text-wrap: pretty;
 }
 
+/* Title band of the inner public pages: an ambient particle field behind the page head */
+.rm-page-band {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(48px, 8vw, 104px) clamp(32px, 5vw, 64px);
+}
+
+.rm-page-band > rm-particle-field {
+  z-index: -1;
+}
+
 /* Numerals that carry order or measurement */
 .rm-num {
   font-family: var(--rm-font-mono);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
+}
+
+/* Scroll entrance, applied by the rmReveal directive (hidden only once JS is ready) */
+.rm-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(6px);
+  transition:
+    opacity 800ms var(--rm-ease-out) var(--rm-reveal-delay, 0ms),
+    transform 800ms var(--rm-ease-out) var(--rm-reveal-delay, 0ms),
+    filter 800ms var(--rm-ease-out) var(--rm-reveal-delay, 0ms);
+}
+
+.rm-reveal.rm-reveal--in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rm-reveal {
+    transform: none;
+    filter: none;
+    transition: opacity 200ms linear;
+  }
 }
 
 /* One form-control look for every native select, date and number field */
