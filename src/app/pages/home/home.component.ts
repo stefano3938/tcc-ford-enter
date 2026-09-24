@@ -90,6 +90,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 
+  goToResources(): void {
+    this.router.navigate(['/recursos']);
+  }
+
   onStartNow(): void {
     if (this.authService.isAuthenticated()) {
       this.goToApp();
