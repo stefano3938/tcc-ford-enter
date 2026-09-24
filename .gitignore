@@ -42,7 +42,7 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# Ferramentas de IA / agentes (não fazem parte do site)
+
 /.claude/
 /.agents/
 /.impeccable/
