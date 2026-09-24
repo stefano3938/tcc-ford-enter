@@ -4,7 +4,7 @@ export const INITIAL_MOCK_IDEAS: Idea[] = [
   {
     id: 'idea-001',
     title: 'Smart Context Summarizer para reuniões diárias',
-    summary: 'Um plugin local que transcreve pontos-chave e automaticamente cria cartões de tarefas no RedmindMe com tags apropriadas.',
+    summary: 'Um plugin local que transcreve pontos-chave e automaticamente cria cartões de tarefas no RemindMe com tags apropriadas.',
     category: 'product',
     tags: ['IA', 'Automação', 'Produtividade'],
     createdAt: '2026-09-22T14:00:00.000Z',

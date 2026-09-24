@@ -106,7 +106,7 @@ import { CardComponent } from '../../../../shared/components/card/card.component
             [loading]="isExpanding()"
             (clicked)="expandWithAi()"
           >
-            Expandir com RedmindMe IA
+            Expandir com RemindMe IA
           </rm-button>
         </div>
       }

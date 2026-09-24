@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "redmindme": {
+    "remindme": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -52,7 +52,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/app/app.css"
             ]
           },
           "configurations": {
@@ -65,8 +66,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "32kB",
-                  "maximumError": "35kB"
+                  "maximumWarning": "40kB",
+                  "maximumError": "48kB"
                 }
               ],
               "outputHashing": "all"
@@ -83,10 +84,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "redmindme:build:production"
+              "buildTarget": "remindme:build:production"
             },
             "development": {
-              "buildTarget": "redmindme:build:development"
+              "buildTarget": "remindme:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -110,7 +111,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/app/app.css"
             ]
           }
         }

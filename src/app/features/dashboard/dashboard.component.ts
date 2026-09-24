@@ -3,6 +3,7 @@ import { Task, TaskPriority, TaskStatus } from '../../core/models/task.model';
 import { Idea, IdeaCategory } from '../../core/models/idea.model';
 import { TaskService } from '../../core/services/task.service';
 import { IdeaService } from '../../core/services/idea.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { StatsOverviewComponent } from './components/stats-overview/stats-overview.component';
 import { TaskItemComponent } from './components/task-item/task-item.component';
 import { IdeaItemComponent } from './components/idea-item/idea-item.component';
@@ -46,7 +47,7 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
             (click)="activeTab.set('tasks')"
           >
             <rm-icon name="check-square" [size]="14"></rm-icon>
-            <span>Tarefas</span>
+            <span>{{ i18n.t('dash.tab.tasks') }}</span>
             <span class="rm-tab-count">{{ taskService.totalCount() }}</span>
           </button>
 
@@ -57,7 +58,7 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
             (click)="activeTab.set('ideas')"
           >
             <rm-icon name="lightbulb" [size]="14"></rm-icon>
-            <span>Banco de Ideias</span>
+            <span>{{ i18n.t('dash.tab.ideas') }}</span>
             <span class="rm-tab-count">{{ ideaService.totalIdeas() }}</span>
           </button>
         </div>
@@ -70,8 +71,8 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
                 class="rm-view-btn"
                 [class.active]="viewMode() === 'list'"
                 (click)="viewMode.set('list')"
-                title="Modo Lista Linear"
-                aria-label="Modo Lista Linear"
+                [title]="i18n.t('dash.view.list')"
+                [attr.aria-label]="i18n.t('dash.view.list')"
               >
                 <rm-icon name="list" [size]="14"></rm-icon>
               </button>
@@ -80,8 +81,8 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
                 class="rm-view-btn"
                 [class.active]="viewMode() === 'kanban'"
                 (click)="viewMode.set('kanban')"
-                title="Modo Quadro Kanban"
-                aria-label="Modo Quadro Kanban"
+                [title]="i18n.t('dash.view.kanban')"
+                [attr.aria-label]="i18n.t('dash.view.kanban')"
               >
                 <rm-icon name="kanban" [size]="14"></rm-icon>
               </button>
@@ -111,7 +112,7 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
             size="sm"
             icon="refresh"
             (clicked)="resetMocks()"
-            title="Restaurar dados mock iniciais"
+            [title]="i18n.t('dash.reset')"
           >
             Reset
           </rm-button>
@@ -122,7 +123,7 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
         <div class="rm-filter-bar">
           <div class="rm-filter-search">
             <rm-input
-              placeholder="Buscar por título, descrição ou #tag..."
+              [placeholder]="i18n.t('dash.search')"
               [clearable]="true"
               prefixIcon="search"
               [value]="taskService.searchQuery()"
@@ -136,10 +137,10 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
               [value]="taskService.statusFilter()"
               (change)="taskService.statusFilter.set($any($event.target).value)"
             >
-              <option value="all">Status: Todos</option>
-              <option value="todo">A Fazer</option>
-              <option value="in-progress">Em Andamento</option>
-              <option value="done">Concluídas</option>
+              <option value="all">{{ i18n.t('dash.status.all') }}</option>
+              <option value="todo">{{ i18n.t('dash.todo') }}</option>
+              <option value="in-progress">{{ i18n.t('dash.doing') }}</option>
+              <option value="done">{{ i18n.t('dash.done') }}</option>
             </select>
 
             <select
@@ -147,11 +148,11 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
               [value]="taskService.priorityFilter()"
               (change)="taskService.priorityFilter.set($any($event.target).value)"
             >
-              <option value="all">Prioridade: Todas</option>
-              <option value="urgent">Urgente</option>
-              <option value="high">Alta</option>
-              <option value="medium">Média</option>
-              <option value="low">Baixa</option>
+              <option value="all">{{ i18n.t('dash.priority.all') }}</option>
+              <option value="urgent">{{ i18n.t('priority.urgent') }}</option>
+              <option value="high">{{ i18n.t('priority.high') }}</option>
+              <option value="medium">{{ i18n.t('priority.medium') }}</option>
+              <option value="low">{{ i18n.t('priority.low') }}</option>
             </select>
           </div>
         </div>
@@ -159,12 +160,12 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
           <div class="rm-active-filters-bar">
             <span class="rm-active-filters-badge">
               <rm-icon name="filter" [size]="12"></rm-icon>
-              Filtros ativos
+              {{ i18n.t('dash.filters.active') }}
             </span>
-            <span class="rm-active-filters-count">{{ taskService.filteredTasks().length }} de {{ taskService.totalCount() }}</span>
-            <button type="button" class="rm-clear-filters-btn" (click)="clearAllFilters()" aria-label="Limpar todos os filtros">
+            <span class="rm-active-filters-count">{{ taskService.filteredTasks().length }} / {{ taskService.totalCount() }}</span>
+            <button type="button" class="rm-clear-filters-btn" (click)="clearAllFilters()" [attr.aria-label]="i18n.t('dash.filters.clearAll')">
               <rm-icon name="x" [size]="12"></rm-icon>
-              Limpar filtros
+              {{ i18n.t('dash.filters.clear') }}
             </button>
           </div>
         }
@@ -236,7 +237,7 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
               <div class="rm-kanban-col__header">
                 <div class="rm-kanban-col__title-wrap">
                   <span class="rm-kanban-dot rm-kanban-dot--todo"></span>
-                  <span class="rm-kanban-col__title">A Fazer</span>
+                  <span class="rm-kanban-col__title">{{ i18n.t('dash.todo') }}</span>
                 </div>
                 <rm-badge type="todo" [label]="getTasksByStatus('todo').length + ''"></rm-badge>
               </div>
@@ -278,7 +279,7 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
               <div class="rm-kanban-col__header">
                 <div class="rm-kanban-col__title-wrap">
                   <span class="rm-kanban-dot rm-kanban-dot--done"></span>
-                  <span class="rm-kanban-col__title">Concluídas</span>
+                  <span class="rm-kanban-col__title">{{ i18n.t('dash.done') }}</span>
                 </div>
                 <rm-badge type="done" [label]="getTasksByStatus('done').length + ''"></rm-badge>
               </div>
@@ -698,6 +699,7 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
   `]
 })
 export class DashboardComponent {
+  readonly i18n = inject(I18nService);
   readonly taskService = inject(TaskService);
   readonly ideaService = inject(IdeaService);
 

@@ -8,11 +8,13 @@ import { ButtonComponent } from '../button/button.component';
 import { BadgeComponent } from '../badge/badge.component';
 import { IconComponent } from '../icon/icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
+import { LangSwitcherComponent } from '../lang-switcher/lang-switcher.component';
+import { I18nService } from '../../../core/services/i18n.service';
 
 @Component({
   selector: 'rm-header',
   standalone: true,
-  imports: [RouterLink, ButtonComponent, BadgeComponent, IconComponent, AvatarComponent],
+  imports: [RouterLink, ButtonComponent, BadgeComponent, IconComponent, AvatarComponent, LangSwitcherComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="rm-header glass-panel">
@@ -21,16 +23,16 @@ import { AvatarComponent } from '../avatar/avatar.component';
           type="button"
           class="rm-header__menu-btn"
           (click)="toggleMenu.emit()"
-          aria-label="Abrir menu de navegação"
+          [attr.aria-label]="i18n.t('nav.menu')"
         >
           <rm-icon name="menu" [size]="16"></rm-icon>
         </button>
 
         <a routerLink="/dashboard" class="rm-logo">
           <div class="rm-logo__mark">
-            <rm-icon name="check-square" [size]="16"></rm-icon>
+            <img src="assets/favicon-plate-64.png" alt="" width="32" height="32" />
           </div>
-          <span class="rm-logo__text">Redmind<span class="rm-logo__accent">Me</span></span>
+          <span class="rm-logo__text">Remind<span class="rm-logo__accent">Me</span></span>
         </a>
 
         <div class="rm-header__status-badge">
@@ -38,7 +40,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
             <rm-badge
               type="neutral"
               [showDot]="true"
-              [label]="taskService.doneCount() + '/' + taskService.totalCount() + ' concluídas (' + taskService.completionPercentage() + '%)'"
+              [label]="taskService.doneCount() + '/' + taskService.totalCount() + ' ' + i18n.t('nav.status') + ' (' + taskService.completionPercentage() + '%)'"
             ></rm-badge>
           }
         </div>
@@ -50,9 +52,9 @@ import { AvatarComponent } from '../avatar/avatar.component';
           <span class="ai-pill">
             <rm-icon name="layers" [size]="12"></rm-icon>
             @if (userService.isPro()) {
-              PRO ILIMITADO
+              {{ i18n.t('nav.ai.unlimited') }}
             } @else {
-              {{ userService.aiRemaining() }} IA restante(s)
+              {{ userService.aiRemaining() }} {{ i18n.t('nav.ai.remaining') }}
             }
           </span>
         </div>
@@ -63,15 +65,16 @@ import { AvatarComponent } from '../avatar/avatar.component';
             icon="crown"
             (clicked)="userService.openPaywall('Upgrade para desbloquear todos os superpoderes de IA.')"
           >
-            Upgrade Pro
+            {{ i18n.t('nav.upgrade') }}
           </rm-button>
         }
+        <rm-lang-switcher></rm-lang-switcher>
         <button
           type="button"
           class="rm-header__action-btn"
           (click)="themeService.toggleTheme()"
-          [attr.aria-label]="themeService.theme() === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'"
-          [title]="themeService.theme() === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'"
+          [attr.aria-label]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
+          [title]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
         >
           @if (themeService.theme() === 'dark') {
             <rm-icon name="sun" [size]="15"></rm-icon>
@@ -98,8 +101,8 @@ import { AvatarComponent } from '../avatar/avatar.component';
           type="button"
           class="rm-header__action-btn rm-header__action-btn--logout"
           (click)="authService.logout()"
-          title="Encerrar sessão"
-          aria-label="Encerrar sessão"
+          [title]="i18n.t('nav.logout')"
+          [attr.aria-label]="i18n.t('nav.logout')"
         >
           <rm-icon name="log-out" [size]="15"></rm-icon>
         </button>
@@ -179,12 +182,18 @@ import { AvatarComponent } from '../avatar/avatar.component';
       width: 32px;
       height: 32px;
       border-radius: var(--rm-radius-md);
-      background: var(--rm-accent);
-      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .rm-logo__mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .rm-logo__text {
@@ -302,6 +311,7 @@ export class HeaderComponent {
   readonly userService = inject(UserService);
   readonly taskService = inject(TaskService);
   readonly authService = inject(AuthService);
+  readonly i18n = inject(I18nService);
 
   readonly toggleMenu = output<void>();
 

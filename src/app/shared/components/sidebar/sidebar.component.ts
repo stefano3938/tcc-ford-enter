@@ -7,6 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { BadgeComponent } from '../badge/badge.component';
 import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../icon/icon.component';
+import { I18nService } from '../../../core/services/i18n.service';
 
 @Component({
   selector: 'rm-sidebar',
@@ -21,7 +22,7 @@ import { IconComponent } from '../icon/icon.component';
     <aside class="rm-sidebar glass-panel" [class.rm-sidebar--open-mobile]="isOpenMobile()">
 
       <nav class="rm-nav-group">
-        <span class="rm-nav-group__title">PRODUTIVIDADE</span>
+        <span class="rm-nav-group__title">{{ i18n.t('nav.group.productivity') }}</span>
 
         <a
           routerLink="/dashboard"
@@ -32,7 +33,7 @@ import { IconComponent } from '../icon/icon.component';
         >
           <div class="rm-nav-item__main">
             <rm-icon name="check-square" [size]="15" class="rm-nav-item__icon"></rm-icon>
-            <span>Painel de Tarefas</span>
+            <span>{{ i18n.t('nav.dashboard') }}</span>
           </div>
           <span class="rm-nav-item__count">{{ taskService.todoCount() }}</span>
         </a>
@@ -45,20 +46,20 @@ import { IconComponent } from '../icon/icon.component';
         >
           <div class="rm-nav-item__main">
             <rm-icon name="message-square" [size]="15" class="rm-nav-item__icon"></rm-icon>
-            <span>Assistente IA</span>
+            <span>{{ i18n.t('ai.title') }}</span>
           </div>
           <rm-badge type="ai" label="COPILOT"></rm-badge>
         </a>
 
         <a
-          routerLink="/pricing"
+          routerLink="/planos"
           routerLinkActive="active"
           class="rm-nav-item"
           (click)="closeMobile.emit()"
         >
           <div class="rm-nav-item__main">
             <rm-icon name="crown" [size]="15" class="rm-nav-item__icon"></rm-icon>
-            <span>Planos & Pro</span>
+            <span>{{ i18n.t('nav.pricing') }}</span>
           </div>
           @if (!userService.isPro()) {
             <rm-badge type="pro" label="PRO"></rm-badge>
@@ -66,7 +67,7 @@ import { IconComponent } from '../icon/icon.component';
         </a>
       </nav>
       <div class="rm-nav-group">
-        <span class="rm-nav-group__title">FILTROS RÁPIDOS</span>
+        <span class="rm-nav-group__title">{{ i18n.t('nav.group.filters') }}</span>
 
         <button
           type="button"
@@ -76,7 +77,7 @@ import { IconComponent } from '../icon/icon.component';
         >
           <div class="rm-nav-item__main">
             <rm-icon name="list" [size]="14" class="rm-nav-item__icon"></rm-icon>
-            <span>Todas as Tarefas</span>
+            <span>{{ i18n.t('nav.filter.allTasks') }}</span>
           </div>
           <span class="rm-nav-item__count">{{ taskService.totalCount() }}</span>
         </button>
@@ -89,7 +90,7 @@ import { IconComponent } from '../icon/icon.component';
         >
           <div class="rm-nav-item__main">
             <rm-icon name="flame" [size]="14" class="rm-nav-item__icon text-urgent"></rm-icon>
-            <span>Urgentes</span>
+            <span>{{ i18n.t('dash.filter.urgent') }}</span>
           </div>
           <span class="rm-nav-item__count text-urgent">{{ taskService.urgentCount() }}</span>
         </button>
@@ -102,7 +103,7 @@ import { IconComponent } from '../icon/icon.component';
         >
           <div class="rm-nav-item__main">
             <rm-icon name="clock" [size]="14" class="rm-nav-item__icon text-progress"></rm-icon>
-            <span>Em Andamento</span>
+            <span>{{ i18n.t('dash.doing') }}</span>
           </div>
           <span class="rm-nav-item__count">{{ taskService.inProgressCount() }}</span>
         </button>
@@ -115,7 +116,7 @@ import { IconComponent } from '../icon/icon.component';
         >
           <div class="rm-nav-item__main">
             <rm-icon name="check-circle" [size]="14" class="rm-nav-item__icon text-done"></rm-icon>
-            <span>Concluídas</span>
+            <span>{{ i18n.t('dash.done') }}</span>
           </div>
           <span class="rm-nav-item__count">{{ taskService.doneCount() }}</span>
         </button>
@@ -152,7 +153,7 @@ import { IconComponent } from '../icon/icon.component';
           <div class="rm-pro-badge-card">
             <div class="rm-pro-badge-card__header">
               <rm-icon name="shield" [size]="14" class="text-pro"></rm-icon>
-              <span class="rm-pro-badge-card__title">RedmindMe Pro Ativo</span>
+              <span class="rm-pro-badge-card__title">{{ i18n.t('nav.proActive') }}</span>
             </div>
             <p class="rm-pro-badge-card__desc">Tarefas, ideias e IA sem limites.</p>
           </div>
@@ -461,6 +462,7 @@ import { IconComponent } from '../icon/icon.component';
   `]
 })
 export class SidebarComponent {
+  readonly i18n = inject(I18nService);
   readonly taskService = inject(TaskService);
   readonly ideaService = inject(IdeaService);
   readonly userService = inject(UserService);

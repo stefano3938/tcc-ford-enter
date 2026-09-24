@@ -66,7 +66,7 @@ export class AiService {
       try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         const body = {
-          contents: [{ parts: [{ text: `Você é o RedmindMe Copilot, assistente especialista em produtividade e planejamento de produtos digitais. Responda em português, de forma detalhada (350-500 palavras) com subtítulos, listas e exemplos práticos.
+          contents: [{ parts: [{ text: `Você é o RemindMe Copilot, assistente especialista em produtividade e planejamento de produtos digitais. Responda em português, de forma detalhada (350-500 palavras) com subtítulos, listas e exemplos práticos.
 
 REGRAS OBRIGATÓRIAS:
 - Ao final da resposta, SEMPRE crie EXATAMENTE 2 tarefas acionáveis no formato exato, cada uma em uma linha separada:

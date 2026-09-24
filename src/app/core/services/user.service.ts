@@ -59,7 +59,7 @@ export class UserService {
     },
     {
       id: 'pro',
-      name: 'RedmindMe Pro',
+      name: 'RemindMe Pro',
       description: 'Poder absoluto de IA para profissionais focados em máxima produtividade linear.',
       priceMonthly: 29,
       priceYearly: 24,
@@ -142,7 +142,7 @@ export class UserService {
     }));
     this.saveUser();
     this.closePaywall();
-    this.toast.success('Parabéns! Você agora é RedmindMe Pro', 'Todos os limites de tarefas, ideias e IA foram removidos.');
+    this.toast.success('Parabéns! Você agora é RemindMe Pro', 'Todos os limites de tarefas, ideias e IA foram removidos.');
   }
 
   downgradeToFree(): void {
@@ -233,7 +233,7 @@ export class UserService {
     const defaultProfile: UserProfile = {
       id: 'usr-001',
       name: 'Visitante',
-      email: 'visitante@redmind.me',
+      email: 'visitante@remindme.com',
       avatarUrl: '',
       plan: 'free',
       quotas: {

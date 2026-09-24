@@ -51,6 +51,8 @@ export type IconName =
   | 'check-square'
   | 'folder'
   | 'menu'
+  | 'globe'
+  | 'chevron-down'
   | 'more-vertical';
 
 @Component({
@@ -280,6 +282,14 @@ export type IconName =
           <line x1="4" x2="20" y1="12" y2="12"/>
           <line x1="4" x2="20" y1="6" y2="6"/>
           <line x1="4" x2="20" y1="18" y2="18"/>
+        }
+        @case ('globe') {
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M3 12h18"/>
+          <path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18Z"/>
+        }
+        @case ('chevron-down') {
+          <polyline points="6 9 12 15 18 9"/>
         }
         @default {
           <circle cx="12" cy="12" r="10"/>

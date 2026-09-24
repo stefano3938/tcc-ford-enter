@@ -23,7 +23,7 @@ import { IconComponent } from '../icon/icon.component';
           <rm-icon name="sparkles" [size]="12"></rm-icon>
           <span>DESBLOQUEIO DE PERFORMANCE</span>
         </span>
-        <h2 class="rm-paywall-hero__title">Pense, organize e execute sem limites com RedmindMe Pro</h2>
+        <h2 class="rm-paywall-hero__title">Pense, organize e execute sem limites com RemindMe Pro</h2>
         <p class="rm-paywall-hero__reason">{{ userService.paywallTriggerReason() }}</p>
       </div>
       <div class="rm-billing-switch">
@@ -48,7 +48,7 @@ import { IconComponent } from '../icon/icon.component';
       <div class="rm-plan-highlight">
         <div class="rm-plan-highlight__header">
           <div>
-            <h3 class="rm-plan-name">RedmindMe Pro</h3>
+            <h3 class="rm-plan-name">RemindMe Pro</h3>
             <p class="rm-plan-sub">Acesso completo para indivíduos e criadores de alto impacto</p>
           </div>
           <div class="rm-plan-price">
@@ -97,7 +97,7 @@ import { IconComponent } from '../icon/icon.component';
           [loading]="isUpgrading()"
           (clicked)="confirmUpgrade()"
         >
-          Ativar RedmindMe Pro Agora
+          Ativar RemindMe Pro Agora
         </rm-button>
       </div>
     </rm-modal>

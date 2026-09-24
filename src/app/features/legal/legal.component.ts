@@ -14,11 +14,11 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         <span>Voltar</span>
       </a>
 
-      <header class="rm-legal-hero">
+      <header class="rm-legal-hero rm-page">
         <span class="rm-legal-badge">LGPD • Lei 13.709/2018</span>
         <h1 class="rm-legal-title">Privacidade e Termos</h1>
         <p class="rm-legal-subtitle">
-          Transparência total sobre como o RedmindMe trata seus dados. Atualizado em 24 de setembro de 2026.
+          Transparência total sobre como o RemindMe trata seus dados. Atualizado em 24 de setembro de 2026.
         </p>
         <div class="rm-legal-tabs">
           <button type="button" class="rm-legal-tab" [class.active]="tab() === 'privacidade'" (click)="tab.set('privacidade')">Privacidade (LGPD)</button>
@@ -27,10 +27,10 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       </header>
 
       @if (tab() === 'privacidade') {
-        <article class="rm-legal-card">
+        <article class="rm-legal-card rm-page">
           <section class="rm-legal-section">
             <h2>1. Quem somos e o que coletamos</h2>
-            <p><strong>Controlador:</strong> RedmindMe — contato <a href="mailto:privacidade@redmind.me">privacidade@redmind.me</a>.</p>
+            <p><strong>Controlador:</strong> RemindMe — contato <a href="mailto:privacidade@remindme.com">privacidade@remindme.com</a>.</p>
             <p>Coletamos apenas o mínimo necessário para o funcionamento local: <strong>nome, e-mail, tarefas, ideias, preferências de tema</strong> e contadores de uso do assistente. Nada é enviado a servidores externos — tudo permanece no seu navegador via <code>localStorage</code> criptografado pelo próprio navegador.</p>
           </section>
 
@@ -51,7 +51,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           <section class="rm-legal-section">
             <h2>4. Seus direitos (art. 18)</h2>
             <p>Você pode, a qualquer momento e gratuitamente: confirmar a existência de tratamento, acessar, corrigir, eliminar, solicitar portabilidade, revogar consentimento e peticionar à ANPD.</p>
-            <p>Para exercer: envie e-mail para <strong>privacidade@redmind.me</strong> com o assunto “Direitos LGPD” ou use a opção “Limpar dados” no aplicativo. Respondemos em até 15 dias.</p>
+            <p>Para exercer: envie e-mail para <strong>privacidade@remindme.com</strong> com o assunto “Direitos LGPD” ou use a opção “Limpar dados” no aplicativo. Respondemos em até 15 dias.</p>
           </section>
 
           <section class="rm-legal-section">
@@ -61,7 +61,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 
           <section class="rm-legal-section">
             <h2>6. Encarregado (DPO)</h2>
-            <p>Encarregado: Stefano — <a href="mailto:privacidade@redmind.me">privacidade@redmind.me</a>.</p>
+            <p>Encarregado: Stefano — <a href="mailto:privacidade@remindme.com">privacidade@remindme.com</a>.</p>
           </section>
 
           <section class="rm-legal-section rm-legal-section--muted">
@@ -69,10 +69,10 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           </section>
         </article>
       } @else {
-        <article class="rm-legal-card">
+        <article class="rm-legal-card rm-page">
           <section class="rm-legal-section">
             <h2>1. Aceitação</h2>
-            <p>Ao criar conta ou usar o RedmindMe, você concorda com estes Termos e com a Política de Privacidade acima.</p>
+            <p>Ao criar conta ou usar o RemindMe, você concorda com estes Termos e com a Política de Privacidade acima.</p>
           </section>
           <section class="rm-legal-section">
             <h2>2. Contas e uso</h2>
@@ -84,7 +84,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           </section>
           <section class="rm-legal-section">
             <h2>4. Propriedade intelectual</h2>
-            <p>Interface, marca e código são de titularidade do RedmindMe. Seu conteúdo (tarefas e ideias) permanece seu.</p>
+            <p>Interface, marca e código são de titularidade do RemindMe. Seu conteúdo (tarefas e ideias) permanece seu.</p>
           </section>
           <section class="rm-legal-section">
             <h2>5. Limitações</h2>
@@ -92,13 +92,13 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           </section>
           <section class="rm-legal-section">
             <h2>6. Contato</h2>
-            <p>Dúvidas sobre os Termos: <a href="mailto:contato@redmind.me">contato@redmind.me</a>.</p>
+            <p>Dúvidas sobre os Termos: <a href="mailto:contato@remindme.com">contato@remindme.com</a>.</p>
           </section>
         </article>
       }
 
       <p class="rm-legal-foot">
-        RedmindMe • Produto demonstrativo para fins acadêmicos e de avaliação — sem processamento de pagamentos reais nesta versão.
+        RemindMe • Produto demonstrativo para fins acadêmicos e de avaliação — sem processamento de pagamentos reais nesta versão.
       </p>
     </div>
   `,

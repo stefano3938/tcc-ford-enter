@@ -35,7 +35,7 @@ export const INITIAL_AI_CHAT_MESSAGES: ChatMessage[] = [
   {
     id: 'msg-001',
     role: 'assistant',
-    content: 'Olá! Sou o assistente de inteligência do **RedmindMe**. Estou pronto para ajudá-lo a decompor ideias complexas, planejar sprints ou priorizar o que realmente importa hoje. Como posso otimizar seu fluxo?',
+    content: 'Olá! Sou o assistente de inteligência do **RemindMe**. Estou pronto para ajudá-lo a decompor ideias complexas, planejar sprints ou priorizar o que realmente importa hoje. Como posso otimizar seu fluxo?',
     timestamp: new Date().toISOString(),
     isStreaming: false
   }

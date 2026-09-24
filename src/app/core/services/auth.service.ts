@@ -104,7 +104,7 @@ export class AuthService {
     const demoSession: AuthSession = {
       id: 'usr-demo-stefano',
       name: 'Stefano',
-      email: 'stefano@redmind.me',
+      email: 'stefano@remindme.com',
       avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
       token: this.generateToken('demo'),
       createdAt: new Date().toISOString()

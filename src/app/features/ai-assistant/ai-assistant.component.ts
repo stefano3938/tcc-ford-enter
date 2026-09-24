@@ -13,6 +13,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import type { SafeHtml } from '@angular/platform-browser';
 import { AiService } from '../../core/services/ai.service';
 import { UserService } from '../../core/services/user.service';
+import { I18nService } from '../../core/services/i18n.service';
 import { AI_PROMPT_PRESETS } from '../../core/mock-data/ai.mock';
 import { AiPromptPreset, ChatMessage } from '../../core/models/ai.model';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -34,7 +35,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
           </div>
           <div>
             <div class="rm-ai-title-row">
-              <h2 class="rm-ai-hero__title">RedmindMe Copilot</h2>
+              <h2 class="rm-ai-hero__title">{{ i18n.t('ai.title') }}</h2>
               <span class="ai-pill">MODO GENERATIVO</span>
             </div>
             <p class="rm-ai-hero__subtitle">
@@ -92,7 +93,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
             <div class="rm-chat-bubble">
               <div class="rm-chat-bubble__meta">
                 <span class="rm-chat-bubble__author">
-                  {{ msg.role === 'user' ? userService.currentUser().name : 'RedmindMe IA' }}
+                  {{ msg.role === 'user' ? userService.currentUser().name : i18n.t('ai.author') }}
                 </span>
                 <span class="rm-chat-bubble__time">{{ formatTime(msg.timestamp) }}</span>
               </div>
@@ -146,7 +147,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
 
             <div class="rm-chat-bubble">
               <div class="rm-chat-bubble__meta">
-                <span class="rm-chat-bubble__author">RedmindMe IA</span>
+                <span class="rm-chat-bubble__author">{{ i18n.t('ai.author') }}</span>
                 <span class="rm-chat-bubble__time">Digitando...</span>
               </div>
 
@@ -169,7 +170,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
                 <span></span>
                 <span></span>
               </div>
-              <span class="rm-thinking-label">RedmindMe IA está analisando o contexto...</span>
+              <span class="rm-thinking-label">{{ i18n.t('ai.thinking') }}</span>
             </div>
           </div>
         }
@@ -178,7 +179,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
         <textarea
           #inputArea
           class="rm-chat-textarea"
-          placeholder="Peça para planejar um sprint, priorizar tarefas ou expandir um conceito... (Pressione Enter para enviar)"
+          [placeholder]="i18n.t('ai.placeholder')"
           [value]="messageInput()"
           (input)="messageInput.set($any($event.target).value)"
           (keydown.enter)="onEnterPressed($event)"
@@ -542,6 +543,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
   `]
 })
 export class AiAssistantComponent {
+  readonly i18n = inject(I18nService);
   readonly aiService = inject(AiService);
   readonly userService = inject(UserService);
   private readonly sanitizer = inject(DomSanitizer);

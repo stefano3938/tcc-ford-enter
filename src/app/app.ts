@@ -19,8 +19,7 @@ import { AuthService } from './core/services/auth.service';
     PaywallModalComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  templateUrl: './app.html'
 })
 export class App {
   readonly authService = inject(AuthService);
@@ -38,7 +37,7 @@ export class App {
   readonly isPublicPage = computed(() => {
     const url = this.currentUrl() || '';
     const clean = url.split('?')[0].split('#')[0];
-    return clean === '/' || clean.startsWith('/home') || clean.startsWith('/login');
+    return clean === '/' || clean.startsWith('/home') || clean.startsWith('/login') || clean.startsWith('/planos') || clean.startsWith('/privacidade');
   });
 
   toggleMobileMenu(): void {

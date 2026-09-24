@@ -30,10 +30,14 @@ export const routes: Routes = [
       import('./features/ai-assistant/ai-assistant.component').then(m => m.AiAssistantComponent)
   },
   {
-    path: 'pricing',
-
+    path: 'planos',
     loadComponent: () =>
       import('./features/paywall/paywall.component').then(m => m.PaywallComponent)
+  },
+  {
+    // Old path kept working so shared links and bookmarks don't break.
+    path: 'pricing',
+    redirectTo: 'planos'
   },
   {
     path: 'privacidade',

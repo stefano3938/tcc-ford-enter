@@ -3,31 +3,37 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { LangSwitcherComponent } from '../../shared/components/lang-switcher/lang-switcher.component';
+import { I18nService } from '../../core/services/i18n.service';
 
 @Component({
   selector: 'rm-login',
   standalone: true,
-  imports: [RouterLink, IconComponent, ButtonComponent],
+  imports: [RouterLink, IconComponent, ButtonComponent, LangSwitcherComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="rm-auth-page">
 
       <a routerLink="/home" class="rm-auth-back-link">
         <rm-icon name="arrow-left" [size]="14"></rm-icon>
-        <span>Voltar para a Página Inicial</span>
+        <span>{{ i18n.t('auth.back') }}</span>
       </a>
+
+      <div class="rm-auth-lang">
+        <rm-lang-switcher></rm-lang-switcher>
+      </div>
 
       <div class="rm-auth-card glass-panel">
 
         <div class="rm-auth-header">
           <div class="rm-auth-logo">
-            <rm-icon name="check-square" [size]="20"></rm-icon>
+            <img src="assets/favicon-plate-64.png" alt="" width="40" height="40" />
           </div>
           <h2 class="rm-auth-title">
-            {{ activeTab() === 'login' ? 'Bem-vindo de volta' : 'Crie sua conta' }}
+            {{ activeTab() === 'login' ? i18n.t('auth.welcome') : i18n.t('auth.registerTitle') }}
           </h2>
           <p class="rm-auth-subtitle">
-            Organize suas tarefas e ideias com foco e inteligência.
+            {{ i18n.t('auth.subtitle2') }}
           </p>
         </div>
         <div class="rm-auth-tabs">
@@ -37,7 +43,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
             [class.active]="activeTab() === 'login'"
             (click)="activeTab.set('login')"
           >
-            Entrar
+            {{ i18n.t('auth.tabLogin') }}
           </button>
           <button
             type="button"
@@ -45,19 +51,19 @@ import { ButtonComponent } from '../../shared/components/button/button.component
             [class.active]="activeTab() === 'register'"
             (click)="activeTab.set('register')"
           >
-            Criar Conta
+            {{ i18n.t('auth.tabRegister') }}
           </button>
         </div>
         <form (submit)="onSubmit($event)" class="rm-auth-form">
           @if (activeTab() === 'register') {
             <div class="rm-field-group">
-              <label class="rm-label" for="auth-name">Nome Completo</label>
+              <label class="rm-label" for="auth-name">{{ i18n.t('auth.name') }}</label>
               <div class="rm-input-wrap">
                 <rm-icon name="user" [size]="14" class="rm-field-prefix"></rm-icon>
                 <input
                   id="auth-name"
                   type="text"
-                  placeholder="Seu nome"
+                  [placeholder]="i18n.t('auth.namePlaceholder')"
                   class="rm-text-input"
                   [value]="nameInput()"
                   (input)="nameInput.set($any($event.target).value)"
@@ -68,7 +74,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
           }
 
           <div class="rm-field-group">
-            <label class="rm-label" for="auth-email">E-mail</label>
+            <label class="rm-label" for="auth-email">{{ i18n.t('auth.email') }}</label>
             <div class="rm-input-wrap">
               <rm-icon name="mail" [size]="14" class="rm-field-prefix"></rm-icon>
               <input
@@ -85,7 +91,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 
           <div class="rm-field-group">
             <div class="rm-label-row">
-              <label class="rm-label" for="auth-password">Senha</label>
+              <label class="rm-label" for="auth-password">{{ i18n.t('auth.password') }}</label>
             </div>
             <div class="rm-input-wrap">
               <rm-icon name="lock" [size]="14" class="rm-field-prefix"></rm-icon>
@@ -102,7 +108,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
                 type="button"
                 class="rm-password-toggle"
                 (click)="toggleShowPassword()"
-                [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Exibir senha'"
+                [attr.aria-label]="showPassword() ? i18n.t('auth.hidePass') : i18n.t('auth.showPass')"
               >
                 <rm-icon [name]="showPassword() ? 'eye-off' : 'eye'" [size]="14"></rm-icon>
               </button>
@@ -116,16 +122,16 @@ import { ButtonComponent } from '../../shared/components/button/button.component
             [icon]="activeTab() === 'login' ? 'log-in' : 'check'"
             [loading]="isLoading()"
           >
-            {{ activeTab() === 'login' ? 'Entrar' : 'Criar conta' }}
+            {{ activeTab() === 'login' ? i18n.t('auth.submit') : i18n.t('auth.create') }}
           </rm-button>
         </form>
 
         <div class="rm-security-note">
           <rm-icon name="shield" [size]="12"></rm-icon>
-          <span>Seus dados permanecem seguros e privados no seu dispositivo.</span>
+          <span>{{ i18n.t('auth.security') }}</span>
         </div>
         <p class="rm-auth-legal">
-          Ao continuar, você concorda com nossos <a routerLink="/privacidade">Termos</a> e <a routerLink="/privacidade">Política de Privacidade</a> (LGPD).
+          {{ i18n.t('auth.legal') }} <a routerLink="/privacidade">{{ i18n.t('auth.terms') }}</a> e <a routerLink="/privacidade">{{ i18n.t('auth.privacyPolicy') }}</a> (LGPD).
         </p>
       </div>
     </div>
@@ -165,6 +171,17 @@ import { ButtonComponent } from '../../shared/components/button/button.component
       }
     }
 
+    .rm-auth-lang {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      @media (max-width: 600px) {
+        position: static;
+        align-self: flex-end;
+        margin-bottom: 12px;
+      }
+    }
+
     .rm-auth-card {
       width: 100%;
       max-width: 440px;
@@ -190,14 +207,15 @@ import { ButtonComponent } from '../../shared/components/button/button.component
       width: 44px;
       height: 44px;
       border-radius: var(--rm-radius-lg);
-      background: var(--rm-accent);
-      color: #ffffff;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
       margin-bottom: 4px;
     }
+
+    .rm-auth-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .rm-auth-title {
       font-size: 22px;
@@ -399,6 +417,7 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 })
 export class LoginComponent {
   readonly authService = inject(AuthService);
+  readonly i18n = inject(I18nService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
