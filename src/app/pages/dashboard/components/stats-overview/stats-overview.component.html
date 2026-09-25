@@ -1,67 +1,114 @@
-<div class="rm-stats-grid">
+<section class="rm-ov" [attr.aria-label]="i18n.t('ov.title')">
 
-  <rm-card class="rm-stat-card">
-    <div class="rm-stat-card__inner">
-      <div class="rm-stat-card__header">
-        <span class="rm-stat-card__label">{{ i18n.t('stats.total') }}</span>
-        <rm-badge type="neutral" [label]="i18n.t('stats.items', { count: taskService.totalCount() })"></rm-badge>
-      </div>
-      <div class="rm-stat-card__value-row">
-        <span class="rm-stat-card__value">{{ taskService.completionPercentage() }}%</span>
-        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.total.sub') }}</span>
-      </div>
-      <div class="rm-stat-card__bar">
-        <div class="rm-stat-card__fill" [style.width.%]="taskService.completionPercentage()"></div>
-      </div>
-    </div>
-  </rm-card>
-  <rm-card class="rm-stat-card" [glow]="taskService.urgentCount() > 0">
-    <div class="rm-stat-card__inner">
-      <div class="rm-stat-card__header">
-        <span class="rm-stat-card__label">{{ i18n.t('stats.urgent') }}</span>
-        <rm-badge type="urgent" [label]="i18n.t('priority.urgent')"></rm-badge>
-      </div>
-      <div class="rm-stat-card__value-row">
-        <span class="rm-stat-card__value text-urgent">{{ taskService.urgentCount() }}</span>
-        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.urgent.sub') }}</span>
-      </div>
-      <p class="rm-stat-card__caption">
-        @if (taskService.urgentCount() > 0) {
-          {{ i18n.t('stats.urgent.hint') }}
-        } @else {
-          {{ i18n.t('stats.urgent.none') }}
+  <div class="rm-ov__cell rm-ov__cell--progress">
+    <h2 class="rm-ov__title">{{ i18n.t('ov.progress.title') }}</h2>
+
+    <div class="rm-ov__progress">
+      <figure class="rm-donut" [class.rm-donut--focus]="hovered() !== null">
+        <svg viewBox="0 0 140 140" role="img" [attr.aria-label]="progressLabel()">
+          <circle class="rm-donut__track" cx="70" cy="70" [attr.r]="radius"></circle>
+          <g transform="rotate(-90 70 70)">
+            @for (s of segments(); track s.key) {
+              <circle
+                [class]="'rm-donut__seg rm-donut__seg--' + s.key"
+                [class.is-dim]="hovered() !== null && hovered() !== s.key"
+                cx="70"
+                cy="70"
+                [attr.r]="radius"
+                [attr.stroke-dasharray]="s.dash"
+                [attr.stroke-dashoffset]="s.offset"
+                (mouseenter)="hovered.set(s.key)"
+                (mouseleave)="hovered.set(null)"
+              ></circle>
+            }
+          </g>
+        </svg>
+        <figcaption class="rm-donut__center" aria-hidden="true">
+          @if (hovered(); as key) {
+            @for (s of segments(); track s.key) {
+              @if (s.key === key) {
+                <span class="rm-donut__value rm-num">{{ s.pct }}%</span>
+                <span class="rm-donut__caption">{{ s.label }}</span>
+              }
+            }
+          } @else {
+            <span class="rm-donut__value rm-num">{{ taskService.completionPercentage() }}%</span>
+            <span class="rm-donut__caption">{{ i18n.t('ov.progress.center') }}</span>
+          }
+        </figcaption>
+      </figure>
+
+      <ul class="rm-legend">
+        @for (s of segments(); track s.key) {
+          <li
+            class="rm-legend__row"
+            [class.is-active]="hovered() === s.key"
+            [class.is-dim]="hovered() !== null && hovered() !== s.key"
+            tabindex="0"
+            (mouseenter)="hovered.set(s.key)"
+            (mouseleave)="hovered.set(null)"
+            (focus)="hovered.set(s.key)"
+            (blur)="hovered.set(null)"
+          >
+            <span [class]="'rm-legend__swatch rm-legend__swatch--' + s.key" aria-hidden="true"></span>
+            <span class="rm-legend__label">{{ s.label }}</span>
+            <span class="rm-legend__count rm-num">{{ s.count }}</span>
+            <span class="rm-legend__pct rm-num">{{ s.pct }}%</span>
+          </li>
         }
-      </p>
+        <li class="rm-legend__total">
+          {{ i18n.t('stats.items', { count: taskService.totalCount() }) }}
+        </li>
+      </ul>
     </div>
-  </rm-card>
-  <rm-card class="rm-stat-card">
-    <div class="rm-stat-card__inner">
-      <div class="rm-stat-card__header">
-        <span class="rm-stat-card__label">{{ i18n.t('stats.doing') }}</span>
-        <rm-badge type="in-progress" [label]="i18n.t('dash.doing')"></rm-badge>
+  </div>
+
+  <div class="rm-ov__cell">
+    <h2 class="rm-ov__title">
+      {{ i18n.t('ov.priority.title') }}
+      <span class="rm-ov__title-count rm-num">{{ openCount() }}</span>
+    </h2>
+
+    @if (openCount() > 0) {
+      <ul class="rm-prio">
+        @for (p of priorities(); track p.key) {
+          <li class="rm-prio__row" [class.is-empty]="p.count === 0">
+            <span class="rm-prio__label">{{ p.label }}</span>
+            <span class="rm-prio__track" aria-hidden="true">
+              <span [class]="'rm-prio__bar rm-prio__bar--' + p.key" [style.width.%]="p.width"></span>
+            </span>
+            <span class="rm-prio__count rm-num">{{ p.count }}</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="rm-ov__empty">{{ i18n.t('ov.priority.empty') }}</p>
+    }
+  </div>
+
+  <div class="rm-ov__cell">
+    <h2 class="rm-ov__title">{{ i18n.t('ov.focus.title') }}</h2>
+
+    <dl class="rm-facts">
+      <div class="rm-facts__row">
+        <dt>{{ i18n.t('ov.overdue') }}</dt>
+        <dd class="rm-num" [class.is-alert]="overdueCount() > 0">{{ overdueCount() }}</dd>
       </div>
-      <div class="rm-stat-card__value-row">
-        <span class="rm-stat-card__value text-progress">{{ taskService.inProgressCount() }}</span>
-        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.doing.sub') }}</span>
+      <div class="rm-facts__row">
+        <dt>{{ i18n.t('ov.week') }}</dt>
+        <dd class="rm-num">{{ dueSoonCount() }}</dd>
       </div>
-      <p class="rm-stat-card__caption">
-        {{ i18n.t('stats.doing.queue', { count: taskService.todoCount() }) }}
-      </p>
-    </div>
-  </rm-card>
-  <rm-card class="rm-stat-card">
-    <div class="rm-stat-card__inner">
-      <div class="rm-stat-card__header">
-        <span class="rm-stat-card__label">{{ i18n.t('dash.tab.ideas') }}</span>
-        <rm-badge type="ai" [label]="i18n.t('stats.ideas.badge')"></rm-badge>
+      <div class="rm-facts__row">
+        <dt>{{ i18n.t('ov.effort') }}</dt>
+        <dd class="rm-num">{{ openEffort() }}</dd>
       </div>
-      <div class="rm-stat-card__value-row">
-        <span class="rm-stat-card__value text-ai">{{ ideaService.totalIdeas() }}</span>
-        <span class="rm-stat-card__sublabel">{{ i18n.t('stats.ideas.sub') }}</span>
+      <div class="rm-facts__row rm-facts__row--bar">
+        <dt>{{ i18n.t('ov.ideas') }}</dt>
+        <dd class="rm-num">{{ ideaService.expandedCount() }}/{{ ideaService.totalIdeas() }}</dd>
+        <dd class="rm-facts__meter" aria-hidden="true">
+          <span [style.width.%]="drawn() ? ideasExpandedPct() : 0"></span>
+        </dd>
       </div>
-      <p class="rm-stat-card__caption">
-        {{ i18n.t('stats.ideas.expanded', { count: ideaService.expandedCount() }) }}
-      </p>
-    </div>
-  </rm-card>
-</div>
+    </dl>
+  </div>
+</section>

@@ -1,4 +1,4 @@
-<rm-card class="rm-idea-card" [glow]="idea().isExpandedByAi">
+<rm-card class="rm-idea-card">
   <div class="rm-idea-header">
     <div class="rm-idea-title-area">
       <h4 class="rm-idea-title">{{ idea().title }}</h4>
@@ -73,7 +73,7 @@
 
       <div class="rm-breakdown-footer">
         <rm-button
-          variant="ai"
+          variant="outline"
           size="sm"
           icon="pi-plus"
           (clicked)="convertStepsToTasks()"

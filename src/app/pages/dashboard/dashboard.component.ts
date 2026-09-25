@@ -10,7 +10,6 @@ import { IdeaItemComponent } from './components/idea-item/idea-item.component';
 import { TaskFormModalComponent } from './components/task-form-modal/task-form-modal.component';
 import { IdeaFormModalComponent } from './components/idea-form-modal/idea-form-modal.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
@@ -26,7 +25,6 @@ import { LoadingSkeletonComponent } from '../../shared/components/loading-skelet
     TaskFormModalComponent,
     IdeaFormModalComponent,
     ButtonComponent,
-    BadgeComponent,
     InputComponent,
     IconComponent,
     EmptyStateComponent,

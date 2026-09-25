@@ -8,9 +8,10 @@
         type="button"
         class="rm-tab-btn"
         [class.active]="activeTab() === 'tasks'"
+        [attr.aria-pressed]="activeTab() === 'tasks'"
         (click)="activeTab.set('tasks')"
       >
-        <rm-icon name="check-square" [size]="14"></rm-icon>
+        <rm-icon name="check-square" [size]="14" aria-hidden="true"></rm-icon>
         <span>{{ i18n.t('dash.tab.tasks') }}</span>
         <span class="rm-tab-count">{{ taskService.totalCount() }}</span>
       </button>
@@ -19,9 +20,10 @@
         type="button"
         class="rm-tab-btn"
         [class.active]="activeTab() === 'ideas'"
+        [attr.aria-pressed]="activeTab() === 'ideas'"
         (click)="activeTab.set('ideas')"
       >
-        <rm-icon name="lightbulb" [size]="14"></rm-icon>
+        <rm-icon name="lightbulb" [size]="14" aria-hidden="true"></rm-icon>
         <span>{{ i18n.t('dash.tab.ideas') }}</span>
         <span class="rm-tab-count">{{ ideaService.totalIdeas() }}</span>
       </button>
@@ -34,21 +36,23 @@
             type="button"
             class="rm-view-btn"
             [class.active]="viewMode() === 'list'"
+            [attr.aria-pressed]="viewMode() === 'list'"
             (click)="viewMode.set('list')"
             [title]="i18n.t('dash.view.list')"
             [attr.aria-label]="i18n.t('dash.view.list')"
           >
-            <rm-icon name="list" [size]="14"></rm-icon>
+            <rm-icon name="list" [size]="14" aria-hidden="true"></rm-icon>
           </button>
           <button
             type="button"
             class="rm-view-btn"
             [class.active]="viewMode() === 'kanban'"
+            [attr.aria-pressed]="viewMode() === 'kanban'"
             (click)="viewMode.set('kanban')"
             [title]="i18n.t('dash.view.kanban')"
             [attr.aria-label]="i18n.t('dash.view.kanban')"
           >
-            <rm-icon name="kanban" [size]="14"></rm-icon>
+            <rm-icon name="kanban" [size]="14" aria-hidden="true"></rm-icon>
           </button>
         </div>
 
@@ -147,22 +151,14 @@
             }
           } @else {
             @if (isFilteredEmpty()) {
-              <div class="rm-filtered-empty">
-                <div class="rm-filtered-empty__head">
-                  <span class="rm-active-filters-badge">
-                    <rm-icon name="filter" [size]="12"></rm-icon>
-                    {{ i18n.t('dash.filters.active') }}
-                  </span>
-                </div>
-                <rm-empty-state
-                  icon="list"
-                  [title]="i18n.t('dash.empty.filtered.title')"
-                  [description]="i18n.t('dash.empty.filtered.body')"
-                  [actionLabel]="i18n.t('dash.filters.clear')"
-                  actionIcon="x"
-                  (action)="clearAllFilters()"
-                ></rm-empty-state>
-              </div>
+              <rm-empty-state
+                icon="list"
+                [title]="i18n.t('dash.empty.filtered.title')"
+                [description]="i18n.t('dash.empty.filtered.body')"
+                [actionLabel]="i18n.t('dash.filters.clear')"
+                actionIcon="x"
+                (action)="clearAllFilters()"
+              ></rm-empty-state>
             } @else {
               <rm-empty-state
                 icon="list"
@@ -183,18 +179,6 @@
           <rm-loading-skeleton variant="kanban-col" [count]="3"></rm-loading-skeleton>
         </div>
       } @else {
-      @if (hasActiveFilters()) {
-        <div class="rm-kanban-filter-notice">
-          <span class="rm-active-filters-badge">
-            <rm-icon name="filter" [size]="12"></rm-icon>
-            {{ i18n.t('dash.filters.kanban') }}
-          </span>
-          <button type="button" class="rm-clear-filters-btn" (click)="clearAllFilters()" [attr.aria-label]="i18n.t('dash.filters.clearKanban')">
-            <rm-icon name="x" [size]="12"></rm-icon>
-            {{ i18n.t('dash.filters.clear') }}
-          </button>
-        </div>
-      }
       <div class="rm-kanban-board">
 
         <div class="rm-kanban-col">
@@ -203,7 +187,7 @@
               <span class="rm-kanban-dot rm-kanban-dot--todo"></span>
               <span class="rm-kanban-col__title">{{ i18n.t('dash.todo') }}</span>
             </div>
-            <rm-badge type="todo" [label]="getTasksByStatus('todo').length + ''"></rm-badge>
+            <span class="rm-kanban-col__count">{{ getTasksByStatus('todo').length }}</span>
           </div>
 
           <div class="rm-kanban-col__list">
@@ -224,7 +208,7 @@
               <span class="rm-kanban-dot rm-kanban-dot--progress"></span>
               <span class="rm-kanban-col__title">{{ i18n.t('dash.doing') }}</span>
             </div>
-            <rm-badge type="in-progress" [label]="getTasksByStatus('in-progress').length + ''"></rm-badge>
+            <span class="rm-kanban-col__count">{{ getTasksByStatus('in-progress').length }}</span>
           </div>
 
           <div class="rm-kanban-col__list">
@@ -245,7 +229,7 @@
               <span class="rm-kanban-dot rm-kanban-dot--done"></span>
               <span class="rm-kanban-col__title">{{ i18n.t('dash.done') }}</span>
             </div>
-            <rm-badge type="done" [label]="getTasksByStatus('done').length + ''"></rm-badge>
+            <span class="rm-kanban-col__count">{{ getTasksByStatus('done').length }}</span>
           </div>
 
           <div class="rm-kanban-col__list">
@@ -299,7 +283,7 @@
         [class.active]="ideaService.categoryFilter() === 'research'"
         (click)="ideaService.categoryFilter.set('research')"
       >
-        <rm-icon name="layers" [size]="12"></rm-icon>
+        <rm-icon name="search" [size]="12"></rm-icon>
         <span>{{ i18n.t('idea.cat.research') }}</span>
       </button>
       <button

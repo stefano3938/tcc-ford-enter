@@ -1,94 +1,93 @@
-<header class="rm-header glass-panel">
+<header class="rm-header">
   <div class="rm-header__left">
     <button
       type="button"
-      class="rm-header__menu-btn"
+      class="rm-header__icon-btn rm-header__menu-btn"
       (click)="toggleMenu.emit()"
       [attr.aria-label]="menuOpen() ? i18n.t('nav.menu.close') : i18n.t('nav.menu')"
       [attr.aria-expanded]="menuOpen()"
       aria-controls="rm-sidebar"
     >
-      <rm-icon name="menu" [size]="16" aria-hidden="true"></rm-icon>
+      <rm-icon [name]="menuOpen() ? 'x' : 'menu'" [size]="18" aria-hidden="true"></rm-icon>
     </button>
 
-    <a routerLink="/dashboard" class="rm-logo">
-      <div class="rm-logo__mark">
-        <img src="assets/favicon-plate-64.png" alt="" width="32" height="32" />
-      </div>
-      <span class="rm-logo__text">Remind<span class="rm-logo__accent">Me</span></span>
+    <a routerLink="/dashboard" class="rm-logo" [attr.aria-label]="i18n.t('dash.title')">
+      <span class="rm-logo__mark">
+        <img src="assets/favicon-plate-64.png" alt="" width="28" height="28" />
+      </span>
+      <span class="rm-logo__text">RemindMe</span>
     </a>
 
-    <div class="rm-header__status-badge">
-      @if (taskService.totalCount() > 0) {
-        <rm-badge
-          type="neutral"
-          [showDot]="true"
-          [label]="taskService.doneCount() + '/' + taskService.totalCount() + ' ' + i18n.t('nav.status') + ' (' + taskService.completionPercentage() + '%)'"
-        ></rm-badge>
-      }
-    </div>
+    @if (taskService.totalCount() > 0) {
+      <div class="rm-header__progress">
+        <span class="rm-header__progress-text">
+          {{ i18n.t('nav.progress', { done: taskService.doneCount(), total: taskService.totalCount() }) }}
+        </span>
+        <span
+          class="rm-header__progress-bar"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [attr.aria-valuenow]="taskService.completionPercentage()"
+          [attr.aria-label]="i18n.t('dash.stats.progress')"
+        >
+          <span class="rm-header__progress-fill" [style.width.%]="taskService.completionPercentage()"></span>
+        </span>
+      </div>
+    }
   </div>
 
   <div class="rm-header__right">
-
-    <button type="button" class="rm-header__ai-quota rm-header__desktop-only" (click)="openAiPaywall()">
-      <span class="ai-pill">
-        <rm-icon name="layers" [size]="12" aria-hidden="true"></rm-icon>
+    <button type="button" class="rm-header__quota rm-header__desktop-only" (click)="openAiPaywall()">
+      <rm-icon name="sparkles" [size]="14" aria-hidden="true"></rm-icon>
+      <span>
         @if (userService.isPro()) {
-          {{ i18n.t('nav.ai.unlimited') }}
+          {{ i18n.t('ai.proUnlimited') }}
         } @else {
-          {{ userService.aiRemaining() }} {{ i18n.t('nav.ai.remaining') }}
+          {{ i18n.t('ai.remainingToday', { count: userService.aiRemaining() }) }}
         }
       </span>
     </button>
+
     @if (!userService.isPro()) {
-      <rm-button
-        class="rm-header__desktop-only"
-        variant="ai"
-        size="sm"
-        icon="crown"
-        (clicked)="userService.openPaywall()"
-      >
+      <rm-button class="rm-header__desktop-only" variant="outline" size="sm" icon="crown" (clicked)="userService.openPaywall()">
         {{ i18n.t('nav.upgrade') }}
       </rm-button>
     }
+
     <rm-lang-switcher></rm-lang-switcher>
+
     <button
       type="button"
-      class="rm-header__action-btn"
+      class="rm-header__icon-btn"
       (click)="themeService.toggleTheme()"
       [attr.aria-label]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
       [title]="themeService.theme() === 'dark' ? i18n.t('nav.theme.light') : i18n.t('nav.theme.dark')"
     >
-      @if (themeService.theme() === 'dark') {
-        <rm-icon name="sun" [size]="15" aria-hidden="true"></rm-icon>
-      } @else {
-        <rm-icon name="moon" [size]="15" aria-hidden="true"></rm-icon>
-      }
+      <rm-icon [name]="themeService.theme() === 'dark' ? 'sun' : 'moon'" [size]="16" aria-hidden="true"></rm-icon>
     </button>
-    <div class="rm-user-pill rm-header__desktop-only" [title]="userService.currentUser().name">
+
+    <div class="rm-user rm-header__desktop-only" [title]="userService.currentUser().name">
       <rm-avatar
         [src]="userService.currentUser().avatarUrl"
         [name]="userService.currentUser().name"
         size="sm"
         [alt]="userService.currentUser().name"
       ></rm-avatar>
-      <div class="rm-user-pill__info">
-        <span class="rm-user-pill__name">{{ userService.currentUser().name }}</span>
-        <rm-badge
-          [type]="userService.isPro() ? 'pro' : 'neutral'"
-          [label]="userService.isPro() ? 'Pro' : 'Starter'"
-        ></rm-badge>
-      </div>
+      <span class="rm-user__info">
+        <span class="rm-user__name">{{ userService.currentUser().name }}</span>
+        <span class="rm-user__plan" [class.rm-user__plan--pro]="userService.isPro()">{{ userService.isPro() ? 'Pro' : 'Starter' }}</span>
+      </span>
     </div>
+
     <button
       type="button"
-      class="rm-header__action-btn rm-header__action-btn--logout rm-header__desktop-only"
+      class="rm-header__icon-btn rm-header__icon-btn--logout rm-header__desktop-only"
       (click)="authService.logout()"
       [title]="i18n.t('nav.logout')"
       [attr.aria-label]="i18n.t('nav.logout')"
     >
-      <rm-icon name="log-out" [size]="15" aria-hidden="true"></rm-icon>
+      <rm-icon name="log-out" [size]="16" aria-hidden="true"></rm-icon>
     </button>
   </div>
 </header>
